@@ -96,11 +96,24 @@ def test_fastapi_app():
     r = client.get("/api/history")
     assert r.status_code == 200
 
-    # Frontend index.html
+    # Frontend Landing Page
     r = client.get("/")
     assert r.status_code == 200
+    assert "SahooShuvranshu" in r.text
     assert "Kitten-TTS 2 Studio" in r.text
-    print("  ✓ FastAPI routes and frontend static serving verified.")
+
+    # Frontend Studio Workstation Console
+    r_studio = client.get("/studio")
+    assert r_studio.status_code == 200
+    assert "Voice Identity" in r_studio.text
+    assert "Speech Synthesizer" in r_studio.text
+
+    # Docs Showcase Page
+    r_docs = client.get("/docs-showcase")
+    assert r_docs.status_code == 200
+    assert "Acoustic Audition Laboratory" in r_docs.text
+
+    print("  ✓ FastAPI routes (/ , /studio, /docs-showcase, API) verified.")
 
 if __name__ == "__main__":
     print("\n--- Running Kitten-TTS 2 Studio Verification Suite ---")
