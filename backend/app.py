@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
 from backend.audio_utils import convert_to_wav, get_audio_metadata, validate_reference_audio
-from backend.profiles import list_profiles, get_profile, create_profile, delete_profile
+from backend.profiles import list_profiles, get_profile, create_profile, update_profile, delete_profile
 from backend.engine import KittenTTSEngine
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -37,6 +37,10 @@ class SynthesizeRequest(BaseModel):
 class SaveSampleProfileRequest(BaseModel):
     filename: str
     name: str
+    description: Optional[str] = ""
+
+class UpdateProfileRequest(BaseModel):
+    name: Optional[str] = None
     description: Optional[str] = ""
 
 def _read_history() -> List[Dict[str, Any]]:
@@ -145,6 +149,13 @@ def remove_profile(profile_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Profile not found.")
     return {"status": "deleted", "id": profile_id}
+
+@app.put("/api/profiles/{profile_id}")
+def edit_profile(profile_id: str, req: UpdateProfileRequest):
+    updated = update_profile(profile_id, name=req.name, description=req.description)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Profile not found.")
+    return updated
 
 @app.post("/api/synthesize")
 def synthesize_speech(req: SynthesizeRequest):

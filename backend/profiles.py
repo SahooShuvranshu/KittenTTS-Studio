@@ -63,6 +63,21 @@ def create_profile(name: str, src_audio_path: str, description: str = "") -> Dic
     _write_index(profiles)
     return profile
 
+def update_profile(profile_id: str, name: Optional[str] = None, description: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    profiles = _read_index()
+    target = None
+    for p in profiles:
+        if p["id"] == profile_id:
+            if name is not None and name.strip():
+                p["name"] = name.strip()
+            if description is not None:
+                p["description"] = description.strip()
+            target = p
+            break
+    if target:
+        _write_index(profiles)
+    return target
+
 def delete_profile(profile_id: str) -> bool:
     profiles = _read_index()
     kept = []

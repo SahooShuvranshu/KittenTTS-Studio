@@ -19,6 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const profileList = document.getElementById('profileList');
   const activeVoiceName = document.getElementById('activeVoiceName');
+  const resetVoiceBtn = document.getElementById('resetVoiceBtn');
+
+  if (resetVoiceBtn) {
+    resetVoiceBtn.addEventListener('click', () => {
+      selectedProfileId = null;
+      localStorage.removeItem('kitten_tts_selected_profile');
+      if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
+      document.querySelectorAll('.profile-card').forEach(el => {
+        el.classList.remove('selected');
+        const b = el.querySelector('.tabular');
+        if (b && b.textContent === 'ACTIVE') b.remove();
+      });
+      showToast('Cleared voice selection. Using default or uploaded audio.');
+    });
+  }
 
   // File Upload Elements
   const dropzone = document.getElementById('dropzone');
@@ -223,41 +238,105 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (profiles.length === 0) {
         profileList.innerHTML = '<div style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px;padding:8px;">No voice profiles saved yet. Upload or record a 5-30s sample above.</div>';
+        selectedProfileId = null;
+        if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
         return;
       }
 
+      // Check localStorage for remembered profile
+      const rememberedId = localStorage.getItem('kitten_tts_selected_profile');
+      let foundRemembered = false;
+
       profiles.forEach(p => {
+        const isSelected = p.id === selectedProfileId || (selectedProfileId === null && p.id === rememberedId);
+        if (isSelected) {
+          selectedProfileId = p.id;
+          foundRemembered = true;
+          if (activeVoiceName) activeVoiceName.textContent = p.name;
+        }
+
         const card = document.createElement('div');
-        card.className = 'profile-card' + (p.id === selectedProfileId ? ' selected' : '');
+        card.className = 'profile-card' + (isSelected ? ' selected' : '');
+        card.setAttribute('data-id', p.id);
         card.innerHTML = `
           <div class="profile-info">
-            <span class="profile-name">${p.name}</span>
-            <span class="profile-meta">${p.duration}s • ${p.size_kb} KB • ${p.created_at.split(' ')[0]}</span>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="profile-name">${p.name}</span>
+              ${isSelected ? '<span class="tabular" style="font-size:9px;background:var(--accent-meter-bg);color:var(--accent-meter);padding:1px 4px;border-radius:2px;font-weight:600;">ACTIVE</span>' : ''}
+            </div>
+            <span class="profile-meta">${p.description ? p.description + ' • ' : ''}${p.duration}s • 24kHz</span>
           </div>
-          <div style="display:flex;gap:6px;">
+          <div style="display:flex;gap:4px;">
             <button class="btn btn-tag" style="padding:2px 6px;" title="Preview Audio" onclick="event.stopPropagation(); window.playProfileAudio('${p.filename}')">▶</button>
+            <button class="btn btn-tag" style="padding:2px 6px;" title="Rename Profile" onclick="event.stopPropagation(); window.renameProfile('${p.id}', '${p.name.replace(/'/g, "\\'")}')">✏</button>
             <button class="btn btn-tag btn-danger" style="padding:2px 6px;" title="Delete" onclick="event.stopPropagation(); window.deleteProfile('${p.id}')">✕</button>
           </div>
         `;
         card.addEventListener('click', () => selectProfile(p.id, p.name));
         profileList.appendChild(card);
       });
+
+      if (!foundRemembered && selectedProfileId === null && profiles.length > 0) {
+        // Automatically select first profile if none remembered
+        selectProfile(profiles[0].id, profiles[0].name, false);
+      }
     } catch (e) {
       console.error('Failed to load profiles:', e);
     }
   }
 
-  function selectProfile(id, name) {
+  function selectProfile(id, name, notify = true) {
     selectedProfileId = id;
+    localStorage.setItem('kitten_tts_selected_profile', id);
     if (activeVoiceName) {
       activeVoiceName.textContent = name || id;
     }
-    document.querySelectorAll('.profile-card').forEach(el => el.classList.remove('selected'));
-    const cards = Array.from(document.querySelectorAll('.profile-card'));
-    const target = cards.find(c => c.innerHTML.includes(id));
-    if (target) target.classList.add('selected');
-    showToast(`Voice profile selected: ${name || id}`);
+    document.querySelectorAll('.profile-card').forEach(el => {
+      if (el.getAttribute('data-id') === id) {
+        el.classList.add('selected');
+        // add active badge if not present
+        if (!el.innerHTML.includes('ACTIVE')) {
+          const nameSpan = el.querySelector('.profile-name');
+          if (nameSpan && nameSpan.parentElement) {
+            const badge = document.createElement('span');
+            badge.className = 'tabular';
+            badge.style.cssText = 'font-size:9px;background:var(--accent-meter-bg);color:var(--accent-meter);padding:1px 4px;border-radius:2px;font-weight:600;';
+            badge.textContent = 'ACTIVE';
+            nameSpan.parentElement.appendChild(badge);
+          }
+        }
+      } else {
+        el.classList.remove('selected');
+        const activeBadge = el.querySelector('span[style*="ACTIVE"], .tabular');
+        if (activeBadge && activeBadge.textContent === 'ACTIVE') {
+          activeBadge.remove();
+        }
+      }
+    });
+    if (notify) {
+      showToast(`Armed profile: ${name || id}`);
+    }
   }
+
+  window.renameProfile = async (id, currentName) => {
+    const newName = prompt('Enter new name for this voice profile:', currentName);
+    if (!newName || newName.trim() === '' || newName.trim() === currentName) return;
+    try {
+      const res = await fetch(`/api/profiles/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName.trim() })
+      });
+      if (res.ok) {
+        showToast('Profile renamed.');
+        await loadProfiles();
+      } else {
+        showToast('Rename failed.');
+      }
+    } catch (e) {
+      showToast('Error: ' + e.message);
+    }
+  };
 
   window.playProfileAudio = (filename) => {
     audioPlayer.src = `/api/audio/${filename}?profile=1`;
@@ -272,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         if (selectedProfileId === id) {
           selectedProfileId = null;
+          localStorage.removeItem('kitten_tts_selected_profile');
           activeVoiceName.textContent = 'None (Default / Uploaded)';
         }
         await loadProfiles();
