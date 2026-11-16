@@ -1,0 +1,327 @@
+/* ==========================================================================
+   KITTEN-TTS 2 STUDIO — PRODUCT LANDING PAGE STYLING (UNSLOPPED)
+   Matte Obsidian • Strict 4px Grid • Hardware Aesthetic • Quiet Chrome
+   ========================================================================== */
+
+:root {
+  --bg-base: #0B0C0E;
+  --bg-surface: #121419;
+  --bg-surface-raised: #181B22;
+  --bg-surface-sunken: #07080A;
+
+  --border-subtle: #1F232D;
+  --border-strong: #2D3342;
+  --border-focus: #4F586E;
+
+  --text-primary: #EDEDF0;
+  --text-secondary: #9096A5;
+  --text-muted: #565D6D;
+
+  --accent-meter: #00E599;
+  --accent-meter-bg: rgba(0, 229, 153, 0.12);
+  --accent-active: #E2E8F0;
+
+  --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-panel: 6px;
+  --radius-control: 4px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* ==================== TOP NAVIGATION ==================== */
+.landing-nav {
+  position: sticky;
+  top: 0;
+  background-color: rgba(11, 12, 14, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.brand-logo-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-strong);
+  background-color: var(--bg-surface-raised);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 100ms ease, border-color 100ms ease, transform 60ms ease;
+  user-select: none;
+}
+
+.btn:hover {
+  background-color: #1F232B;
+  border-color: var(--border-focus);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--accent-active);
+  color: #0B0C0E;
+  border-color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: #FFFFFF;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 13px;
+}
+
+/* ==================== HERO SECTION ==================== */
+.hero-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background-color: var(--bg-surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  align-self: flex-start;
+}
+
+.hero-headline {
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+  color: var(--text-primary);
+  max-width: 860px;
+}
+
+.hero-subhead {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* ==================== CONSOLE PREVIEW CARD ==================== */
+.preview-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.preview-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.preview-header {
+  background-color: var(--bg-surface-raised);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.preview-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==================== PILLARS GRID ==================== */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--accent-meter);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  margin-bottom: 32px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-panel);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==================== TECHNICAL MATRIX TABLE ==================== */
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.matrix-table th, .matrix-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.matrix-table th {
+  background-color: var(--bg-surface-raised);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.matrix-table td {
+  color: var(--text-primary);
+}
+
+.matrix-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.015);
+}
+
+/* ==================== FOOTER ==================== */
+.landing-footer {
+  border-top: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-sunken);
+  padding: 32px 24px;
+  margin-top: 60px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

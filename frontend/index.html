@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitten-TTS 2 Studio — Zero-Shot Voice Cloning on CPU</title>
+  <meta name="description" content="Local, zero-shot voice cloning on standard consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). By SahooShuvranshu.">
+  <meta name="author" content="SahooShuvranshu">
+  <meta name="theme-color" content="#0B0C0E">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio">
+  <meta property="og:title" content="Kitten-TTS 2 Studio — Zero-Shot Voice Cloning on CPU">
+  <meta property="og:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM).">
+  <meta property="og:image" content="/assets/og-card.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SahooShuvranshu">
+  <meta name="twitter:creator" content="@SahooShuvranshu">
+  <meta name="twitter:title" content="Kitten-TTS 2 Studio — Zero-Shot Voice Cloning on CPU">
+  <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM).">
+  <meta name="twitter:image" content="/assets/og-card.png">
+
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header class="landing-nav">
+    <a href="/" class="brand-link">
+      <img src="/assets/logo.png" alt="Logo" class="brand-logo-img">
+      <span>SAHOOSHUVRAHNSU / KITTEN-TTS 2</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#specs" class="nav-link">Specifications</a>
+      <a href="#quickstart" class="nav-link">Quickstart</a>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-link">GitHub</a>
+      <a href="/studio" class="btn btn-primary">⚡ LAUNCH STUDIO</a>
+    </nav>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero-section">
+    <div class="hero-meta-badge">
+      <span style="width:6px; height:6px; border-radius:50%; background:var(--accent-meter); display:inline-block;"></span>
+      <span>1.7B TERNARY SLM • 24KHZ MONO • 8GB RAM COMPATIBLE</span>
+    </div>
+
+    <h1 class="hero-headline">
+      Zero-shot voice cloning on standard consumer CPUs.
+    </h1>
+
+    <p class="hero-subhead">
+      Synthesize high-fidelity speech matching any speaker from 5–30 seconds of reference audio. 
+      Runs 100% locally and offline within an 8 GB RAM physical memory budget with zero dedicated GPU requirements.
+    </p>
+
+    <div class="hero-cta-group">
+      <a href="/studio" class="btn btn-primary btn-lg">
+        ⚡ OPEN STUDIO CONSOLE
+      </a>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-lg">
+        VIEW ON GITHUB
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== CONSOLE PREVIEW SECTION ==================== -->
+  <section class="preview-wrap">
+    <div class="preview-card">
+      <div class="preview-header">
+        <span>HARDWARE AUDIO CONSOLE // TELEMETRY HUD PREVIEW</span>
+        <span class="tabular">DEVICE: CPU [AVX2] | LATENCY: ~1.1x REAL-TIME</span>
+      </div>
+      <img src="/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Preview" class="preview-img">
+    </div>
+  </section>
+
+  <!-- ==================== TECHNICAL PILLARS ==================== -->
+  <section id="features" class="section-container">
+    <div class="section-label">Engineering Pillars</div>
+    <h2 class="section-title">Built for efficiency, privacy, and acoustic precision</h2>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          In-Context Voice Cloning
+        </h3>
+        <p class="card-desc">
+          Upload any 5–30 second audio clip or record live via your browser microphone. The model extracts speaker timbre and pitch contours on-the-fly with zero fine-tuning.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></svg>
+          1.6-bit Ternary Weights
+        </h3>
+        <p class="card-desc">
+          The 1.7B parameter speech language model uses extreme ternary quantization, shrinking the core weights to ~1.03 GB and running smoothly within ~1.2 GB of CPU RAM.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Expression & Emotion Syntax
+        </h3>
+        <p class="card-desc">
+          Control delivery with inline tags: <code>[happy]</code>, <code>[whisper]</code>, <code>[serious]</code>, non-speech events like <code>&lt;laugh&gt;</code>, and <code>(((emphasis)))</code> spans.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TECHNICAL MATRIX ==================== -->
+  <section id="specs" class="section-container">
+    <div class="section-label">Specifications</div>
+    <h2 class="section-title">Acoustic and compute benchmark specifications</h2>
+
+    <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-panel); overflow:hidden;">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base Architecture</td>
+            <td>Kitten-TTS 2 (1.7B Qwen3 SLM)</td>
+            <td>Ternary speech language model with neural codec</td>
+          </tr>
+          <tr>
+            <td>Weight Quantization</td>
+            <td>1.6-bit Ternary ({ -1, 0, +1 })</td>
+            <td>Lossless packing down to ~1.03 GB disk size</td>
+          </tr>
+          <tr>
+            <td>Audio Output Rate</td>
+            <td>24,000 Hz (24 kHz) Mono</td>
+            <td>Single-channel 16-bit PCM WAV broadcast rate</td>
+          </tr>
+          <tr>
+            <td>RAM Working Set</td>
+            <td>~1.2 GB – 1.5 GB RSS</td>
+            <td>Runs safely within 8 GB physical memory envelopes</td>
+          </tr>
+          <tr>
+            <td>Dedicated VRAM</td>
+            <td>0 MB (CPU Mode via AVX2)</td>
+            <td>No GPU required; prevents laptop display driver crashes</td>
+          </tr>
+          <tr>
+            <td>Audio Normalization</td>
+            <td>Automated FFmpeg Pipeline</td>
+            <td>Converts MP3, M4A, FLAC, OGG, and WebM to 24kHz WAV</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ==================== QUICKSTART DECK ==================== -->
+  <section id="quickstart" class="section-container">
+    <div class="section-label">Deployment</div>
+    <h2 class="section-title">One-command setup and launch</h2>
+
+    <div style="background:var(--bg-surface-sunken); border:1px solid var(--border-strong); border-radius:var(--radius-panel); padding:20px; font-family:var(--font-mono); font-size:12px; color:var(--text-secondary); display:flex; flex-direction:column; gap:8px;">
+      <div style="color:var(--text-muted);"># Clone and enter directory</div>
+      <div style="color:var(--text-primary);">git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git &amp;&amp; cd KittenTTS-Studio</div>
+      <br/>
+      <div style="color:var(--text-muted);"># Launch local studio (handles venv and opens browser automatically)</div>
+      <div style="color:var(--text-primary);">./run_studio.sh</div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="landing-footer">
+    <div class="footer-content">
+      <div>
+        <span>Created by <strong>SahooShuvranshu</strong> • Powered by Kitten-TTS 2</span>
+      </div>
+      <div style="display:flex; gap:16px;">
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" style="color:var(--text-secondary);">GitHub</a>
+        <a href="https://sahooshuvranshu.github.io/KittenTTS-Studio" style="color:var(--text-secondary);">Showcase</a>
+        <a href="/studio" style="color:var(--accent-meter);">Open Studio →</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
