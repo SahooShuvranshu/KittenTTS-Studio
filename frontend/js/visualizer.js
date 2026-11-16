@@ -1,6 +1,6 @@
 /**
  * Kitten-TTS 2 Studio — Oscilloscope Visualizer
- * Real-time hardware waveform rendering using Web Audio API
+ * Real-time Cute Brutalist waveform rendering with dual neon glow
  */
 class OscilloscopeVisualizer {
   constructor(canvasId, audioElement) {
@@ -69,7 +69,7 @@ class OscilloscopeVisualizer {
     const h = this.height;
     const ctx = this.ctx;
 
-    ctx.strokeStyle = '#181B22';
+    ctx.strokeStyle = '#1a1e2c';
     ctx.lineWidth = 1;
 
     // Horizontal center and quarter lines
@@ -100,13 +100,15 @@ class OscilloscopeVisualizer {
     ctx.clearRect(0, 0, w, h);
     this.drawGrid();
 
-    // Quiet center line
-    ctx.strokeStyle = '#2D3342';
-    ctx.lineWidth = 1;
+    // Quiet center line with cute kitty pink & mint dots
+    ctx.strokeStyle = '#ff70a6';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
     ctx.beginPath();
     ctx.moveTo(0, h * 0.5);
     ctx.lineTo(w, h * 0.5);
     ctx.stroke();
+    ctx.setLineDash([]);
   }
 
   render() {
@@ -122,9 +124,16 @@ class OscilloscopeVisualizer {
     ctx.clearRect(0, 0, w, h);
     this.drawGrid();
 
-    // Waveform line in Studio Green
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = '#00E599';
+    // Waveform line in vibrant Cute Brutalist Cyber Mint -> Bubblegum Pink gradient
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, '#00f59b');
+    grad.addColorStop(0.5, '#fff9e6');
+    grad.addColorStop(1, '#ff70a6');
+
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = grad;
+    ctx.shadowColor = '#ff70a6';
+    ctx.shadowBlur = 6;
     ctx.beginPath();
 
     const sliceWidth = w / this.dataArray.length;
@@ -144,6 +153,7 @@ class OscilloscopeVisualizer {
 
     ctx.lineTo(w, h / 2);
     ctx.stroke();
+    ctx.shadowBlur = 0; // reset blur
   }
 }
 

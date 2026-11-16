@@ -30,6 +30,12 @@
 
 <br/>
 
+<p align="center">
+  <img src="frontend/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface" width="100%" style="border-radius:6px; border:2px solid #000;" />
+</p>
+
+<br/>
+
 [**Live Showcase & Interactive Demo**](https://sahooshuvranshu.github.io/KittenTTS-Studio) • [**Architecture Docs**](ARCHITECTURE.md) • [**Contributing Guide**](CONTRIBUTING.md)
 
 </div>

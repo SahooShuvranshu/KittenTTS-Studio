@@ -1,33 +1,43 @@
 /* ==========================================================================
-   KITTEN-TTS 2 STUDIO — HARDWARE AUDIO CONSOLE THEME
-   Strict 4px grid • Hardware Aesthetic • Minimalist Palette
+   KITTEN-TTS 2 STUDIO — CUTE BRUTALIST HARDWARE CONSOLE
+   Brutalism × Kitty Aesthetic • 2.5px Solid Black Borders • Hard Offset Shadows
    ========================================================================== */
 
 :root {
-  --bg-base: #0B0C0E;
-  --bg-surface: #121419;
-  --bg-surface-raised: #181B22;
-  --bg-surface-sunken: #07080A;
+  --bg-base: #0c0e14;
+  --bg-surface: #141722;
+  --bg-surface-raised: #1c202e;
+  --bg-surface-sunken: #08090d;
   
-  --border-subtle: #1F232D;
-  --border-strong: #2D3342;
-  --border-focus: #4F586E;
+  --border-dark: #000000;
+  --border-subtle: #242938;
+  --border-focus: #ff70a6;
   
-  --text-primary: #EDEDF0;
-  --text-secondary: #9096A5;
-  --text-muted: #565D6D;
+  --text-primary: #fdfdfd;
+  --text-secondary: #9aa1b2;
+  --text-muted: #5d6579;
   
-  --accent-meter: #00E599;
-  --accent-meter-bg: rgba(0, 229, 153, 0.12);
-  --accent-rec: #FF3B30;
-  --accent-rec-bg: rgba(255, 59, 48, 0.15);
-  --accent-active: #E2E8F0;
-  
+  --kitty-pink: #ff70a6;
+  --kitty-pink-light: #ffb3ce;
+  --kitty-pink-bg: rgba(255, 112, 166, 0.15);
+
+  --kitty-mint: #00f59b;
+  --kitty-mint-bg: rgba(0, 245, 155, 0.15);
+
+  --kitty-cream: #fff9e6;
+  --kitty-lavender: #b388ff;
+  --kitty-yellow: #ffd166;
+  --kitty-coral: #ff4757;
+  --kitty-coral-bg: rgba(255, 71, 87, 0.2);
+
   --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   
-  --radius-panel: 6px;
-  --radius-control: 4px;
+  --radius-brutal: 4px;
+  --shadow-brutal: 4px 4px 0px #000000;
+  --shadow-brutal-sm: 2px 2px 0px #000000;
+  --shadow-brutal-pink: 4px 4px 0px #ff70a6;
+  --shadow-brutal-mint: 4px 4px 0px #00f59b;
 }
 
 * {
@@ -46,9 +56,10 @@ body {
   -webkit-font-smoothing: antialiased;
   display: flex;
   flex-direction: column;
+  background-image: radial-gradient(rgba(255, 112, 166, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* Tabular figures for numbers, timers and metrics */
 .tabular {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
@@ -57,47 +68,84 @@ body {
 /* ==================== TOP TELEMETRY HUD ==================== */
 .hud-bar {
   background-color: var(--bg-surface-sunken);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 8px 16px;
+  border-bottom: 2.5px solid var(--border-dark);
+  padding: 8px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--text-muted);
+  box-shadow: 0 2px 0px #000000;
 }
 
 .hud-group {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+.hud-back-btn {
+  color: #000000;
+  background: var(--kitty-cream);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: 2px 2px 0px #000000;
+  transition: transform 60ms ease, box-shadow 60ms ease;
+}
+
+.hud-back-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
+}
+
+.hud-back-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000000;
 }
 
 .hud-item {
   display: flex;
   align-items: center;
   gap: 6px;
+  background: var(--bg-surface);
+  padding: 4px 10px;
+  border: 1.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: 2px 2px 0px #000000;
 }
 
 .hud-label {
   color: var(--text-muted);
   text-transform: uppercase;
+  font-weight: 700;
   letter-spacing: 0.5px;
+  font-size: 10px;
 }
 
 .hud-val {
   color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .hud-val.active {
-  color: var(--accent-meter);
+  color: var(--kitty-mint);
 }
 
 .hud-status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background-color: var(--accent-meter);
+  background-color: var(--kitty-mint);
+  box-shadow: 0 0 6px var(--kitty-mint);
   display: inline-block;
 }
 
@@ -109,22 +157,24 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 16px;
-  gap: 16px;
+  gap: 18px;
 }
 
-/* Column Panels */
+/* Brutalist Column Panels */
 .panel {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-panel);
+  border: 2.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: var(--shadow-brutal);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 .panel-header {
   padding: 12px 16px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 2.5px solid var(--border-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,10 +183,10 @@ body {
 
 .panel-title {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.75px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-family: var(--font-mono);
   display: flex;
   align-items: center;
@@ -154,7 +204,7 @@ body {
 
 /* Width Layout */
 .panel-left {
-  flex: 0 0 340px;
+  flex: 0 0 350px;
 }
 
 .panel-center {
@@ -163,109 +213,120 @@ body {
 }
 
 .panel-right {
-  flex: 0 0 380px;
+  flex: 0 0 390px;
 }
 
 /* ==================== BUTTONS & CONTROLS ==================== */
 button, .btn {
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
-  padding: 8px 12px;
-  border-radius: var(--radius-control);
-  border: 1px solid var(--border-strong);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: var(--radius-brutal);
+  border: 2px solid var(--border-dark);
   background-color: var(--bg-surface-raised);
   color: var(--text-primary);
+  box-shadow: 3px 3px 0px #000000;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: background-color 100ms ease, border-color 100ms ease, transform 60ms ease;
+  transition: transform 60ms ease, box-shadow 60ms ease, background-color 80ms ease;
   user-select: none;
 }
 
 button:hover, .btn:hover {
-  background-color: #1F232B;
-  border-color: var(--border-focus);
+  background-color: #242a3b;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #000000;
 }
 
 button:active, .btn:active {
-  transform: translateY(1px);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000000;
 }
 
 button:focus-visible {
-  outline: 2px solid var(--border-focus);
+  outline: 2px solid var(--kitty-pink);
   outline-offset: 1px;
 }
 
-/* Primary Hardware CTA Button */
+/* Primary Brutalist Button (Cute Pink) */
 .btn-primary {
-  background-color: var(--accent-active);
-  color: #0B0C0E;
-  border-color: #FFFFFF;
-  font-weight: 600;
+  background-color: var(--kitty-pink);
+  color: #000000;
+  font-weight: 800;
+  box-shadow: 4px 4px 0px #000000;
 }
 
 .btn-primary:hover {
-  background-color: #FFFFFF;
-  border-color: #FFFFFF;
+  background-color: #ff85b3;
+  box-shadow: 5px 5px 0px #000000;
 }
 
+/* Danger / Recording Button */
 .btn-danger {
-  border-color: rgba(255, 59, 48, 0.4);
-  color: #FF5A52;
+  background-color: var(--kitty-coral);
+  color: #ffffff;
+  border-color: var(--border-dark);
 }
 
 .btn-danger:hover {
-  background-color: var(--accent-rec-bg);
-  border-color: var(--accent-rec);
+  background-color: #ff5e6e;
 }
 
+/* Expression & Micro Tags */
 .btn-tag {
   font-size: 10px;
-  padding: 4px 8px;
+  font-weight: 700;
+  padding: 4px 9px;
   background-color: var(--bg-surface-sunken);
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
+  border: 1.5px solid var(--border-dark);
+  color: var(--text-primary);
+  box-shadow: 2px 2px 0px #000000;
 }
 
 .btn-tag:hover {
-  background-color: var(--bg-surface-raised);
-  color: var(--text-primary);
-  border-color: var(--border-strong);
+  background-color: var(--kitty-pink);
+  color: #000000;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
 }
 
 /* ==================== TABS ==================== */
 .tab-row {
   display: flex;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .tab-btn {
   flex: 1;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
+  background: var(--bg-surface-sunken);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
   padding: 8px;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 700;
+  box-shadow: 2px 2px 0px #000000;
+  cursor: pointer;
+  transition: all 80ms ease;
 }
 
 .tab-btn.active {
-  color: var(--text-primary);
-  border-bottom-color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: var(--kitty-pink);
+  color: #000000;
+  box-shadow: 3px 3px 0px #000000;
 }
 
 /* ==================== DRAG & DROP UPLOAD ZONE ==================== */
 .dropzone {
-  border: 1px dashed var(--border-strong);
+  border: 2.5px dashed var(--kitty-pink);
   background-color: var(--bg-surface-sunken);
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-brutal);
   padding: 24px 16px;
   text-align: center;
   cursor: pointer;
@@ -273,21 +334,24 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  transition: border-color 120ms ease, background-color 120ms ease;
+  box-shadow: 3px 3px 0px #000000;
+  transition: all 120ms ease;
 }
 
 .dropzone:hover, .dropzone.dragover {
-  border-color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.02);
+  border-color: var(--kitty-mint);
+  background-color: rgba(0, 245, 155, 0.05);
+  box-shadow: 4px 4px 0px var(--kitty-mint);
 }
 
 .dropzone-icon {
-  color: var(--text-muted);
+  color: var(--kitty-pink);
 }
 
 .dropzone-text {
   font-size: 12px;
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .dropzone-hint {
@@ -299,12 +363,13 @@ button:focus-visible {
 /* ==================== RECORDER INTERFACE ==================== */
 .recorder-card {
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  box-shadow: 3px 3px 0px #000000;
 }
 
 .rec-timer-row {
@@ -314,8 +379,8 @@ button:focus-visible {
 }
 
 .rec-time {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 800;
   color: var(--text-primary);
   font-family: var(--font-mono);
 }
@@ -326,11 +391,17 @@ button:focus-visible {
   gap: 6px;
   font-family: var(--font-mono);
   font-size: 10px;
+  font-weight: 700;
   color: var(--text-muted);
+  background: #000000;
+  padding: 2px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--border-subtle);
 }
 
 .rec-indicator.active {
-  color: var(--accent-rec);
+  color: var(--kitty-coral);
+  border-color: var(--kitty-coral);
 }
 
 .rec-dot {
@@ -341,13 +412,15 @@ button:focus-visible {
 }
 
 .rec-indicator.active .rec-dot {
-  background-color: var(--accent-rec);
+  background-color: var(--kitty-coral);
+  box-shadow: 0 0 6px var(--kitty-coral);
 }
 
 /* Audio Level VU Meter */
 .vu-meter {
-  height: 6px;
-  background-color: var(--bg-surface-raised);
+  height: 8px;
+  background-color: #000000;
+  border: 1.5px solid var(--border-dark);
   border-radius: 2px;
   overflow: hidden;
   position: relative;
@@ -356,7 +429,7 @@ button:focus-visible {
 .vu-meter-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--accent-meter) 0%, #EAB308 80%, var(--accent-rec) 100%);
+  background: linear-gradient(90deg, var(--kitty-mint) 0%, var(--kitty-yellow) 75%, var(--kitty-coral) 100%);
   transition: width 60ms linear;
 }
 
@@ -364,30 +437,33 @@ button:focus-visible {
 .profile-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   max-height: 220px;
   overflow-y: auto;
 }
 
 .profile-card {
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
   padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  transition: border-color 100ms ease;
+  box-shadow: 2px 2px 0px #000000;
+  transition: all 80ms ease;
 }
 
 .profile-card:hover {
-  border-color: var(--border-strong);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
 }
 
 .profile-card.selected {
-  border-color: var(--accent-meter);
-  background-color: var(--accent-meter-bg);
+  border-color: var(--kitty-pink);
+  background-color: rgba(255, 112, 166, 0.08);
+  box-shadow: 3px 3px 0px var(--kitty-pink);
 }
 
 .profile-info {
@@ -397,7 +473,7 @@ button:focus-visible {
 }
 
 .profile-name {
-  font-weight: 500;
+  font-weight: 700;
   font-size: 12px;
   color: var(--text-primary);
 }
@@ -421,9 +497,10 @@ button:focus-visible {
   flex: 1;
   min-height: 200px;
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
-  padding: 14px;
+  border: 2.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: var(--shadow-brutal);
+  padding: 16px;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 14px;
@@ -433,7 +510,8 @@ button:focus-visible {
 
 .studio-textarea:focus {
   outline: none;
-  border-color: var(--border-focus);
+  border-color: var(--kitty-pink);
+  box-shadow: 4px 4px 0px var(--kitty-pink);
 }
 
 .tag-toolbar {
@@ -447,7 +525,8 @@ button:focus-visible {
 .tag-toolbar-label {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--text-muted);
+  font-weight: 800;
+  color: var(--kitty-pink);
   text-transform: uppercase;
   margin-right: 4px;
 }
@@ -466,29 +545,33 @@ button:focus-visible {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 700;
   color: var(--text-secondary);
 }
 
 select {
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-strong);
+  border: 2px solid var(--border-dark);
   color: var(--text-primary);
-  padding: 6px 10px;
-  border-radius: var(--radius-control);
+  padding: 6px 12px;
+  border-radius: var(--radius-brutal);
+  box-shadow: 2px 2px 0px #000000;
   font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 700;
 }
 
 select:focus {
   outline: none;
-  border-color: var(--border-focus);
+  border-color: var(--kitty-pink);
 }
 
 /* ==================== AUDIO VAULT & OSCILLOSCOPE ==================== */
 .waveform-canvas-box {
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
+  border: 2.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: var(--shadow-brutal);
   padding: 8px;
   height: 120px;
   position: relative;
@@ -508,33 +591,38 @@ select:focus {
   align-items: center;
   gap: 12px;
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: var(--shadow-brutal);
   padding: 10px 14px;
 }
 
 .player-scrubber {
   flex: 1;
   -webkit-appearance: none;
-  height: 4px;
-  background-color: var(--border-strong);
-  border-radius: 2px;
+  height: 6px;
+  background-color: #000000;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
   cursor: pointer;
 }
 
 .player-scrubber::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--text-primary);
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background-color: var(--kitty-pink);
+  border: 1.5px solid #000000;
+  box-shadow: 1px 1px 0px #000000;
   cursor: pointer;
 }
 
 .player-time {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--text-muted);
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 
 /* History Vault List */
@@ -548,16 +636,19 @@ select:focus {
 
 .history-card {
   background-color: var(--bg-surface-sunken);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-control);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
   padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  box-shadow: 2px 2px 0px #000000;
+  transition: all 80ms ease;
 }
 
 .history-card:hover {
-  border-color: var(--border-strong);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #000000;
 }
 
 .history-text {
@@ -595,12 +686,13 @@ select:focus {
 }
 
 .toast {
-  background-color: var(--bg-surface-raised);
-  border: 1px solid var(--border-strong);
-  color: var(--text-primary);
+  background-color: var(--kitty-cream);
+  border: 2.5px solid var(--border-dark);
+  color: #000000;
   font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 700;
   padding: 10px 16px;
-  border-radius: var(--radius-control);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-brutal);
+  box-shadow: 4px 4px 0px #000000;
 }

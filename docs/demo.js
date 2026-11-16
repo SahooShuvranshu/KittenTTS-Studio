@@ -1,5 +1,6 @@
 /**
  * Kitten-TTS 2 Studio — GitHub Pages Showcase Interactive Controller
+ * Cute Brutalist Oscilloscope Demo
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,10 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = canvas.getContext('2d');
   const playBtn = document.getElementById('demoPlayBtn');
   const trackTitle = document.getElementById('demoTrackTitle');
+  const trackDuration = document.getElementById('demoDuration');
 
   let isPlaying = false;
   let animId = null;
   let phase = 0;
+  let width = 600;
+  let height = 110;
 
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
@@ -22,16 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     draw();
   }
 
-  let width = 600;
-  let height = 100;
   window.addEventListener('resize', resize);
   resize();
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
 
-    // Grid lines
-    ctx.strokeStyle = '#181B22';
+    // Grid line
+    ctx.strokeStyle = '#181b28';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, height * 0.5);
@@ -39,18 +41,28 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.stroke();
 
     if (!isPlaying) {
-      ctx.strokeStyle = '#2D3342';
-      ctx.lineWidth = 1;
+      // Idle dashed center line with cute pink tint
+      ctx.strokeStyle = '#ff70a6';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(0, height * 0.5);
       ctx.lineTo(width, height * 0.5);
       ctx.stroke();
+      ctx.setLineDash([]);
       return;
     }
 
-    // Oscilloscope wave animation in Studio Green
-    ctx.strokeStyle = '#00E599';
-    ctx.lineWidth = 1.5;
+    // Oscilloscope wave animation with Cute Brutalist Mint-to-Pink gradient
+    const grad = ctx.createLinearGradient(0, 0, width, 0);
+    grad.addColorStop(0, '#00f59b');
+    grad.addColorStop(0.5, '#fff9e6');
+    grad.addColorStop(1, '#ff70a6');
+
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = '#ff70a6';
+    ctx.shadowBlur = 6;
     ctx.beginPath();
 
     const points = 120;
@@ -59,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i <= points; i++) {
       const x = i * slice;
       const angle = (i * 0.15) + phase;
-      const amp = Math.sin(angle * 0.5) * 25 + Math.cos(angle * 1.8) * 12;
+      const amp = Math.sin(angle * 0.5) * 28 + Math.cos(angle * 1.8) * 14;
       const y = (height * 0.5) + amp;
 
       if (i === 0) {
@@ -69,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     ctx.stroke();
+    ctx.shadowBlur = 0;
 
     phase += 0.08;
     animId = requestAnimationFrame(draw);
@@ -80,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     { title: "Demo 2: Cloned Voice — [whisper] Intimate Delivery", duration: "00:04.8" },
     { title: "Demo 3: Cloned Voice — <laugh> Event Syntax", duration: "00:05.2" }
   ];
-  let currentTrackIdx = 0;
 
   playBtn.addEventListener('click', () => {
     isPlaying = !isPlaying;
@@ -97,12 +109,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.track-select-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = parseInt(btn.getAttribute('data-idx'));
-      currentTrackIdx = idx;
-      trackTitle.textContent = tracks[idx].title;
-      document.getElementById('demoDuration').textContent = tracks[idx].duration;
-      isPlaying = true;
-      playBtn.textContent = '⏸ PAUSE';
-      draw();
+      if (tracks[idx]) {
+        trackTitle.textContent = tracks[idx].title;
+        trackDuration.textContent = tracks[idx].duration;
+      }
+      document.querySelectorAll('.track-select-btn').forEach(b => {
+        b.style.borderColor = 'var(--border-dark)';
+        b.style.backgroundColor = 'var(--bg-surface-raised)';
+        b.style.color = 'var(--text-primary)';
+      });
+      btn.style.borderColor = 'var(--border-dark)';
+      btn.style.backgroundColor = 'var(--kitty-pink)';
+      btn.style.color = '#000000';
     });
   });
 });

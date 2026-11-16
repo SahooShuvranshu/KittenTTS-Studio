@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kitten-TTS 2 Studio — Audio Workstation Console</title>
-  <meta name="description" content="Industrial zero-shot voice cloning and speech synthesis console powered by Kitten-TTS 2 (1.7B Ternary SLM). By SahooShuvranshu.">
+  <meta name="description" content="Cute Brutalist zero-shot voice cloning and speech synthesis console powered by Kitten-TTS 2 (1.7B Ternary SLM). By SahooShuvranshu.">
   <meta name="author" content="SahooShuvranshu">
   
   <!-- Open Graph / Facebook -->
@@ -29,8 +29,8 @@
   <!-- ==================== TOP TELEMETRY HUD ==================== -->
   <header class="hud-bar">
     <div class="hud-group">
-      <a href="/" style="color:var(--text-secondary); text-decoration:none; font-family:var(--font-mono); font-size:11px; display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border:1px solid var(--border-strong); border-radius:3px; background:var(--bg-surface-raised);">
-        ← OVERVIEW
+      <a href="/" class="hud-back-btn">
+        ← 🐾 OVERVIEW
       </a>
       <div class="hud-item">
         <span class="hud-status-dot"></span>
@@ -70,36 +70,36 @@
     <section class="panel panel-left">
       <div class="panel-header">
         <span class="panel-title">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-          Voice Identity
+          <span>🐾</span>
+          Voice Identity Hub
         </span>
       </div>
 
       <div class="panel-body">
         <!-- Tab Selectors -->
         <div class="tab-row">
-          <button id="tabUpload" class="tab-btn active">UPLOAD AUDIO</button>
-          <button id="tabRecord" class="tab-btn">RECORD MIC</button>
+          <button id="tabUpload" class="tab-btn active">🐾 UPLOAD AUDIO</button>
+          <button id="tabRecord" class="tab-btn">🎙 RECORD MIC</button>
         </div>
 
         <!-- UPLOAD VIEW -->
         <div id="viewUpload" style="display:flex; flex-direction:column; gap:12px;">
           <input type="file" id="audioFileInput" accept=".wav,.mp3,.m4a,.flac,.ogg" style="display:none;">
           <div id="dropzone" class="dropzone">
-            <svg class="dropzone-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-            <span class="dropzone-text">Drop voice audio file here</span>
-            <span class="dropzone-hint">WAV, MP3, M4A, FLAC, OGG (5-30s optimal)</span>
+            <svg class="dropzone-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+            <span class="dropzone-text">Drop voice reference audio here</span>
+            <span class="dropzone-hint">🐾 WAV, MP3, M4A, FLAC, OGG (5-30s optimal)</span>
           </div>
 
           <!-- Uploaded Preview & Save -->
-          <div id="uploadPreview" style="display:none; flex-direction:column; gap:8px; background:var(--bg-surface-sunken); padding:10px; border:1px solid var(--border-subtle); border-radius:var(--radius-control);">
+          <div id="uploadPreview" style="display:none; flex-direction:column; gap:8px; background:var(--bg-surface-sunken); padding:12px; border:2px solid var(--border-dark); border-radius:var(--radius-brutal); box-shadow:3px 3px 0px #000;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span id="uploadFileName" style="font-weight:500; font-size:11px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:180px;"></span>
-              <span id="uploadFileMeta" class="tabular" style="font-size:10px; color:var(--text-muted);"></span>
+              <span id="uploadFileName" style="font-weight:700; font-size:11px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:180px;"></span>
+              <span id="uploadFileMeta" class="tabular" style="font-size:10px; color:var(--kitty-mint);"></span>
             </div>
             <audio id="uploadAudioPreview" controls style="width:100%; height:32px; margin:4px 0;"></audio>
-            <input type="text" id="profileNameInput" placeholder="Profile Name (e.g. My Voice)" style="background:var(--bg-surface); border:1px solid var(--border-strong); border-radius:var(--radius-control); padding:6px 8px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono);">
-            <button id="saveProfileBtn" class="btn btn-primary" style="padding:6px 10px;">SAVE AS VOICE PROFILE</button>
+            <input type="text" id="profileNameInput" placeholder="Profile Name (e.g. My Voice)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
+            <button id="saveProfileBtn" class="btn btn-primary" style="padding:8px 12px;">🐾 SAVE AS VOICE PROFILE</button>
           </div>
         </div>
 
@@ -121,18 +121,18 @@
           </div>
 
           <!-- Recorded Preview & Save -->
-          <div id="recPreview" style="display:none; flex-direction:column; gap:8px; background:var(--bg-surface-sunken); padding:10px; border:1px solid var(--border-subtle); border-radius:var(--radius-control);">
-            <span style="font-weight:500; font-size:11px; color:var(--text-primary);">Recorded Audio Sample</span>
+          <div id="recPreview" style="display:none; flex-direction:column; gap:8px; background:var(--bg-surface-sunken); padding:12px; border:2px solid var(--border-dark); border-radius:var(--radius-brutal); box-shadow:3px 3px 0px #000;">
+            <span style="font-weight:700; font-size:11px; color:var(--text-primary);">Recorded Audio Sample</span>
             <audio id="recAudioPreview" controls style="width:100%; height:32px; margin:4px 0;"></audio>
-            <input type="text" id="recProfileNameInput" placeholder="Profile Name (e.g. My Voice Mic)" style="background:var(--bg-surface); border:1px solid var(--border-strong); border-radius:var(--radius-control); padding:6px 8px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono);">
-            <button id="saveRecProfileBtn" class="btn btn-primary" style="padding:6px 10px;">SAVE AS VOICE PROFILE</button>
+            <input type="text" id="recProfileNameInput" placeholder="Profile Name (e.g. My Mic Voice)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
+            <button id="saveRecProfileBtn" class="btn btn-primary" style="padding:8px 12px;">🐾 SAVE AS VOICE PROFILE</button>
           </div>
         </div>
 
         <!-- SAVED PROFILES LIST -->
         <div style="margin-top:8px; display:flex; flex-direction:column; gap:8px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase;">Saved Voice Profiles</span>
+            <span style="font-size:11px; font-family:var(--font-mono); font-weight:700; color:var(--kitty-pink); text-transform:uppercase;">🐱 Saved Voice Profiles</span>
           </div>
           <div id="profileList" class="profile-list">
             <!-- Dynamically populated -->
@@ -146,19 +146,19 @@
     <section class="panel panel-center">
       <div class="panel-header">
         <span class="panel-title">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m18 8-8 8"/><path d="m14 4 6 6"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4Z"/></svg>
+          <span>🐱</span>
           Speech Synthesizer
         </span>
         <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); display:flex; align-items:center;">
-          ACTIVE VOICE:&nbsp;<span id="activeVoiceName" style="color:var(--text-primary); font-weight:500;">None (Default / Uploaded)</span>
-          <button id="resetVoiceBtn" class="btn btn-tag" style="padding:1px 6px; margin-left:8px;" title="Clear selected voice profile">Clear</button>
+          ACTIVE VOICE:&nbsp;<span id="activeVoiceName" style="color:var(--kitty-mint); font-weight:700;">None (Default / Uploaded)</span>
+          <button id="resetVoiceBtn" class="btn btn-tag" style="padding:2px 8px; margin-left:8px;" title="Clear selected voice profile">Clear</button>
         </div>
       </div>
 
       <div class="panel-body">
         <!-- Tag Quick Toolbar -->
         <div class="tag-toolbar">
-          <span class="tag-toolbar-label">EXPRESSIONS:</span>
+          <span class="tag-toolbar-label">🐾 EXPRESSIONS:</span>
           <button class="btn btn-tag" data-tag="[happy]">happy</button>
           <button class="btn btn-tag" data-tag="[whisper]">whisper</button>
           <button class="btn btn-tag" data-tag="[excited]">excited</button>
@@ -170,9 +170,9 @@
 
         <!-- Text Input Area -->
         <div class="studio-textarea-wrap">
-          <textarea id="textPrompt" class="studio-textarea" placeholder="Type or paste the text you want your cloned voice to speak..."></textarea>
-          <div style="display:flex; justify-content:space-between; padding:6px 4px; font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">
-            <span>Supports natural language and inline expression tags</span>
+          <textarea id="textPrompt" class="studio-textarea" placeholder="Type or paste the speech prompt for your cloned voice... Use inline tags like [happy] or (((emphasis))) to customize expression."></textarea>
+          <div style="display:flex; justify-content:space-between; padding:8px 4px 0; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); font-weight:600;">
+            <span>🐾 Supports natural speech and inline emotion syntax</span>
             <span id="charCount" class="tabular">0 chars</span>
           </div>
         </div>
@@ -189,10 +189,10 @@
             </select>
           </div>
 
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span id="latencyBadge" class="tabular" style="font-size:11px; color:var(--text-muted);">Ready</span>
-            <button id="synthesizeBtn" class="btn btn-primary" style="padding:10px 20px; font-size:12px;">
-              ⚡ SYNTHESIZE SPEECH
+          <div style="display:flex; align-items:center; gap:14px;">
+            <span id="latencyBadge" class="tabular" style="font-size:11px; color:var(--kitty-mint); font-weight:700;">Ready</span>
+            <button id="synthesizeBtn" class="btn btn-primary" style="padding:10px 22px; font-size:12px;">
+              ⚡ 🐾 SYNTHESIZE SPEECH
             </button>
           </div>
         </div>
@@ -203,8 +203,8 @@
     <section class="panel panel-right">
       <div class="panel-header">
         <span class="panel-title">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
-          Audio Output & Vault
+          <span>🧶</span>
+          Audio Vault & Oscilloscope
         </span>
       </div>
 
@@ -216,18 +216,18 @@
 
         <!-- Custom Audio Player Bar -->
         <div class="player-controls">
-          <button id="playBtn" class="btn" style="padding:6px 10px; width:72px;">▶ PLAY</button>
+          <button id="playBtn" class="btn" style="padding:8px 12px; width:80px; background:var(--kitty-mint); color:#000;">▶ PLAY</button>
           <input type="range" id="scrubber" class="player-scrubber" value="0" min="0" max="100" step="0.1">
           <span class="player-time tabular">
             <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span>
           </span>
-          <a id="downloadLink" href="#" class="btn btn-tag" style="display:none;" title="Download WAV">⬇ WAV</a>
+          <a id="downloadLink" href="#" class="btn btn-tag" style="display:none; background:var(--kitty-cream); color:#000;" title="Download WAV">⬇ 🐾 WAV</a>
         </div>
         <audio id="audioPlayer" style="display:none;"></audio>
 
         <!-- Generation History -->
         <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
-          <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted); text-transform:uppercase;">Recent Generations</span>
+          <span style="font-size:11px; font-family:var(--font-mono); font-weight:700; color:var(--kitty-pink); text-transform:uppercase;">🐾 Recent Generations</span>
           <div id="historyList" class="history-list">
             <!-- Dynamically populated -->
           </div>
