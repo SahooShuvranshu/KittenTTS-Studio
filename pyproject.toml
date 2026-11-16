@@ -1,11 +1,11 @@
 [project]
 name = "kitten-tts-studio"
 version = "1.0.0"
-description = "Industrial, unslopped local zero-shot voice cloning studio powered by Kitten-TTS 2"
+description = "Local zero-shot voice cloning and speech synthesis studio powered by Kitten-TTS 2"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    { name = "SahooShuvranshu", email = "shuvransu.sahoo@gmail.com" }
+    { name = "Shuvransu", email = "shuvransu.sahoo@gmail.com" }
 ]
 license = { text = "MIT" }
 dependencies = [

@@ -67,11 +67,11 @@ Examples:
 
 ---
 
-## 🎨 UI/UX Unslopped Design Standards
+## 🎨 UI/UX Design Standards
 
-Any contribution to the dashboard or showcase pages **must adhere to the `/unslop` design protocol**:
+Any contribution to the dashboard or showcase pages should follow our clean design principles:
 1. **4px Grid**: All margins, paddings, gaps, and component sizes must strictly align to multiples of 4px.
-2. **Quiet Chrome**: Do not add purple gradients, glow shadows, or neon borders. Depth is created with subtle surface steps and 1px crisp borders (`#1F232D`).
+2. **Quiet Palette**: Depth is created with subtle surface steps and 1px crisp borders (`#1F232D`).
 3. **No Decorative Emojis**: Use consistent line icons (Lucide icon set, 16px size, 1.5 stroke).
 4. **Tabular Numerics**: Apply `font-variant-numeric: tabular-nums` to timecodes, frequencies, file sizes, and audio metrics.
 5. **Memory Discipline**: All backend routines must strictly preserve the 8 GB RAM physical memory budget.

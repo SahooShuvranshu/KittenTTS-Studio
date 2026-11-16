@@ -8,7 +8,7 @@ This document details the engineering specifications, memory constraints, model 
 
 ```mermaid
 flowchart TD
-    subgraph Client["🖥️ Unslopped Industrial Frontend"]
+    subgraph Client["🖥️ Studio Console Frontend"]
         Landing["Landing Page (index.html)"]
         Studio["Studio Console (studio.html)"]
         Oscilloscope["Web Audio API Oscilloscope & VU Meter"]
@@ -88,13 +88,13 @@ sequenceDiagram
 
 ---
 
-## 4. UI/UX: The `/unslop` Hardware Aesthetic
+## 4. UI/UX: Minimalist Hardware Console Aesthetic
 
-The interface conforms to the `/unslop` design protocol created by Damir Sokolovsky:
+The interface focuses on functional, high-density audio workstation craft:
 - **Spatial Consistency**: A strict **4px layout grid** governs all elements (8px, 12px, 16px, 24px, 32px padding and gaps).
 - **Color Discipline**: Built upon a neutral graphite ramp (`#0B0C0E` base, `#121419` surface, `#1F232D` borders) with a single studio-green accent (`#00E599`).
-- **No Decorative Slop**: Zero purple gradients, no glowing blobs, no decorative emojis (16px line icons only).
-- **One Bright Element**: The live oscilloscope canvas visualizer and real-time audio VU-meter.
+- **Clean Elements**: Zero purple gradients, no glowing blobs, no decorative emojis (16px line icons only).
+- **Interactive Oscilloscope**: The live oscilloscope canvas visualizer and real-time audio VU-meter provide immediate feedback.
 
 ---
 

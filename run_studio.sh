@@ -13,7 +13,7 @@ PORT=8765
 HOST="127.0.0.1"
 
 echo "==========================================================="
-echo "   KITTEN-TTS 2 STUDIO — UNSLOPPED INDUSTRIAL CONSOLE"
+echo "   KITTEN-TTS 2 STUDIO — HARDWARE AUDIO CONSOLE"
 echo "==========================================================="
 echo " Directory: $SCRIPT_DIR"
 echo " Host:      http://$HOST:$PORT"

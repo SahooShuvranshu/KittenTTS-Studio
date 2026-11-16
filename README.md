@@ -2,32 +2,31 @@
 
 # 🎙️ Kitten-TTS 2 Studio
 
-**An industrial, unslopped local zero-shot voice cloning and speech synthesis console.**  
-*Powered by Kitten-TTS 2 (1.7B Ternary SLM) • 100% Offline • CPU-Optimized for 8 GB Systems*
+**An industrial, high-performance local speech synthesis and zero-shot voice cloning console.**  
+*Powered by Kitten-TTS 2 (1.7B Ternary SLM) • 100% Offline • Built by Shuvransu with the help of Antigravity*
 
 <br/>
 
-<!-- ==================== BADGE MATRIX ==================== -->
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-2B3245?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Model](https://img.shields.io/badge/Model-Kitten--TTS%202%20(1.7B)-00E599?style=flat-square&color=00E599&labelColor=0E1116)](https://huggingface.co/KittenML/kitten-tts-2)
-[![Weights](https://img.shields.io/badge/Weights-1.6--bit%20Ternary%20SLM-2B3245?style=flat-square&labelColor=0E1116)]()
-[![Audio Output](https://img.shields.io/badge/Audio-24kHz%20Mono%20WAV-3B82F6?style=flat-square&labelColor=0E1116)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-EDEDEF?style=flat-square&labelColor=0E1116)](LICENSE)
+<!-- ==================== BADGE MATRIX (FOR-THE-BADGE STYLE) ==================== -->
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Model](https://img.shields.io/badge/Model-Kitten--TTS%202%20(1.7B)-10B981?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/KittenML/kitten-tts-2)
+[![Weights](https://img.shields.io/badge/Weights-1.6--bit%20Ternary%20SLM-2B3245?style=for-the-badge&labelColor=0E1116)]()
+[![Audio Output](https://img.shields.io/badge/Audio-24kHz%20PCM%20WAV-2563EB?style=for-the-badge&logo=audio-technica&logoColor=white)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge&labelColor=0E1116)](LICENSE)
 
-[![Built with Antigravity AI](https://img.shields.io/badge/Built%20with-Antigravity%20AI%20(DeepMind)-00E599?style=flat-square&logo=google&logoColor=white)](https://deepmind.google)
-[![Hardware](https://img.shields.io/badge/RAM%20Envelope-8GB%20Compatible-E2E8F0?style=flat-square&labelColor=0E1116)]()
-[![VRAM Required](https://img.shields.io/badge/VRAM-0%20MB%20(CPU%20Only)-success?style=flat-square&labelColor=0E1116)]()
-[![Execution](https://img.shields.io/badge/Execution-AVX2%20Vectorized-2B3245?style=flat-square&labelColor=0E1116)]()
-[![Design System](https://img.shields.io/badge/Design-Unslopped%20Brutalism-black?style=flat-square&labelColor=0E1116)](https://heydamir.design/unslop)
-[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-informational?style=flat-square&labelColor=0E1116)]()
+[![Built with Antigravity AI](https://img.shields.io/badge/Built%20with-Antigravity%20AI-00E599?style=for-the-badge&logo=google&logoColor=white&labelColor=0E1116)](https://deepmind.google)
+[![RAM Budget](https://img.shields.io/badge/RAM%20Envelope-8GB%20Safe-8B5CF6?style=for-the-badge&labelColor=0E1116)]()
+[![Execution](https://img.shields.io/badge/Execution-CPU%20AVX2-6366F1?style=for-the-badge&labelColor=0E1116)]()
+[![Offline](https://img.shields.io/badge/Privacy-100%25%20Offline-EC4899?style=for-the-badge&labelColor=0E1116)]()
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-14B8A6?style=for-the-badge&logo=linux&logoColor=white)]()
 
-[![GitHub Stars](https://img.shields.io/github/stars/SahooShuvranshu/KittenTTS-Studio?style=flat-square&color=FFE600&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/SahooShuvranshu/KittenTTS-Studio?style=flat-square&color=EDEDEF&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/SahooShuvranshu/KittenTTS-Studio?style=flat-square&color=FF5A52&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square&labelColor=0E1116)](CONTRIBUTING.md)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=flat-square&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio)
+[![GitHub Stars](https://img.shields.io/github/stars/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FFE600&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=EDEDEF&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FF5A52&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-10B981?style=for-the-badge&labelColor=0E1116)](CONTRIBUTING.md)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-00E599?style=for-the-badge&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio)
 
 <br/>
 
@@ -39,7 +38,7 @@
 
 ## ⚡ Overview
 
-**Kitten-TTS 2 Studio** is an open-source, local audio workstation created by [SahooShuvranshu](https://github.com/SahooShuvranshu) to clone human voices and synthesize expressive speech with zero cloud dependencies.
+**Kitten-TTS 2 Studio** is an open-source, local audio workstation built by **Shuvransu** with the help of **Antigravity** (Google DeepMind) to clone human voices and synthesize expressive speech with zero cloud dependencies.
 
 Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language model compressed using exact 1.6-bit ternary weights—this studio runs comfortably on standard laptop CPUs within a strict **8 GB physical RAM budget**, producing broadcast-ready 24,000 Hz audio.
 
@@ -56,7 +55,7 @@ Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language m
   - Emotions: `[happy]`, `[whisper]`, `[serious]`, `[excited]`
   - Non-Speech Events: `<laugh>`, `<sigh>`
   - Stress & Prosody: `(((emphasis)))`
-- **Unslopped Industrial Dashboard**: Built in adherence to the `/unslop` design protocol. Zero purple gradients, no glowing blobs, and no decorative emojis. Features a real-time oscilloscope canvas and a strict 4px layout grid.
+- **Minimalist Studio Dashboard**: Clean, tactile audio engineering workstation layout featuring a real-time oscilloscope canvas and a strict 4px layout grid.
 - **100% Offline & Private**: Zero analytics, zero cloud transmission, zero telemetry.
 
 ---
@@ -65,7 +64,7 @@ Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language m
 
 ```mermaid
 flowchart TD
-    subgraph Frontend["🖥️ Unslopped Industrial Frontend"]
+    subgraph Frontend["🖥️ Modern Studio Frontend"]
         Landing["Landing Page (index.html)"]
         Studio["Studio Console (studio.html)"]
         Oscilloscope["Web Audio API Oscilloscope & VU Meter"]
@@ -194,12 +193,11 @@ Contributions are welcomed! Please read our [Contributing Guidelines](CONTRIBUTI
 
 ## 📜 Credits & Acknowledgments
 
-This project is made possible through the combined efforts of:
+This project is built by **Shuvransu** with the help of **Antigravity**:
 
-- **[SahooShuvranshu](https://github.com/SahooShuvranshu)**: Project Lead, System Architecture, & Open-Source Author.
+- **[Shuvransu](https://github.com/SahooShuvranshu)**: Lead Developer, System Architecture, & Open-Source Author.
 - **[Google DeepMind Antigravity](https://deepmind.google)**: Autonomous AI Architect & Agentic Co-Engineer.
 - **[KittenML Team](https://github.com/KittenML)**: Kitten-TTS 2 1.7B Speech Language Model and ternary quantization.
-- **[Damir Sokolovsky](https://heydamir.design/unslop)**: Creator of the `/unslop` design protocol.
 
 ---
 

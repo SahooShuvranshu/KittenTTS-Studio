@@ -27,7 +27,7 @@ When enabled on GitHub, this site is served at:
 ```
 docs/
 ├── index.html        # Main showcase landing page with SEO & Twitter Cards
-├── style.css         # Standalone Cyber-Brutalist stylesheet
+├── style.css         # Standalone stylesheet
 ├── demo.js           # Interactive audio audition & oscilloscope visualizer
 ├── assets/
 │   ├── og-card.png   # 1200x630 social media open graph card
