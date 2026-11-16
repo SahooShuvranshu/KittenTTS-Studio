@@ -1,0 +1,606 @@
+/* ==========================================================================
+   KITTEN-TTS 2 STUDIO — UNSLOPPED INDUSTRIAL AUDIO CONSOLE THEME
+   Strict 4px grid • Quiet Chrome • Physical Hardware Aesthetic
+   ========================================================================== */
+
+:root {
+  --bg-base: #0B0C0E;
+  --bg-surface: #121419;
+  --bg-surface-raised: #181B22;
+  --bg-surface-sunken: #07080A;
+  
+  --border-subtle: #1F232D;
+  --border-strong: #2D3342;
+  --border-focus: #4F586E;
+  
+  --text-primary: #EDEDF0;
+  --text-secondary: #9096A5;
+  --text-muted: #565D6D;
+  
+  --accent-meter: #00E599;
+  --accent-meter-bg: rgba(0, 229, 153, 0.12);
+  --accent-rec: #FF3B30;
+  --accent-rec-bg: rgba(255, 59, 48, 0.15);
+  --accent-active: #E2E8F0;
+  
+  --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  --radius-panel: 6px;
+  --radius-control: 4px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tabular figures for numbers, timers and metrics */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+/* ==================== TOP TELEMETRY HUD ==================== */
+.hud-bar {
+  background-color: var(--bg-surface-sunken);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hud-val {
+  color: var(--text-secondary);
+}
+
+.hud-val.active {
+  color: var(--accent-meter);
+}
+
+.hud-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-meter);
+  display: inline-block;
+}
+
+/* ==================== MAIN WORKSPACE ==================== */
+.app-container {
+  display: flex;
+  flex: 1;
+  max-width: 1540px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 16px;
+}
+
+/* Column Panels */
+.panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-panel);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-surface-raised);
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Width Layout */
+.panel-left {
+  flex: 0 0 340px;
+}
+
+.panel-center {
+  flex: 1;
+  min-width: 480px;
+}
+
+.panel-right {
+  flex: 0 0 380px;
+}
+
+/* ==================== BUTTONS & CONTROLS ==================== */
+button, .btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-strong);
+  background-color: var(--bg-surface-raised);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 100ms ease, border-color 100ms ease, transform 60ms ease;
+  user-select: none;
+}
+
+button:hover, .btn:hover {
+  background-color: #1F232B;
+  border-color: var(--border-focus);
+}
+
+button:active, .btn:active {
+  transform: translateY(1px);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 1px;
+}
+
+/* Primary Hardware CTA Button */
+.btn-primary {
+  background-color: var(--accent-active);
+  color: #0B0C0E;
+  border-color: #FFFFFF;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+.btn-danger {
+  border-color: rgba(255, 59, 48, 0.4);
+  color: #FF5A52;
+}
+
+.btn-danger:hover {
+  background-color: var(--accent-rec-bg);
+  border-color: var(--accent-rec);
+}
+
+.btn-tag {
+  font-size: 10px;
+  padding: 4px 8px;
+  background-color: var(--bg-surface-sunken);
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-tag:hover {
+  background-color: var(--bg-surface-raised);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* ==================== TABS ==================== */
+.tab-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 8px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* ==================== DRAG & DROP UPLOAD ZONE ==================== */
+.dropzone {
+  border: 1px dashed var(--border-strong);
+  background-color: var(--bg-surface-sunken);
+  border-radius: var(--radius-control);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.dropzone-icon {
+  color: var(--text-muted);
+}
+
+.dropzone-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.dropzone-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ==================== RECORDER INTERFACE ==================== */
+.recorder-card {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rec-timer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rec-time {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.rec-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.rec-indicator.active {
+  color: var(--accent-rec);
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+}
+
+.rec-indicator.active .rec-dot {
+  background-color: var(--accent-rec);
+}
+
+/* Audio Level VU Meter */
+.vu-meter {
+  height: 6px;
+  background-color: var(--bg-surface-raised);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.vu-meter-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-meter) 0%, #EAB308 80%, var(--accent-rec) 100%);
+  transition: width 60ms linear;
+}
+
+/* ==================== VOICE PROFILES LIST ==================== */
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.profile-card {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 100ms ease;
+}
+
+.profile-card:hover {
+  border-color: var(--border-strong);
+}
+
+.profile-card.selected {
+  border-color: var(--accent-meter);
+  background-color: var(--accent-meter-bg);
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-name {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.profile-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ==================== TEXT SYNTHESIS STUDIO ==================== */
+.studio-textarea-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.studio-textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 200px;
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 14px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.studio-textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.tag-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.tag-toolbar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+select {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+/* ==================== AUDIO VAULT & OSCILLOSCOPE ==================== */
+.waveform-canvas-box {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 8px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#oscilloscopeCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 10px 14px;
+}
+
+.player-scrubber {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  background-color: var(--border-strong);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.player-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  cursor: pointer;
+}
+
+.player-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* History Vault List */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-card {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-card:hover {
+  border-color: var(--border-strong);
+}
+
+.history-text {
+  font-size: 12px;
+  color: var(--text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.history-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.history-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* ==================== NOTIFICATIONS & TOASTS ==================== */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.toast {
+  background-color: var(--bg-surface-raised);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 10px 16px;
+  border-radius: var(--radius-control);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}

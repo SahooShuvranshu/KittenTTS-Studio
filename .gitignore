@@ -1,0 +1,35 @@
+# Environment & Runtimes
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Audio Outputs & Temp Files
+storage/outputs/*
+!storage/outputs/.gitkeep
+storage/temp/*
+!storage/temp/.gitkeep
+
+# User Voice Profiles (keep sample profiles, ignore private user profiles)
+# To preserve privacy by default:
+# storage/profiles/*
+# !storage/profiles/.gitkeep
+
+# Model weights and caches
+*.gguf
+*.safetensors
+*.bin
+*.onnx
+models/
+.cache/
+
+# System and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
