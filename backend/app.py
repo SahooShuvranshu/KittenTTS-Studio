@@ -5,6 +5,7 @@ import uuid
 import shutil
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -19,13 +20,28 @@ OUTPUTS_DIR = os.path.join(STORAGE_DIR, "outputs")
 PROFILES_DIR = os.path.join(STORAGE_DIR, "profiles")
 TEMP_DIR = os.path.join(STORAGE_DIR, "temp")
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+DOCS_DIR = os.path.join(BASE_DIR, "docs")
 HISTORY_FILE = os.path.join(OUTPUTS_DIR, "history.json")
 
 # Ensure directories exist
-for d in [STORAGE_DIR, OUTPUTS_DIR, PROFILES_DIR, TEMP_DIR]:
+for d in [STORAGE_DIR, OUTPUTS_DIR, PROFILES_DIR, TEMP_DIR, DOCS_DIR]:
     os.makedirs(d, exist_ok=True)
 
-app = FastAPI(title="Kitten-TTS 2 Studio", version="1.0.0")
+app = FastAPI(
+    title="Kitten-TTS 2 Studio",
+    version="1.0.0",
+    description="Industrial local zero-shot voice cloning and speech synthesis studio by SahooShuvranshu."
+)
+
+# Remote & Cloud CORS Configuration
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins if cors_origins != ["*"] else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Request Schemas
 class SynthesizeRequest(BaseModel):
@@ -221,6 +237,20 @@ def serve_audio(filename: str, temp: Optional[int] = 0, profile: Optional[int] =
 @app.get("/api/history")
 def get_history():
     return _read_history()
+
+@app.get("/studio")
+def serve_studio():
+    studio_html = os.path.join(FRONTEND_DIR, "studio.html")
+    if not os.path.exists(studio_html):
+        raise HTTPException(status_code=404, detail="Studio console not found.")
+    return FileResponse(studio_html, media_type="text/html")
+
+@app.get("/docs-showcase")
+def serve_docs_showcase():
+    docs_html = os.path.join(DOCS_DIR, "index.html")
+    if not os.path.exists(docs_html):
+        raise HTTPException(status_code=404, detail="Docs showcase not found.")
+    return FileResponse(docs_html, media_type="text/html")
 
 # Serve Frontend static assets
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
