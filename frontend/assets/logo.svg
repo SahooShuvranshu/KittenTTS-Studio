@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Phosphor CRT Green Glow Filter -->
+    <filter id="phosphorGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="14" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Signal Amber Glow Filter -->
+    <filter id="amberGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Linear Gradients for Instrument Faceplate -->
+    <linearGradient id="chassisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141822" />
+      <stop offset="50%" stop-color="#0c0e14" />
+      <stop offset="100%" stop-color="#06070a" />
+    </linearGradient>
+
+    <linearGradient id="screenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#030806" />
+      <stop offset="100%" stop-color="#010403" />
+    </linearGradient>
+
+    <linearGradient id="metalBezel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2a3040" />
+      <stop offset="50%" stop-color="#1a1e28" />
+      <stop offset="100%" stop-color="#353d52" />
+    </linearGradient>
+
+    <pattern id="crgGrid" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#00ff88" stroke-width="0.5" stroke-opacity="0.12" />
+    </pattern>
+  </defs>
+
+  <!-- Outer Drop Shadow Plate (Brutalist Hard Offset) -->
+  <rect x="22" y="22" width="476" height="476" rx="36" fill="#000000" />
+
+  <!-- Main Chassis Faceplate -->
+  <rect x="14" y="14" width="476" height="476" rx="34" fill="url(#chassisGrad)" stroke="#2d3548" stroke-width="3" />
+  <rect x="16" y="16" width="472" height="472" rx="32" fill="none" stroke="#000000" stroke-width="2" />
+
+  <!-- Corner Industrial Hex Bolts -->
+  <!-- Top-Left -->
+  <g transform="translate(44, 44)">
+    <circle r="14" fill="#181c26" stroke="#3d465c" stroke-width="2" />
+    <polygon points="0,-7 6,-3.5 6,3.5 0,7 -6,3.5 -6,-3.5" fill="#090a0d" stroke="#5a6685" stroke-width="1.5" />
+    <circle r="2.5" fill="#00ff88" opacity="0.8" />
+  </g>
+  <!-- Top-Right -->
+  <g transform="translate(468, 44)">
+    <circle r="14" fill="#181c26" stroke="#3d465c" stroke-width="2" />
+    <polygon points="0,-7 6,-3.5 6,3.5 0,7 -6,3.5 -6,-3.5" fill="#090a0d" stroke="#5a6685" stroke-width="1.5" />
+    <circle r="2.5" fill="#00ff88" opacity="0.8" />
+  </g>
+  <!-- Bottom-Left -->
+  <g transform="translate(44, 468)">
+    <circle r="14" fill="#181c26" stroke="#3d465c" stroke-width="2" />
+    <polygon points="0,-7 6,-3.5 6,3.5 0,7 -6,3.5 -6,-3.5" fill="#090a0d" stroke="#5a6685" stroke-width="1.5" />
+    <circle r="2.5" fill="#ff8800" opacity="0.8" />
+  </g>
+  <!-- Bottom-Right -->
+  <g transform="translate(468, 468)">
+    <circle r="14" fill="#181c26" stroke="#3d465c" stroke-width="2" />
+    <polygon points="0,-7 6,-3.5 6,3.5 0,7 -6,3.5 -6,-3.5" fill="#090a0d" stroke="#5a6685" stroke-width="1.5" />
+    <circle r="2.5" fill="#ff8800" opacity="0.8" />
+  </g>
+
+  <!-- Technical Silk-Screen Header Legend -->
+  <text x="256" y="50" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#7a859e" text-anchor="middle" letter-spacing="3.5">
+    TEKTRONIX P31 // 1.7B TERNARY SLM
+  </text>
+  <line x1="80" y1="62" x2="432" y2="62" stroke="#252b3b" stroke-width="1.5" />
+
+  <!-- CRT Recessed Monitor Screen -->
+  <rect x="58" y="76" width="396" height="348" rx="22" fill="url(#screenGrad)" stroke="#1a202c" stroke-width="3" />
+  <!-- CRT Phosphor Grid Background -->
+  <rect x="62" y="80" width="388" height="340" rx="18" fill="url(#crgGrid)" />
+
+  <!-- Scope Center Crosshairs & Axis Reticle -->
+  <line x1="62" y1="250" x2="450" y2="250" stroke="#00ff88" stroke-width="0.75" stroke-opacity="0.35" stroke-dasharray="3,3" />
+  <line x1="256" y1="80" x2="256" y2="420" stroke="#00ff88" stroke-width="0.75" stroke-opacity="0.35" stroke-dasharray="3,3" />
+
+  <!-- Calibration Tick Marks on Reticle -->
+  <path d="M 156 246 L 156 254 M 206 246 L 206 254 M 306 246 L 306 254 M 356 246 L 356 254 M 252 150 L 260 150 M 252 200 L 260 200 M 252 300 L 260 300 M 252 350 L 260 350" stroke="#00ff88" stroke-width="1" stroke-opacity="0.5" />
+
+  <!-- ==================== CENTRAL CYBER-KITTEN ACOUSTIC EMBLEM ==================== -->
+  <!-- Cat Silhouette Chassis Base Plate -->
+  <g id="kittenSilhouette">
+    <!-- Outer Glow Silhouette -->
+    <path d="M 160 145 
+             L 205 210 
+             L 307 210 
+             L 352 145 
+             L 366 230 
+             L 396 280 
+             L 374 360 
+             L 305 380 
+             L 207 380 
+             L 138 360 
+             L 116 280 
+             L 146 230 Z" 
+          fill="#0c1219" 
+          stroke="#00ff88" 
+          stroke-width="2.5" 
+          stroke-opacity="0.45" />
+
+    <!-- Inner Geometric Facets -->
+    <!-- Left Ear Inner Panel -->
+    <polygon points="175,170 205,212 165,220" fill="#141f28" stroke="#ff8800" stroke-width="1.8" filter="url(#amberGlow)" />
+    <!-- Right Ear Inner Panel -->
+    <polygon points="337,170 347,220 307,212" fill="#141f28" stroke="#ff8800" stroke-width="1.8" filter="url(#amberGlow)" />
+
+    <!-- Crown Plate (Forehead Hexagon) -->
+    <polygon points="256,195 288,212 288,245 256,262 224,245 224,212" fill="#090d14" stroke="#2c364c" stroke-width="2" />
+    <circle cx="256" cy="228" r="6" fill="#ff8800" filter="url(#amberGlow)" />
+
+    <!-- Geometric Cheek Soundwave Grids (Left & Right Flanks) -->
+    <!-- Left Soundwave Bars -->
+    <g stroke="#ff8800" stroke-width="2.5" stroke-linecap="round" opacity="0.85">
+      <line x1="126" y1="265" x2="98" y2="265" />
+      <line x1="122" y1="280" x2="88" y2="280" />
+      <line x1="126" y1="295" x2="102" y2="295" />
+    </g>
+    <!-- Right Soundwave Bars -->
+    <g stroke="#ff8800" stroke-width="2.5" stroke-linecap="round" opacity="0.85">
+      <line x1="386" y1="265" x2="414" y2="265" />
+      <line x1="390" y1="280" x2="424" y2="280" />
+      <line x1="386" y1="295" x2="410" y2="295" />
+    </g>
+
+    <!-- Cybernetic Eye Visors (Angular CRT Green Slits) -->
+    <!-- Left Eye -->
+    <polygon points="178,248 220,248 206,262 170,258" fill="#00ff88" filter="url(#phosphorGlow)" opacity="0.95" />
+    <!-- Right Eye -->
+    <polygon points="292,248 334,248 342,258 306,262" fill="#00ff88" filter="url(#phosphorGlow)" opacity="0.95" />
+
+    <!-- Nose / Inverted Triangle Connector -->
+    <polygon points="256,285 264,275 248,275" fill="#ff8800" filter="url(#amberGlow)" />
+
+    <!-- Mechanical Whisker Bus Lines -->
+    <g stroke="#00ff88" stroke-width="1.8" stroke-opacity="0.75" stroke-linecap="round">
+      <path d="M 242 290 L 195 300 L 140 292" fill="none" />
+      <path d="M 240 298 L 190 314 L 144 322" fill="none" />
+      <path d="M 270 290 L 317 300 L 372 292" fill="none" />
+      <path d="M 272 298 L 322 314 L 368 322" fill="none" />
+    </g>
+  </g>
+
+  <!-- ==================== P31 PHOSPHOR OSCILLOSCOPE TRACE ==================== -->
+  <!-- Glowing Laboratory Speech Waveform Traversing Chassis -->
+  <path d="M 62 250 
+           L 110 250 
+           Q 125 250, 132 232 
+           T 146 270 
+           T 160 215 
+           T 178 300 
+           T 196 175 
+           T 214 330 
+           T 234 160 
+           T 256 345 
+           T 278 160 
+           T 298 330 
+           T 316 175 
+           T 334 300 
+           T 352 215 
+           T 366 270 
+           T 380 232 
+           Q 388 250, 404 250 
+           L 450 250" 
+        fill="none" 
+        stroke="#00ff88" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        filter="url(#phosphorGlow)" />
+
+  <!-- Core Sharp Phosphor Beam Line (Bright center) -->
+  <path d="M 62 250 
+           L 110 250 
+           Q 125 250, 132 232 
+           T 146 270 
+           T 160 215 
+           T 178 300 
+           T 196 175 
+           T 214 330 
+           T 234 160 
+           T 256 345 
+           T 278 160 
+           T 298 330 
+           T 316 175 
+           T 334 300 
+           T 352 215 
+           T 366 270 
+           T 380 232 
+           Q 388 250, 404 250 
+           L 450 250" 
+        fill="none" 
+        stroke="#eafff4" 
+        stroke-width="1.4" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Active Beam Trigger Dot -->
+  <circle cx="256" cy="345" r="4" fill="#ffffff" filter="url(#phosphorGlow)" />
+
+  <!-- Lower Bezel Telemetry Screen Info -->
+  <rect x="76" y="382" width="360" height="26" rx="4" fill="#090d14" stroke="#1f2636" stroke-width="1" />
+  <circle cx="92" cy="395" r="4" fill="#00ff88" />
+  <text x="106" y="399" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#00ff88" letter-spacing="1">
+    CH-A: 24,000 Hz PCM // ZERO-SHOT
+  </text>
+  <text x="420" y="399" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#ff8800" text-anchor="end" letter-spacing="1">
+    1.6-BIT SLM
+  </text>
+
+  <!-- Lower Chassis Silk-Screen Title Block -->
+  <line x1="80" y1="442" x2="432" y2="442" stroke="#252b3b" stroke-width="1.5" />
+  <text x="256" y="466" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" fill="#eeebe3" text-anchor="middle" letter-spacing="2">
+    KITTEN-TTS 2 STUDIO
+  </text>
+  <text x="256" y="484" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="700" fill="#8892aa" text-anchor="middle" letter-spacing="1.5">
+    SAHOO SHUVRANSU // ANTIGRAVITY LABS
+  </text>
+</svg>

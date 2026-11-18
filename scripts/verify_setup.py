@@ -116,12 +116,34 @@ def test_fastapi_app():
     assert "Voice Identity" in r_studio.text
     assert "Speech Synthesizer" in r_studio.text
 
-    # Docs Showcase Page
-    r_docs = client.get("/docs-showcase")
-    assert r_docs.status_code == 200
-    assert "Acoustic Audition Laboratory" in r_docs.text
+    # Docs Showcase Routes & Static Mounts
+    r_docs_showcase = client.get("/docs-showcase")
+    assert r_docs_showcase.status_code == 200
+    assert "Acoustic Audition Laboratory" in r_docs_showcase.text
+    assert "Kitten-TTS 2 Studio" in r_docs_showcase.text
 
-    print("  ✓ FastAPI routes (/ , /studio, /docs-showcase, API) verified.")
+    # /docs endpoint (without trailing slash) serves showcase, not Swagger UI
+    r_docs = client.get("/docs")
+    assert r_docs.status_code == 200
+    assert "Kitten-TTS 2 Studio" in r_docs.text
+    assert "swagger" not in r_docs.text.lower()
+
+    # /docs/ endpoint (with trailing slash) serves showcase
+    r_docs_slash = client.get("/docs/")
+    assert r_docs_slash.status_code == 200
+    assert "Kitten-TTS 2 Studio" in r_docs_slash.text
+
+    # OpenAPI Swagger UI is cleanly available under /api/docs
+    r_api_docs = client.get("/api/docs")
+    assert r_api_docs.status_code == 200
+    assert "swagger" in r_api_docs.text.lower()
+
+    # Vector Logo SVG delivery
+    r_logo = client.get("/assets/logo.svg")
+    assert r_logo.status_code == 200
+    assert "image/svg+xml" in r_logo.headers.get("content-type", "")
+
+    print("  ✓ FastAPI routes (/, /studio, /docs, /docs/, /docs-showcase, /api/docs, API) verified.")
 
 if __name__ == "__main__":
     print("\n--- Running Kitten-TTS 2 Studio Verification Suite ---")

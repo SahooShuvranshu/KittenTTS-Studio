@@ -31,6 +31,8 @@ docs/
 ├── demo.js           # Interactive audio audition & oscilloscope visualizer
 ├── assets/
 │   ├── og-card.png   # 1200x630 social media open graph card
-│   └── logo.png      # 512x512 industrial hardware app icon
+│   ├── logo.svg      # Scalable P31 phosphor vector logo emblem (9.8 KB)
+│   ├── logo.png      # 512x512 industrial hardware app icon
+│   └── audio/        # Studio 24kHz PCM audition samples (.mp3 / .wav)
 └── README.md         # Deployment documentation
 ```

@@ -30,7 +30,10 @@ for d in [STORAGE_DIR, OUTPUTS_DIR, PROFILES_DIR, TEMP_DIR, DOCS_DIR]:
 app = FastAPI(
     title="Kitten-TTS 2 Studio",
     version="1.0.0",
-    description="Industrial local zero-shot voice cloning and speech synthesis studio by SahooShuvranshu."
+    description="Industrial local zero-shot voice cloning and speech synthesis studio by SahooShuvranshu.",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json"
 )
 
 # Remote & Cloud CORS Configuration
@@ -279,6 +282,13 @@ def serve_docs_showcase():
         raise HTTPException(status_code=404, detail="Docs showcase not found.")
     return FileResponse(docs_html, media_type="text/html")
 
+@app.get("/docs")
+def serve_docs():
+    docs_html = os.path.join(DOCS_DIR, "index.html")
+    if not os.path.exists(docs_html):
+        raise HTTPException(status_code=404, detail="Docs showcase not found.")
+    return FileResponse(docs_html, media_type="text/html")
+
 # Mount Documentation showcase directory
 app.mount("/docs", StaticFiles(directory=DOCS_DIR, html=True), name="docs")
 
@@ -296,6 +306,16 @@ def serve_docs_demo():
     if os.path.exists(demo_path):
         return FileResponse(demo_path, media_type="application/javascript")
     raise HTTPException(status_code=404)
+
+@app.get("/assets/{subpath:path}")
+def serve_assets(subpath: str):
+    docs_asset = os.path.join(DOCS_DIR, "assets", subpath)
+    if os.path.exists(docs_asset) and os.path.isfile(docs_asset):
+        return FileResponse(docs_asset)
+    fe_asset = os.path.join(FRONTEND_DIR, "assets", subpath)
+    if os.path.exists(fe_asset) and os.path.isfile(fe_asset):
+        return FileResponse(fe_asset)
+    raise HTTPException(status_code=404, detail="Asset not found")
 
 # Serve Frontend static assets
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
