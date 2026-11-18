@@ -381,6 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
     charCounter.textContent = `${textInput.value.length} chars`;
   }
 
+  let currentDeviceName = 'CPU';
+  let synthStopwatchTimer = null;
+
   // ==================== SYNTHESIZE AUDIO ====================
   synthesizeBtn.addEventListener('click', async () => {
     const text = textInput.value.trim();
@@ -396,10 +399,17 @@ document.addEventListener('DOMContentLoaded', () => {
       temp_sample: currentUploadedSample ? currentUploadedSample.filename : null
     };
 
+    const startTimeMs = Date.now();
+    const updateStopwatch = () => {
+      const elapsedSec = Math.floor((Date.now() - startTimeMs) / 1000);
+      synthesizeBtn.textContent = `⚡ SYNTHESIZING ON ${currentDeviceName} (${elapsedSec}s)...`;
+      latencyBadge.textContent = `Crunching audio on ${currentDeviceName} (${elapsedSec}s)...`;
+    };
+
     try {
       synthesizeBtn.disabled = true;
-      synthesizeBtn.textContent = '⚡ SYNTHESIZING ON CPU...';
-      latencyBadge.textContent = 'Processing...';
+      updateStopwatch();
+      synthStopwatchTimer = setInterval(updateStopwatch, 1000);
 
       const t0 = performance.now();
       const res = await fetch('/api/synthesize', {
@@ -407,11 +417,18 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
+
+      if (synthStopwatchTimer) {
+        clearInterval(synthStopwatchTimer);
+        synthStopwatchTimer = null;
+      }
+
       const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
       const data = await res.json();
 
       if (res.ok) {
-        latencyBadge.textContent = `Latency: ${elapsed}s (Gen: ${data.duration}s)`;
+        const devTag = data.device ? data.device.toUpperCase() : currentDeviceName;
+        latencyBadge.textContent = `Latency: ${elapsed}s [${devTag}] (Gen: ${data.duration}s @ 24kHz)`;
         activeAudioUrl = data.audio_url;
         audioPlayer.src = activeAudioUrl;
         downloadLink.href = activeAudioUrl;
@@ -420,16 +437,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         audioPlayer.play();
         visualizer.start();
-        showToast(`Speech synthesized in ${elapsed}s!`);
+        showToast(`Speech synthesized in ${elapsed}s on ${devTag}!`);
         await loadHistory();
       } else {
         showToast('Synthesis failed: ' + (data.detail || 'Unknown error'));
-        latencyBadge.textContent = 'Failed';
+        latencyBadge.textContent = `Failed (${elapsed}s)`;
       }
     } catch (e) {
+      if (synthStopwatchTimer) {
+        clearInterval(synthStopwatchTimer);
+        synthStopwatchTimer = null;
+      }
       showToast('Error: ' + e.message);
       latencyBadge.textContent = 'Error';
     } finally {
+      if (synthStopwatchTimer) {
+        clearInterval(synthStopwatchTimer);
+        synthStopwatchTimer = null;
+      }
       synthesizeBtn.disabled = false;
       synthesizeBtn.textContent = '⚡ SYNTHESIZE SPEECH';
     }
@@ -533,10 +558,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/telemetry');
       if (!res.ok) return;
       const data = await res.json();
-      document.getElementById('hudRam').textContent = `${data.ram_used_gb}G / ${data.ram_total_gb}G`;
-      document.getElementById('hudCpu').textContent = `${data.cpu_percent}%`;
-      document.getElementById('hudModel').textContent = data.model_loaded ? 'LOADED' : 'STANDBY';
-      document.getElementById('hudModel').className = 'hud-val' + (data.model_loaded ? ' active' : '');
+      
+      const hudRam = document.getElementById('hudRam');
+      if (hudRam) hudRam.textContent = `${data.ram_used_gb}G / ${data.ram_total_gb}G`;
+      
+      const hudCpu = document.getElementById('hudCpu');
+      if (hudCpu) hudCpu.textContent = `${data.cpu_percent}%`;
+      
+      const hudModel = document.getElementById('hudModel');
+      if (hudModel) {
+        hudModel.textContent = data.model_loaded ? 'LOADED' : 'STANDBY';
+        hudModel.className = 'hud-val' + (data.model_loaded ? ' active' : '');
+      }
+
+      const hudDevice = document.getElementById('hudDevice');
+      if (data.device && (data.device.toLowerCase().includes('cuda') || data.device.toLowerCase().includes('gpu'))) {
+        currentDeviceName = 'GPU';
+        if (hudDevice) {
+          hudDevice.textContent = 'GPU (NVIDIA MX250)';
+          hudDevice.className = 'hud-val active';
+        }
+      } else {
+        currentDeviceName = 'CPU';
+        if (hudDevice) {
+          hudDevice.textContent = 'CPU (AVX2)';
+          hudDevice.className = 'hud-val';
+        }
+      }
     } catch (e) {
       // Telemetry poll error is non-fatal
     }

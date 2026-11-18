@@ -1,35 +1,79 @@
-# Environment & Runtimes
+# ==============================================================================
+# Kitten-TTS 2 Studio - Git Ignore Rules
+# ==============================================================================
+
+# 1. Python Bytecode, Caches & Build Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+eggs/
+*.egg-info/
+*.egg
+.eggs/
+
+# 2. Virtual Environments & Runtimes
 .venv/
 venv/
 ENV/
 env/
-__pycache__/
-*.py[cod]
-*$py.class
+virtualenv/
+.Python
+pip-wheel-metadata/
 
-# Audio Outputs & Temp Files
+# 3. Model Weights, Checkpoints & Large Binaries
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.onnx
+*.gguf
+*.ckpt
+*.joblib
+models/
+.cache/
+hf_cache/
+
+# 4. Audio Storage & Runtime Outputs (Preserve directory structure via .gitkeep)
 storage/outputs/*
 !storage/outputs/.gitkeep
 storage/temp/*
 !storage/temp/.gitkeep
+storage/profiles/*.wav
+!storage/profiles/.gitkeep
 
-# User Voice Profiles (keep sample profiles, ignore private user profiles)
-# To preserve privacy by default:
-# storage/profiles/*
-# !storage/profiles/.gitkeep
+# 5. Testing & Code Quality Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
 
-# Model weights and caches
-*.gguf
-*.safetensors
-*.bin
-*.onnx
-models/
-.cache/
-
-# System and IDE
+# 6. IDE, Editors & OS Trash
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
+*~
+*.bak
+*.tmp
+
+# 7. Spec Kit Local State & Extension Overrides
+.specify/feature.json
+.specify/integrations/packages/
+.specify/integrations/packages.json
+.specify/extensions/*/local-config.yml
+
+# 8. Temporary Developer & Agent Scratch Files
+kitten_tts_hardware_emblem.jpg

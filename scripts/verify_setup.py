@@ -74,7 +74,7 @@ def test_engine_telemetry():
     telem = engine.get_telemetry()
     assert "ram_total_gb" in telem
     assert "ram_used_gb" in telem
-    assert telem["device"] == "cpu"
+    assert telem["device"] in ["cpu", "cuda"], f"Expected 'cpu' or 'cuda', got {telem['device']}"
     print(f"  ✓ Telemetry verified: RAM {telem['ram_used_gb']}G / {telem['ram_total_gb']}G (Device: {telem['device']})")
 
 def test_fastapi_app():

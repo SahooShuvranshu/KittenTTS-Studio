@@ -179,18 +179,24 @@ def synthesize_speech(req: SynthesizeRequest):
     Main speech generation endpoint. Clones speaker voice if profile or temp_sample is given.
     """
     ref_audio_path = None
+    voice_label = "Default Voice"
 
     if req.profile_id:
         profile = get_profile(req.profile_id)
         if profile:
             ref_audio_path = os.path.join(PROFILES_DIR, profile["filename"])
+            voice_label = f"Profile: {profile.get('name', req.profile_id)}"
+        else:
+            voice_label = f"Profile ID: {req.profile_id}"
     elif req.temp_sample:
         temp_path = os.path.join(TEMP_DIR, req.temp_sample)
         if os.path.exists(temp_path):
             ref_audio_path = temp_path
+            voice_label = f"Temp Sample: {req.temp_sample}"
 
     engine = KittenTTSEngine.get_instance()
     t0 = time.time()
+    char_count = len(req.text)
 
     try:
         filename, duration = engine.synthesize(
@@ -200,6 +206,17 @@ def synthesize_speech(req: SynthesizeRequest):
             output_dir=OUTPUTS_DIR
         )
         elapsed = round(time.time() - t0, 2)
+        device_used = engine.device.upper()
+
+        # Clear console logging for every /api/synthesize request
+        print(
+            f"[Synthesize] Processed request | "
+            f"Chars: {char_count} | "
+            f"Voice: {voice_label} | "
+            f"Device: {device_used} | "
+            f"Elapsed: {elapsed}s | "
+            f"Output: {filename}"
+        )
 
         entry = {
             "id": filename.replace(".wav", ""),
@@ -207,6 +224,7 @@ def synthesize_speech(req: SynthesizeRequest):
             "text": req.text,
             "duration": duration,
             "latency": elapsed,
+            "device": engine.device,
             "profile_used": req.profile_id or ("uploaded" if req.temp_sample else "default"),
             "audio_url": f"/api/audio/{filename}",
             "created_at": time.strftime("%Y-%m-%d %H:%M:%S")
@@ -215,6 +233,15 @@ def synthesize_speech(req: SynthesizeRequest):
 
         return entry
     except Exception as e:
+        elapsed = round(time.time() - t0, 2)
+        print(
+            f"[Synthesize ERROR] Failed request | "
+            f"Chars: {char_count} | "
+            f"Voice: {voice_label} | "
+            f"Device: {engine.device.upper()} | "
+            f"Elapsed: {elapsed}s | "
+            f"Error: {str(e)}"
+        )
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}")
 
 @app.get("/api/audio/{filename}")
