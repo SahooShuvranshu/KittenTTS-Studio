@@ -5,7 +5,7 @@ description = "Local zero-shot voice cloning and speech synthesis studio powered
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    { name = "Shuvransu", email = "shuvransu.sahoo@gmail.com" }
+    { name = "Shuvransu", email = "contact@sahooshuvranshu.is-a.dev" }
 ]
 license = { text = "MIT" }
 dependencies = [

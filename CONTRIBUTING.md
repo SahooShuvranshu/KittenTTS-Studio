@@ -93,3 +93,12 @@ Before opening a pull request, ensure:
 2. Open a Pull Request against the `main` branch of `SahooShuvranshu/KittenTTS-Studio`.
 3. Fill out the PR template with a clear description of the problem solved and testing steps performed.
 4. Maintainers will review your PR promptly!
+
+---
+
+## 📬 Questions & Community
+
+For discussions, technical feedback, or questions:
+- **Maintainer**: [Shuvransu](https://sahooshuvranshu.is-a.dev)
+- **Email**: [contact@sahooshuvranshu.is-a.dev](mailto:contact@sahooshuvranshu.is-a.dev)
+- **GitHub Issues**: [Issues & Discussions](https://github.com/SahooShuvranshu/KittenTTS-Studio/issues)

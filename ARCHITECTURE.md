@@ -8,25 +8,32 @@ This document details the engineering specifications, memory constraints, model 
 
 ```mermaid
 flowchart TD
+    classDef client fill:#11141b,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef backend fill:#181b22,stroke:#ff8800,stroke-width:2px,color:#eeebe3
+    classDef engine fill:#0e1016,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef accent fill:#00ff88,stroke:#000000,stroke-width:2px,color:#050608
+    classDef amber fill:#ff8800,stroke:#000000,stroke-width:2px,color:#050608
+
     subgraph Client["🖥️ Studio Console Frontend"]
-        Landing["Landing Page (index.html)"]
-        Studio["Studio Console (studio.html)"]
-        Oscilloscope["Web Audio API Oscilloscope & VU Meter"]
-        StorageState["localStorage Voice Profile Sync"]
+        Landing["Landing Page (index.html)"]:::client
+        Studio["Studio Console (studio.html)"]:::client
+        Oscilloscope["Web Audio API Oscilloscope & VU Meter"]:::accent
+        StorageState["localStorage Voice Profile Sync"]:::client
     end
 
     subgraph Backend["⚡ FastAPI Application Layer"]
-        Router["REST & Streaming Router (backend/app.py)"]
-        AudioPipeline["Audio Ingestion & Normalizer (backend/audio_utils.py)"]
-        ProfileManager["Voice Profile Database (backend/profiles.py)"]
-        Engine["Kitten-TTS 2 Model Runner (backend/engine.py)"]
+        Router["REST & Streaming Router (backend/app.py)"]:::backend
+        AudioPipeline["Audio Ingestion & Normalizer (backend/audio_utils.py)"]:::backend
+        ProfileManager["Voice Profile Database (backend/profiles.py)"]:::backend
+        Engine["Kitten-TTS 2 Model Runner (backend/engine.py)"]:::amber
     end
 
-    subgraph AudioEngine["🔊 Audio Synthesis Core"]
-        FFmpeg["FFmpeg PCM Transcoder"]
-        KittenCore["Kitten-TTS 2 (1.7B Qwen3 SLM)"]
-        Ternary["1.6-bit Ternary Weights (~1.03 GB)"]
-        AVX2["AVX2 CPU Vectorized Execution"]
+    subgraph AudioEngine["🔊 Audio Synthesis & Hardware Core"]
+        FFmpeg["FFmpeg PCM Transcoder"]:::engine
+        KittenCore["Kitten-TTS 2 (1.7B Qwen3 SLM)"]:::amber
+        Ternary["1.6-bit Ternary Weights (~1.03 GB)"]:::engine
+        GPUExec["CUDA Acceleration (NVIDIA GPUs)"]:::accent
+        AVX2["AVX2 CPU Vectorized Execution (Fallback)"]:::engine
     end
 
     Studio --> Router
@@ -36,6 +43,7 @@ flowchart TD
     ProfileManager --> Engine
     Engine --> KittenCore
     KittenCore --> Ternary
+    Ternary --> GPUExec
     Ternary --> AVX2
     Engine --> Router
     Router --> Oscilloscope

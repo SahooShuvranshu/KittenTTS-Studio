@@ -32,7 +32,8 @@ When hosting Kitten-TTS 2 Studio on a public VPS, cloud container, or Tailscale 
 If you discover a security vulnerability within Kitten-TTS 2 Studio, please do **NOT** open a public issue.
 
 Instead, please send a responsible disclosure email to:
-**`shuvransu.sahoo@gmail.com`**
+**`contact@sahooshuvranshu.is-a.dev`**
+or visit **[sahooshuvranshu.is-a.dev](https://sahooshuvranshu.is-a.dev)**.
 
 Please include:
 1. Description of the vulnerability.

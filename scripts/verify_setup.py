@@ -15,6 +15,14 @@ from backend.audio_utils import convert_to_wav, get_audio_metadata, validate_ref
 from backend.profiles import list_profiles, create_profile, delete_profile, get_profile
 from backend.engine import KittenTTSEngine
 
+def save_wav_robust(path, audio, sr):
+    try:
+        sf.write(path, audio, sr)
+    except Exception:
+        import scipy.io.wavfile as wav
+        audio_i16 = (np.clip(audio, -1.0, 1.0) * 32767).astype(np.int16)
+        wav.write(path, sr, audio_i16)
+
 def test_audio_pipeline():
     print("[1/4] Testing Audio Processing Pipeline...")
     temp_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "storage", "temp"))
@@ -26,7 +34,7 @@ def test_audio_pipeline():
     sr_in = 44100
     t = np.linspace(0, 5, sr_in * 5, endpoint=False)
     sine = (0.5 * np.sin(2 * np.pi * 440 * t)).astype(np.float32)
-    sf.write(raw_path, sine, sr_in)
+    save_wav_robust(raw_path, sine, sr_in)
 
     # Convert to 24kHz mono
     convert_to_wav(raw_path, clean_path, target_sr=24000)
@@ -50,7 +58,7 @@ def test_profile_manager():
     sr = 24000
     t = np.linspace(0, 4, sr * 4, endpoint=False)
     audio = (0.3 * np.sin(2 * np.pi * 300 * t)).astype(np.float32)
-    sf.write(test_sample, audio, sr)
+    save_wav_robust(test_sample, audio, sr)
 
     profile = create_profile(name="Test Speaker", src_audio_path=test_sample, description="Automated verification test")
     p_id = profile["id"]

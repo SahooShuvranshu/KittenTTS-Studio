@@ -43,7 +43,13 @@ font_att = ImageFont.truetype("/usr/share/fonts/TTF/JetBrainsMonoNerdFont-Bold.t
 
 def get_masked_emblem():
     """Crop the emblem hardware plate and apply a smooth rounded corner alpha mask."""
-    emblem_path = "/home/shuvransu/Projects/KittenTTS-Studio/kitten_tts_hardware_emblem.jpg"
+    import os
+    emblem_path = "/home/shuvransu/.gemini/antigravity-cli/brain/9b31bb28-c2c3-4e89-8bc2-61cb9d58630e/kitten_tts_hardware_emblem_1794993324793.jpg"
+    if not os.path.exists(emblem_path):
+        emblem_path = "/home/shuvransu/Projects/KittenTTS-Studio/kitten_tts_hardware_emblem.jpg"
+    if not os.path.exists(emblem_path):
+        # Fallback to existing logo if original raw emblem image is unlinked
+        return Image.open("/home/shuvransu/Projects/KittenTTS-Studio/frontend/assets/logo.png").convert("RGBA")
     orig = Image.open(emblem_path)
     # The plate is centered at (512, 512). Crop 840x840 -> (92, 92, 932, 932)
     cropped = orig.crop((92, 92, 932, 932)).convert("RGBA")
@@ -229,7 +235,7 @@ def generate_og_card():
     # 8. Bottom Attribution
     att_y = 552
     draw.line([(left_x, att_y - 14), (660, att_y - 14)], fill=BORDER_COLOR, width=1)
-    draw.text((left_x, att_y), "Built by Shuvransu with the help of Antigravity", fill=BONE_CREAM, font=font_att)
+    draw.text((left_x, att_y), "Built with ❤️ and ☕ by Shuvransu & Antigravity", fill=BONE_CREAM, font=font_att)
     draw.text((left_x, att_y + 18), "Offline Speech Synthesis & Zero-Shot Cloning Console", fill=DARK_TEXT, font=font_mono_sm)
 
     # 9. Right Column: Dedicated Industrial Hardware Module Bay with Clean Emblem
