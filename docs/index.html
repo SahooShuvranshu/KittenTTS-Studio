@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer</title>
-  <meta name="description" content="Industrial brutalist minimal retro-futurist speech synthesis and zero-shot voice cloning console powered by Kitten-TTS 2 (1.7B Ternary SLM). Real-time CPU AVX2 speech synthesis under 8 GB RAM. Built with ❤️ and ☕ by Shuvransu & Antigravity.">
+  <meta name="description" content="Industrial brutalist retro-futurist speech synthesis and zero-shot voice cloning console powered by Kitten-TTS 2 (1.7B Ternary SLM). Real-time CPU AVX2 speech synthesis under 8 GB RAM. Built with ❤️ and ☕ by Shuvransu & Antigravity.">
   <meta name="author" content="SahooShuvranshu">
   <meta name="theme-color" content="#090A0D">
 
@@ -54,16 +54,18 @@
       <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
       <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
     </div>
-    <div style="display:flex; gap:16px; align-items:center;">
-      <nav style="display:flex; gap:12px; font-family:var(--font-mono); font-size:11px;">
-        <a href="#audition" style="color:var(--bone-cream); font-weight:700;">[AUDITION]</a>
-        <a href="#architecture" style="color:var(--text-secondary);">[ARCHITECTURE]</a>
-        <a href="#hardware" style="color:var(--text-secondary);">[HARDWARE]</a>
-        <a href="#api" style="color:var(--text-secondary);">[API]</a>
-        <a href="#metrics" style="color:var(--signal-amber); font-weight:700;">[METRICS]</a>
-        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio#quickstart" target="_blank" style="color:var(--phosphor-green); font-weight:700;">[LAUNCH]</a>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="#audition" class="nav-item">[AUDITION]</a>
+        <a href="#architecture" class="nav-item">[ARCHITECTURE]</a>
+        <a href="#hardware" class="nav-item">[HARDWARE]</a>
+        <a href="#syntax" class="nav-item">[SYNTAX]</a>
+        <a href="#api" class="nav-item">[API]</a>
+        <a href="#terminal" class="nav-item">[TERMINAL]</a>
+        <a href="#metrics" class="nav-item nav-accent">[METRICS]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio#quickstart" target="_blank" class="nav-item nav-launch">[LAUNCH]</a>
       </nav>
-      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber">
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
         ★ STAR ON GITHUB
       </a>
     </div>
@@ -71,8 +73,8 @@
 
   <main class="container">
 
-    <!-- TITLE & HERO SECTION -->
-    <div style="display:flex; flex-direction:column; gap:8px;">
+    <!-- ==================== HERO SECTION & TELEMETRY ==================== -->
+    <div class="hero-block">
       <div class="hero-kicker">
         <span class="indicator-dot"></span>
         HARDWARE-ACCELERATED ACOUSTIC ENGINE // DYNAMIC CUDA &amp; AVX2
@@ -92,8 +94,8 @@
         <div class="telemetry-cell"><strong>MODEL:</strong> 1.7B TERNARY SLM</div>
         <div class="telemetry-cell"><strong>MEM_BUDGET:</strong> &lt; 1.4 GB WORKING SET</div>
         <div class="telemetry-cell"><strong>SAMPLING:</strong> 24.0 kHz MONO PCM</div>
-        <div class="telemetry-cell live"><strong>VISITORS:</strong> <img src="https://count.getloli.com/@KittenTTS2Studio?theme=rule34&darkmode=1" alt="Visitors" style="height:14px; vertical-align:middle;"></div>
-        <div class="telemetry-cell live"><strong>STATUS:</strong> OPERATIONAL</div>
+        <div class="telemetry-cell live"><strong>VISITORS:</strong> <img src="https://count.getloli.com/@KittenTTS2Studio?theme=rule34&darkmode=1" alt="Visitors" class="telemetry-badge-img"></div>
+        <div class="telemetry-cell live"><span>●</span> <strong>STATUS:</strong> OPERATIONAL</div>
       </div>
 
       <!-- High-Contrast Badge Matrix -->
@@ -108,7 +110,7 @@
       </div>
     </div>
 
-    <!-- HARDWARE DISPLAY / BANNER PREVIEW -->
+    <!-- ==================== HARDWARE BANNER PREVIEW ==================== -->
     <div class="banner-frame">
       <div class="banner-bezel">
         <span>DISP_OUT // CH-01: CONSOLE TELEMETRY INTERFACE</span>
@@ -117,14 +119,14 @@
       <img src="assets/og-card.png" alt="Kitten-TTS 2 Studio Interface" class="banner-img">
     </div>
 
-    <!-- INTERACTIVE AUDITION DEMO -->
+    <!-- ==================== AUDITION WORKSTATION ==================== -->
     <section id="audition" class="demo-card">
       <div class="demo-header">
         <div class="demo-title">
           <span class="led-pulse"></span>
           <span>Acoustic Audition Laboratory // OSCILLOSCOPE MONITOR</span>
         </div>
-        <div class="demo-mode-badge">CRT PHOSPHOR 50Hz</div>
+        <div class="demo-mode-badge" id="demoModeBadge">CRT PHOSPHOR 50Hz</div>
       </div>
 
       <div class="demo-canvas-box">
@@ -139,7 +141,7 @@
       </div>
 
       <div class="demo-track-row">
-        <div>
+        <div class="track-info">
           <div id="demoTrackTitle" class="track-title-text">
             SAMPLE_01: REFERENCE_TIMBRE // NATURAL VOCAL DELIVERY (24kHz PCM)
           </div>
@@ -147,8 +149,8 @@
             ACOUSTIC_SYNTHESIS // ZERO-SHOT CLONED FORMANT PROFILE
           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <span id="demoDuration" class="tabular track-time">00:06.4</span>
+        <div class="track-controls">
+          <span id="demoDuration" class="tabular track-time">00:05.2</span>
           <button id="demoPlayBtn" class="btn btn-green">▶ AUDITION SYNTHESIS</button>
         </div>
       </div>
@@ -160,12 +162,14 @@
       </div>
     </section>
 
-    <!-- ARCHITECTURE BREAKDOWN & COLORED MERMAID DIAGRAM -->
-    <section id="architecture" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">◈ System Architecture &amp; Dataflow</h2>
-      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
-        Kitten-TTS 2 Studio enforces architectural discipline: a 1.6-bit ternary quantized speech language model executing entirely on the host CPU with dynamic GPU routing, dual-engine sound serialization, and automated 24 kHz audio normalization.
-      </p>
+    <!-- ==================== SYSTEM ARCHITECTURE ==================== -->
+    <section id="architecture" class="section-block">
+      <div class="section-heading">
+        <h2 class="section-title">◈ System Architecture &amp; Dataflow</h2>
+        <p class="section-desc">
+          Kitten-TTS 2 Studio enforces strict architectural discipline: a 1.6-bit ternary quantized speech language model executing on the host CPU with dynamic GPU routing, dual-engine sound serialization, and automated 24 kHz audio normalization.
+        </p>
+      </div>
 
       <div class="mermaid-box">
         <pre class="mermaid">
@@ -228,12 +232,14 @@ flowchart TD
       </div>
     </section>
 
-    <!-- HARDWARE CAPABILITY MATRIX -->
-    <section id="hardware" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">⚙️ Multi-Device Hardware Capability &amp; Portability Matrix</h2>
-      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
-        Designed to guarantee zero-configuration execution whether running on high-end servers, battery-constrained laptops, Apple Silicon, or headless cloud containers.
-      </p>
+    <!-- ==================== HARDWARE BENCHMARK MATRIX ==================== -->
+    <section id="hardware" class="section-block">
+      <div class="section-heading">
+        <h2 class="section-title">⚙️ Multi-Device Hardware Capability &amp; Portability Matrix</h2>
+        <p class="section-desc">
+          Designed to guarantee zero-configuration execution whether running on high-end servers, battery-constrained laptops, Apple Silicon, or headless cloud containers.
+        </p>
+      </div>
 
       <div class="docs-table-wrapper">
         <table class="docs-table">
@@ -278,14 +284,37 @@ flowchart TD
           </tbody>
         </table>
       </div>
+
+      <!-- Physical RAM Budget Allocation Callout Card -->
+      <div class="terminal-block" style="margin-top:20px;">
+        <div class="terminal-header">
+          <div class="dot-group">
+            <div class="dot" style="background:#00ff88;"></div>
+            <div class="dot" style="background:#ff8800;"></div>
+            <div class="dot" style="background:#00ffff;"></div>
+          </div>
+          <span>MEMORY TOPOLOGY // 8 GB HOST RAM BUDGET ALLOCATION</span>
+        </div>
+        <div class="terminal-body" style="font-size:12px; line-height:1.7;">
+          <span class="comment"># Physical Memory Envelope: 8.0 GB Total Physical RAM</span><br>
+          <span class="cmd">├─ Host Linux Kernel &amp; Hyprland Desktop:</span> ~1.80 GB (Anonymous + Shared)<br>
+          <span class="cmd">├─ FastAPI ASGI Server Core &amp; Uvicorn:</span> ~0.03 GB (28 MB RSS)<br>
+          <span class="cmd">├─ Kitten-TTS 2 Model In-Memory Weights:</span> ~1.03 GB (Ternary SLM Loaded)<br>
+          <span class="cmd">├─ Active Synthesis Tensor Buffer:</span> ~0.35 GB (Peak generation working set)<br>
+          <span class="cmd">└─ Total Working Set at Peak Synthesis:</span> <span style="color:var(--phosphor-green); font-weight:700;">~1.41 GB RSS</span><br>
+          <span class="comment"># Safe Remaining System Headroom: &gt; 4.5 GB (Zero paging, no swap thrashing)</span>
+        </div>
+      </div>
     </section>
 
-    <!-- EXPRESSION SYNTAX & INTONATION CHEATSHEET -->
-    <section style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">🎛️ Expression &amp; Emotion Prosody Tags</h2>
-      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
-        Kitten-TTS 2 natively parses emotional markers, laughter events, and vocal emphasis directly inside the prompt text:
-      </p>
+    <!-- ==================== EXPRESSION & EMOTION SYNTAX ==================== -->
+    <section id="syntax" class="section-block">
+      <div class="section-heading">
+        <h2 class="section-title">🎛️ Expression &amp; Emotion Prosody Tags</h2>
+        <p class="section-desc">
+          Kitten-TTS 2 natively parses emotional markers, laughter events, and vocal emphasis directly inside the prompt text:
+        </p>
+      </div>
 
       <div class="docs-table-wrapper">
         <table class="docs-table">
@@ -337,12 +366,14 @@ flowchart TD
       </div>
     </section>
 
-    <!-- REST API REFERENCE -->
-    <section id="api" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📡 REST API Endpoints</h2>
-      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
-        The built-in FastAPI server exposes high-performance asynchronous REST endpoints:
-      </p>
+    <!-- ==================== REST API REFERENCE ==================== -->
+    <section id="api" class="section-block">
+      <div class="section-heading">
+        <h2 class="section-title">📡 REST API Endpoints &amp; Curl Explorer</h2>
+        <p class="section-desc">
+          The built-in FastAPI server exposes high-performance asynchronous REST endpoints for headless integration and automated speech pipelines:
+        </p>
+      </div>
 
       <div class="docs-table-wrapper">
         <table class="docs-table">
@@ -358,26 +389,44 @@ flowchart TD
             <tr>
               <td><span class="code-pill-amber">POST</span> <code>/api/synthesize</code></td>
               <td>JSON: <code>{ text, speed, profile_id }</code></td>
-              <td>Synthesize speech with live hardware selection and stopwatch telemetry.</td>
-              <td><code>{ audio_url, duration, elapsed, device }</code></td>
+              <td>Synthesize speech with live hardware routing and stopwatch telemetry.</td>
+              <td><code>{ audio_url, duration, latency, device }</code></td>
             </tr>
             <tr>
               <td><span class="code-pill-amber">POST</span> <code>/api/upload-sample</code></td>
               <td>Multipart: <code>file</code></td>
               <td>Transcodes arbitrary audio uploads to 24kHz mono 16-bit PCM WAV.</td>
-              <td><code>{ filename, duration, sample_rate }</code></td>
+              <td><code>{ filename, duration, sample_rate, validation }</code></td>
             </tr>
             <tr>
               <td><span class="code-pill-amber">POST</span> <code>/api/profiles/save-sample</code></td>
-              <td>JSON: <code>{ filename, name }</code></td>
+              <td>JSON: <code>{ filename, name, description }</code></td>
               <td>Registers and permanently persists voice identity in profile vault.</td>
-              <td><code>{ id, name, created_at }</code></td>
+              <td><code>{ id, name, filename, duration }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">POST</span> <code>/api/profiles/record</code></td>
+              <td>Multipart: <code>file, name, description</code></td>
+              <td>Directly registers browser MediaRecorder WebM blob as voice profile.</td>
+              <td><code>{ id, name, filename, duration }</code></td>
             </tr>
             <tr>
               <td><span class="code-pill">GET</span> <code>/api/profiles</code></td>
               <td>None</td>
               <td>Fetches all registered voice profiles with sample rate &amp; duration.</td>
               <td><code>[ { id, name, filename, ... } ]</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">PUT</span> <code>/api/profiles/{id}</code></td>
+              <td>JSON: <code>{ name, description }</code></td>
+              <td>Updates voice profile metadata in storage vault.</td>
+              <td><code>{ id, name, description, ... }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">DELETE</span> <code>/api/profiles/{id}</code></td>
+              <td>None</td>
+              <td>Deletes voice profile metadata and unlinks WAV asset from disk.</td>
+              <td><code>{ status: "deleted", id }</code></td>
             </tr>
             <tr>
               <td><span class="code-pill">GET</span> <code>/api/telemetry</code></td>
@@ -387,18 +436,60 @@ flowchart TD
             </tr>
             <tr>
               <td><span class="code-pill">GET</span> <code>/api/audio/{filename}</code></td>
-              <td>None</td>
+              <td>Query: <code>temp, profile</code></td>
               <td>Streams generated WAV files with HTTP Range Header seek support.</td>
               <td><code>audio/wav</code> Stream</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">GET</span> <code>/api/history</code></td>
+              <td>None</td>
+              <td>Retrieves last 50 generated synthesis records with timestamps.</td>
+              <td><code>[ { id, text, latency, ... } ]</code></td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Curl Explorer Terminal Block -->
+      <div class="terminal-block" style="margin-top:24px;">
+        <div class="terminal-header">
+          <div class="dot-group">
+            <div class="dot" style="background:#ff3344;"></div>
+            <div class="dot" style="background:#ff8800;"></div>
+            <div class="dot" style="background:#00ff88;"></div>
+          </div>
+          <span>CURL EXPLORER // HEADLESS REST WORKFLOW EXAMPLES</span>
+        </div>
+        <div class="terminal-body" style="font-size:12px; line-height:1.7;">
+          <span class="comment"># 1. Synthesize speech via REST API (Default Voice)</span><br>
+          <span class="cmd">curl -X POST http://127.0.0.1:8765/api/synthesize \</span><br>
+          <span class="cmd">&nbsp;&nbsp;-H "Content-Type: application/json" \</span><br>
+          <span class="cmd">&nbsp;&nbsp;-d '{"text": "[happy] System operational. Zero-shot neural voice active.", "speed": 1.0}'</span><br><br>
+
+          <span class="comment"># 2. Upload reference sample for voice cloning</span><br>
+          <span class="cmd">curl -X POST http://127.0.0.1:8765/api/upload-sample \</span><br>
+          <span class="cmd">&nbsp;&nbsp;-F "file=@speaker_sample.wav"</span><br><br>
+
+          <span class="comment"># 3. Retrieve system hardware telemetry &amp; memory utilization</span><br>
+          <span class="cmd">curl -s http://127.0.0.1:8765/api/telemetry | jq .</span><br><br>
+
+          <span class="comment"># 4. Synthesize with cloned voice profile</span><br>
+          <span class="cmd">curl -X POST http://127.0.0.1:8765/api/synthesize \</span><br>
+          <span class="cmd">&nbsp;&nbsp;-H "Content-Type: application/json" \</span><br>
+          <span class="cmd">&nbsp;&nbsp;-d '{"text": "[whisper] Secrets encrypted.", "profile_id": "a1b2c3d4"}'</span>
+        </div>
+      </div>
     </section>
 
-    <!-- INSTALLATION & DEPLOYMENT -->
-    <section style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">⚡ Quickstart &amp; Local Workstation Boot</h2>
+    <!-- ==================== INSTALLATION & QUICKSTART ==================== -->
+    <section id="terminal" class="section-block">
+      <div class="section-heading">
+        <h2 class="section-title">⚡ Quickstart &amp; Local Workstation Boot</h2>
+        <p class="section-desc">
+          Spin up the complete Kitten-TTS 2 Studio locally in under 60 seconds with automated virtual environment provisioning:
+        </p>
+      </div>
+
       <div class="terminal-block">
         <div class="terminal-header">
           <div class="dot-group">
@@ -412,19 +503,21 @@ flowchart TD
           <span class="comment"># 1. Clone repository from GitHub</span><br>
           <span class="cmd">git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git</span><br>
           <span class="cmd">cd KittenTTS-Studio</span><br><br>
-          <span class="comment"># 2. Launch local workstation (auto-provisions venv &amp; boots hardware console)</span><br>
+          <span class="comment"># 2. Launch local workstation (auto-provisions venv, dependencies &amp; boots GUI)</span><br>
           <span class="cmd">./run_studio.sh</span><br><br>
-          <span class="comment"># Console opens automatically at http://127.0.0.1:8765</span>
+          <span class="comment"># 3. Custom host/port or headless cloud binding</span><br>
+          <span class="cmd">HOST="0.0.0.0" PORT="8765" ./run_studio.sh</span><br><br>
+          <span class="comment"># Workstation console opens at http://127.0.0.1:8765/studio</span>
         </div>
       </div>
     </section>
 
-    <!-- METRICS: STAR HISTORY & VISITOR TELEMETRY -->
-    <section id="metrics" style="margin:48px 0; display:flex; flex-direction:column; gap:24px;">
-      <div id="star-history" style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <!-- ==================== METRICS: STAR HISTORY & VISITOR TELEMETRY ==================== -->
+    <section id="metrics" class="section-block">
+      <div id="star-history" class="metrics-header-row">
         <div>
-          <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📈 Community Growth &amp; Telemetry Metrics</h2>
-          <p style="color:var(--text-secondary); font-size:14px;">Real-time stargazer metrics and visitor traffic for Kitten-TTS 2 Studio.</p>
+          <h2 class="section-title">📈 Community Growth &amp; Telemetry Metrics</h2>
+          <p class="section-desc">Real-time stargazer trajectory and visitor traffic telemetry for Kitten-TTS 2 Studio.</p>
         </div>
         <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers" target="_blank" class="btn btn-amber">
           ★ STAR ON GITHUB
@@ -435,10 +528,10 @@ flowchart TD
       <div class="star-history-frame">
         <div class="star-history-header">
           <span>METRICS // REPO_STAR_TRAJECTORY: SAHOOSHUVRANSHU / KITTENTTS-STUDIO</span>
-          <span style="color:var(--phosphor-green);">● LIVE FEED</span>
+          <span class="status-live">● LIVE FEED</span>
         </div>
         <div class="star-history-body">
-          <a href="https://star-history.com/#SahooShuvranshu/KittenTTS-Studio&Date" target="_blank" style="display:block; width:100%; text-align:center;">
+          <a href="https://star-history.com/#SahooShuvranshu/KittenTTS-Studio&Date" target="_blank" class="star-history-link">
             <img 
               src="https://api.star-history.com/svg?repos=SahooShuvranshu/KittenTTS-Studio&type=Date&theme=dark" 
               alt="Kitten-TTS 2 Studio Star History Chart" 
@@ -452,10 +545,10 @@ flowchart TD
       <div class="visitor-counter-frame">
         <div class="star-history-header">
           <span>TELEMETRY // ACCESS_MONITOR: UNIQUE_VISITORS</span>
-          <span style="color:var(--phosphor-green);">● ACTIVE COUNT</span>
+          <span class="status-live">● ACTIVE COUNT</span>
         </div>
         <div class="visitor-counter-body">
-          <div style="font-family:var(--font-mono); font-size:12px; color:var(--bone-cream); letter-spacing:1px; text-transform:uppercase;">
+          <div class="visitor-counter-title">
             TOTAL WORKSTATION VISITOR IMPRESSIONS
           </div>
           <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank">
@@ -465,7 +558,7 @@ flowchart TD
               class="visitor-counter-img"
             />
           </a>
-          <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">
+          <div class="visitor-counter-sub">
             Real-time telemetry tracked across GitHub Pages &amp; local instances
           </div>
         </div>
@@ -480,7 +573,7 @@ flowchart TD
       Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
     </div>
     <div class="footer-meta">
-      <a href="mailto:contact@sahooshuvranshu.is-a.dev" style="color:var(--signal-amber); margin-right:12px;">contact@sahooshuvranshu.is-a.dev</a>
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" class="footer-email">contact@sahooshuvranshu.is-a.dev</a>
       KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
     </div>
   </footer>
