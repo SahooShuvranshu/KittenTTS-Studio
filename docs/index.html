@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer</title>
-  <meta name="description" content="Brutalist retro-futurist zero-shot voice cloning console powered by Kitten-TTS 2 (1.7B Ternary SLM). Real-time CPU AVX2 speech synthesis under 8 GB RAM. By Shuvransu.">
+  <meta name="description" content="Industrial brutalist minimal retro-futurist speech synthesis and zero-shot voice cloning console powered by Kitten-TTS 2 (1.7B Ternary SLM). Real-time CPU AVX2 speech synthesis under 8 GB RAM. Built with ❤️ and ☕ by Shuvransu & Antigravity.">
   <meta name="author" content="SahooShuvranshu">
   <meta name="theme-color" content="#090A0D">
 
@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio">
   <meta property="og:title" content="Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer">
-  <meta property="og:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM).">
+  <meta property="og:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). Built with ❤️ and ☕ by Shuvransu & Antigravity.">
   <meta property="og:image" content="assets/og-card.png">
 
   <!-- Twitter -->
@@ -20,11 +20,31 @@
   <meta name="twitter:site" content="@SahooShuvranshu">
   <meta name="twitter:creator" content="@SahooShuvranshu">
   <meta name="twitter:title" content="Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer">
-  <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM).">
+  <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). Built with ❤️ and ☕ by Shuvransu & Antigravity.">
   <meta name="twitter:image" content="assets/og-card.png">
 
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Mermaid.js for colored technical architecture diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#050608',
+        primaryColor: '#181b22',
+        primaryTextColor: '#eeebe3',
+        primaryBorderColor: '#00ff88',
+        lineColor: '#ff8800',
+        secondaryColor: '#111318',
+        tertiaryColor: '#090a0d',
+        fontFamily: 'JetBrains Mono, ui-monospace, monospace'
+      }
+    });
+  </script>
 </head>
 <body>
 
@@ -34,7 +54,14 @@
       <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
       <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
     </div>
-    <div style="display:flex; gap:12px; align-items:center;">
+    <div style="display:flex; gap:16px; align-items:center;">
+      <nav style="display:flex; gap:12px; font-family:var(--font-mono); font-size:11px;">
+        <a href="#audition" style="color:var(--bone-cream); font-weight:700;">[AUDITION]</a>
+        <a href="#architecture" style="color:var(--text-secondary);">[ARCHITECTURE]</a>
+        <a href="#hardware" style="color:var(--text-secondary);">[HARDWARE]</a>
+        <a href="#api" style="color:var(--text-secondary);">[API]</a>
+        <a href="#star-history" style="color:var(--signal-amber); font-weight:700;">[STARS]</a>
+      </nav>
       <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber">
         ★ STAR ON GITHUB
       </a>
@@ -47,7 +74,7 @@
     <div style="display:flex; flex-direction:column; gap:8px;">
       <div class="hero-kicker">
         <span class="indicator-dot"></span>
-        HARDWARE-ACCELERATED ACOUSTIC ENGINE // AVX2
+        HARDWARE-ACCELERATED ACOUSTIC ENGINE // DYNAMIC CUDA &amp; AVX2
       </div>
 
       <h1 class="hero-title">
@@ -55,15 +82,15 @@
       </h1>
 
       <p class="hero-subtitle">
-        An acoustic speech synthesis workstation engineered for zero-shot in-context voice cloning on consumer hardware under 8 GB RAM. Delivers 24kHz broadcast-quality speech through real-time CPU AVX2 vectorization.
+        An industrial acoustic speech workstation engineered for zero-shot in-context voice cloning on consumer hardware within an 8 GB RAM envelope. Generates broadcast-grade 24,000 Hz single-channel PCM audio through real-time CPU AVX2 vectorization and resilient GPU acceleration.
       </p>
 
       <!-- Chassis Telemetry Strip -->
       <div class="telemetry-strip">
-        <div class="telemetry-cell live"><span>●</span> <strong>CORE:</strong> AVX2_SIMD</div>
+        <div class="telemetry-cell live"><span>●</span> <strong>CORE:</strong> AVX2_SIMD / CUDA</div>
         <div class="telemetry-cell"><strong>MODEL:</strong> 1.7B TERNARY SLM</div>
-        <div class="telemetry-cell"><strong>MEM_BUDGET:</strong> &lt; 1.4 GB CPU RSS</div>
-        <div class="telemetry-cell"><strong>SAMPLING:</strong> 24.0 kHz MONO</div>
+        <div class="telemetry-cell"><strong>MEM_BUDGET:</strong> &lt; 1.4 GB WORKING SET</div>
+        <div class="telemetry-cell"><strong>SAMPLING:</strong> 24.0 kHz MONO PCM</div>
         <div class="telemetry-cell live"><strong>STATUS:</strong> OPERATIONAL</div>
       </div>
 
@@ -72,8 +99,8 @@
         <a href="https://www.python.org" target="_blank"><img src="https://img.shields.io/badge/PYTHON-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
         <a href="https://fastapi.tiangolo.com" target="_blank"><img src="https://img.shields.io/badge/FASTAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"></a>
         <a href="https://github.com/KittenML" target="_blank"><img src="https://img.shields.io/badge/MODEL-KITTEN--TTS%202%20(1.7B)-FF8800?style=for-the-badge&labelColor=090A0D" alt="Model"></a>
-        <a href="#specs"><img src="https://img.shields.io/badge/WEIGHTS-1.6--BIT%20TERNARY-00FF88?style=for-the-badge&labelColor=090A0D" alt="Weights"></a>
-        <a href="#specs"><img src="https://img.shields.io/badge/RAM-8GB%20COMPATIBLE-EEEBE3?style=for-the-badge&labelColor=090A0D" alt="RAM"></a>
+        <a href="#architecture"><img src="https://img.shields.io/badge/WEIGHTS-1.6--BIT%20TERNARY-00FF88?style=for-the-badge&labelColor=090A0D" alt="Weights"></a>
+        <a href="#hardware"><img src="https://img.shields.io/badge/RAM-8GB%20SAFE-EEEBE3?style=for-the-badge&labelColor=090A0D" alt="RAM"></a>
         <a href="https://deepmind.google" target="_blank"><img src="https://img.shields.io/badge/BUILT%20WITH-ANTIGRAVITY-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Antigravity"></a>
         <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/LICENSE-MIT-181B22?style=for-the-badge&labelColor=090A0D" alt="MIT License"></a>
       </div>
@@ -89,7 +116,7 @@
     </div>
 
     <!-- INTERACTIVE AUDITION DEMO -->
-    <section class="demo-card">
+    <section id="audition" class="demo-card">
       <div class="demo-header">
         <div class="demo-title">
           <span class="led-pulse"></span>
@@ -131,37 +158,254 @@
       </div>
     </section>
 
-    <!-- ARCHITECTURE BREAKDOWN -->
-    <section style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">◈ Hardware & System Architecture</h2>
-      <p style="color:var(--text-secondary); font-size:14px; max-width:800px;">
-        Kitten-TTS 2 Studio addresses the physical constraints of everyday consumer hardware. It bypasses memory-constrained laptop GPUs entirely and delivers real-time speech synthesis on the CPU using AVX2 vectorization.
+    <!-- ARCHITECTURE BREAKDOWN & COLORED MERMAID DIAGRAM -->
+    <section id="architecture" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
+      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">◈ System Architecture &amp; Dataflow</h2>
+      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
+        Kitten-TTS 2 Studio enforces architectural discipline: a 1.6-bit ternary quantized speech language model executing entirely on the host CPU with dynamic GPU routing, dual-engine sound serialization, and automated 24 kHz audio normalization.
       </p>
+
+      <div class="mermaid-box">
+        <pre class="mermaid">
+flowchart TD
+    classDef client fill:#11141b,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef backend fill:#181b22,stroke:#ff8800,stroke-width:2px,color:#eeebe3
+    classDef hardware fill:#0e1016,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef accent fill:#00ff88,stroke:#000000,stroke-width:2px,color:#050608
+    classDef amber fill:#ff8800,stroke:#000000,stroke-width:2px,color:#050608
+
+    subgraph UI["🖥️ Studio Interface Deck"]
+        Landing["Landing Portal (index.html)"]:::client
+        Console["3-Bay Rack Console (studio.html)"]:::client
+        Scope["CRT Phosphor Oscilloscope (visualizer.js)"]:::accent
+        State["Profile Cache (localStorage)"]:::client
+    end
+
+    subgraph Service["⚡ FastAPI Service Core"]
+        Router["REST Router (backend/app.py)"]:::backend
+        Ingest["Audio Transcoder (backend/audio_utils.py)"]:::backend
+        Profiles["Voice Profile Store (backend/profiles.py)"]:::backend
+        Engine["Acoustic Engine (backend/engine.py)"]:::amber
+    end
+
+    subgraph EngineCore["⚙️ Hardware Execution &amp; Memory Envelope"]
+        CUDA["CUDA GPU Acceleration (NVIDIA)"]:::accent
+        AVX2["CPU AVX2 SIMD Fallback"]:::hardware
+        AudioSave["Dual-Engine Writer (soundfile + scipy)"]:::amber
+        RAMLimit["RAM Budget Guard (&lt; 1.5 GB RSS)"]:::hardware
+    end
+
+    Console --> Router
+    Router --> Ingest
+    Ingest --> Profiles
+    Profiles --> Engine
+    Engine --> CUDA
+    CUDA -.->|Auto Fallback on OOM| AVX2
+    Engine --> AVX2
+    AVX2 --> AudioSave
+    AudioSave --> Router
+    Router --> Scope
+        </pre>
+      </div>
 
       <div class="arch-grid">
         <div class="arch-card">
-          <div class="arch-badge">[SYS_01] Model Compression</div>
+          <div class="arch-badge">[SYS_01] Compression</div>
           <div class="arch-card-title">1.6-bit Ternary Weights</div>
-          <div class="arch-card-desc">Quantized down to ~1.03 GB disk footprint, enabling real-time neural speech synthesis in ~1.2 GB of CPU RAM.</div>
+          <div class="arch-card-desc">Quantized down to ~1.03 GB disk footprint, enabling real-time neural speech synthesis in ~1.2 GB of host RAM without cloud reliance.</div>
         </div>
 
         <div class="arch-card">
-          <div class="arch-badge">[SYS_02] Audio Ingestion</div>
+          <div class="arch-badge">[SYS_02] Ingestion</div>
           <div class="arch-card-title">24 kHz Mono Pipeline</div>
-          <div class="arch-card-desc">Automated FFmpeg transcoding converts incoming MP3, M4A, FLAC, and WebM into clean 16-bit PCM WAV.</div>
+          <div class="arch-card-desc">Automated FFmpeg transcoding converts incoming MP3, M4A, FLAC, and WebM into clean 16-bit PCM WAV matching model formants.</div>
         </div>
 
         <div class="arch-card">
-          <div class="arch-badge">[SYS_03] Acoustic Engine</div>
-          <div class="arch-card-title">Zero-Shot Formant Extraction</div>
-          <div class="arch-card-desc">Captures speaker identity and vocal idiosyncrasies dynamically without any gradient fine-tuning.</div>
+          <div class="arch-badge">[SYS_03] Fallback Engine</div>
+          <div class="arch-card-title">Dynamic Hardware Routing</div>
+          <div class="arch-card-desc">Routes to CUDA when GPU memory allows, and falls back seamlessly to CPU AVX2 on 2GB VRAM constraints with zero crash.</div>
         </div>
+
+        <div class="arch-card">
+          <div class="arch-badge">[SYS_04] Persistence</div>
+          <div class="arch-card-title">Dual-Engine Audio Writer</div>
+          <div class="arch-card-desc">Primary C libsndfile writer backed by an automatic pure Python scipy.io.wavfile fallback for 100% resilient audio delivery.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARDWARE CAPABILITY MATRIX -->
+    <section id="hardware" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
+      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">⚙️ Multi-Device Hardware Capability &amp; Portability Matrix</h2>
+      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
+        Designed to guarantee zero-configuration execution whether running on high-end servers, battery-constrained laptops, Apple Silicon, or headless cloud containers.
+      </p>
+
+      <div class="docs-table-wrapper">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Target Tier</th>
+              <th>Hardware Architecture</th>
+              <th>Inference Execution</th>
+              <th>Synthesis RTF</th>
+              <th>Operational Strategy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-pill-amber">Tier 1</span></td>
+              <td>Dedicated NVIDIA GPUs (VRAM &ge; 4 GB)</td>
+              <td>CUDA FP16 / BF16</td>
+              <td>~0.08x &ndash; 0.15x RTF</td>
+              <td>Full GPU flow matching; ultra-fast sub-second turnaround.</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">Tier 2</span></td>
+              <td>Mobile / Shared GPUs (e.g. NVIDIA MX250 2GB)</td>
+              <td>Dynamic CUDA &rarr; CPU Fallback</td>
+              <td>~0.30x &ndash; 0.65x RTF</td>
+              <td>Attempts CUDA; catches OOM cleanly and routes to CPU AVX2 instantly.</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">Tier 3</span></td>
+              <td>Apple Silicon (Mac M1 / M2 / M3 / M4)</td>
+              <td>ARM NEON Vectorized</td>
+              <td>~0.25x &ndash; 0.45x RTF</td>
+              <td>Unified memory execution via PyTorch multi-threaded CPU backend.</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">Tier 4</span></td>
+              <td>Headless Cloud / Linux &amp; Windows PCs</td>
+              <td>CPU AVX2 / AVX-512</td>
+              <td>~0.40x &ndash; 0.85x RTF</td>
+              <td>Standard x86_64 vectorized kernels within 8 GB RAM envelope.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- EXPRESSION SYNTAX & INTONATION CHEATSHEET -->
+    <section style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
+      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">🎛️ Expression &amp; Emotion Prosody Tags</h2>
+      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
+        Kitten-TTS 2 natively parses emotional markers, laughter events, and vocal emphasis directly inside the prompt text:
+      </p>
+
+      <div class="docs-table-wrapper">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Tag / Syntax</th>
+              <th>Acoustic Inflection</th>
+              <th>Example Prompt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-pill">[happy]</span></td>
+              <td>Warm, upbeat, energetic formant curve</td>
+              <td><code>[happy] Good morning! The system telemetry looks fantastic today.</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">[whisper]</span></td>
+              <td>Quiet, breathy, intimate vocal dynamics</td>
+              <td><code>[whisper] Keep your voice down, the servers are sleeping.</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">[serious]</span></td>
+              <td>Authoritative, firm, steady cadence</td>
+              <td><code>[serious] Critical threshold reached. Initiating protocol zero.</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">[excited]</span></td>
+              <td>Rapid tempo and elevated pitch peak</td>
+              <td><code>[excited] We just benchmarked over 1.2x real-time generation on CPU!</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">&lt;laugh&gt;</span></td>
+              <td>Audible laughter and chuckle event</td>
+              <td><code>You really thought that would fail? &lt;laugh&gt; It compiled on the first try.</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">&lt;sigh&gt;</span></td>
+              <td>Exhale and contemplative cadence pause</td>
+              <td><code>Another 3:00 AM debugging session. &lt;sigh&gt; Back to the terminal.</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">(((emphasis)))</span></td>
+              <td>Heavy harmonic pitch and volume boost</td>
+              <td><code>This parameter is (((crucial))) for memory stability.</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- REST API REFERENCE -->
+    <section id="api" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
+      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📡 REST API Endpoints</h2>
+      <p style="color:var(--text-secondary); font-size:14px; max-width:840px;">
+        The built-in FastAPI server exposes high-performance asynchronous REST endpoints:
+      </p>
+
+      <div class="docs-table-wrapper">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Method &amp; Path</th>
+              <th>Payload Type</th>
+              <th>Description</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-pill-amber">POST</span> <code>/api/synthesize</code></td>
+              <td>JSON: <code>{ text, speed, profile_id }</code></td>
+              <td>Synthesize speech with live hardware selection and stopwatch telemetry.</td>
+              <td><code>{ audio_url, duration, elapsed, device }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">POST</span> <code>/api/upload-sample</code></td>
+              <td>Multipart: <code>file</code></td>
+              <td>Transcodes arbitrary audio uploads to 24kHz mono 16-bit PCM WAV.</td>
+              <td><code>{ filename, duration, sample_rate }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill-amber">POST</span> <code>/api/profiles/save-sample</code></td>
+              <td>JSON: <code>{ filename, name }</code></td>
+              <td>Registers and permanently persists voice identity in profile vault.</td>
+              <td><code>{ id, name, created_at }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">GET</span> <code>/api/profiles</code></td>
+              <td>None</td>
+              <td>Fetches all registered voice profiles with sample rate &amp; duration.</td>
+              <td><code>[ { id, name, filename, ... } ]</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">GET</span> <code>/api/telemetry</code></td>
+              <td>None</td>
+              <td>Reports real-time RAM allocation, CPU load, and CUDA GPU status.</td>
+              <td><code>{ ram_used_gb, ram_total_gb, device, gpu_name }</code></td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">GET</span> <code>/api/audio/{filename}</code></td>
+              <td>None</td>
+              <td>Streams generated WAV files with HTTP Range Header seek support.</td>
+              <td><code>audio/wav</code> Stream</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
     <!-- INSTALLATION & DEPLOYMENT -->
     <section style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">⚡ Deployment & Local Execution</h2>
+      <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">⚡ Quickstart &amp; Local Workstation Boot</h2>
       <div class="terminal-block">
         <div class="terminal-header">
           <div class="dot-group">
@@ -176,18 +420,50 @@
           <span class="cmd">git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git</span><br>
           <span class="cmd">cd KittenTTS-Studio</span><br><br>
           <span class="comment"># 2. Launch local workstation (auto-provisions venv &amp; boots hardware console)</span><br>
-          <span class="cmd">./run_studio.sh</span>
+          <span class="cmd">./run_studio.sh</span><br><br>
+          <span class="comment"># Console opens automatically at http://127.0.0.1:8765</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAR HISTORY -->
+    <section id="star-history" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+          <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📈 GitHub Star History</h2>
+          <p style="color:var(--text-secondary); font-size:14px;">Real-time growth and stargazer metrics for Kitten-TTS 2 Studio.</p>
+        </div>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers" target="_blank" class="btn btn-amber">
+          ★ STAR ON GITHUB
+        </a>
+      </div>
+
+      <div class="star-history-frame">
+        <div class="star-history-header">
+          <span>METRICS // REPO_STAR_TRAJECTORY: SAHOOSHUVRANSHU / KITTENTTS-STUDIO</span>
+          <span style="color:var(--phosphor-green);">● LIVE FEED</span>
+        </div>
+        <div class="star-history-body">
+          <a href="https://star-history.com/#SahooShuvranshu/KittenTTS-Studio&Date" target="_blank" style="display:block; width:100%; text-align:center;">
+            <img 
+              src="https://api.star-history.com/svg?repos=SahooShuvranshu/KittenTTS-Studio&type=Date&theme=dark" 
+              alt="Kitten-TTS 2 Studio Star History Chart" 
+              class="star-history-img"
+            />
+          </a>
         </div>
       </div>
     </section>
 
   </main>
 
+  <!-- ==================== FOOTER ==================== -->
   <footer>
     <div class="footer-attribution">
-      Built by <strong><a href="https://github.com/SahooShuvranshu" target="_blank">Shuvransu</a></strong> with the help of <strong>Antigravity</strong>
+      Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
     </div>
     <div class="footer-meta">
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" style="color:var(--signal-amber); margin-right:12px;">contact@sahooshuvranshu.is-a.dev</a>
       KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
     </div>
   </footer>

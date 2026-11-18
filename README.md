@@ -3,7 +3,7 @@
 # 🎛️ Kitten-TTS 2 Studio
 
 **An industrial, minimal retro-futurist speech synthesis and zero-shot voice cloning console.**  
-*Powered by Kitten-TTS 2 (1.7B Ternary SLM) • 100% Offline • Built by Shuvransu with the help of Antigravity*
+*Powered by Kitten-TTS 2 (1.7B Ternary SLM) • 100% Offline • Built with ❤️ and ☕ by Shuvransu & Antigravity*
 
 <br/>
 
@@ -42,9 +42,16 @@
 
 ---
 
+<div align="center">
+   <h3>Visitors 👀:</h3>
+   <img src="https://count.getloli.com/@KittenTTS2Studio?theme=3d-num&darkmode=1" alt="Visitor Counter" />
+</div>
+
+---
+
 ## ⚡ Overview
 
-**Kitten-TTS 2 Studio** is an open-source, local audio workstation built by **Shuvransu** with the help of **Antigravity** (Google DeepMind) to clone human voices and synthesize expressive speech with zero cloud dependencies.
+**Kitten-TTS 2 Studio** is an open-source, local audio workstation built with ❤️ and ☕ by **Shuvransu** & **Antigravity** (Google DeepMind) to clone human voices and synthesize expressive speech with zero cloud dependencies.
 
 Inspired by Dieter Rams, Teenage Engineering, and NASA instrumentation aesthetics, the interface embraces a tactile brutalist design with high-contrast hardware telemetry, real-time CRT phosphor oscilloscope monitoring, and strict zero-shot offline execution.
 
@@ -72,29 +79,37 @@ Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language m
 
 ```mermaid
 flowchart TD
+    classDef frontend fill:#11141b,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef backend fill:#181b22,stroke:#ff8800,stroke-width:2px,color:#eeebe3
+    classDef hardware fill:#0e1016,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef accent fill:#00ff88,stroke:#000000,stroke-width:2px,color:#050608
+    classDef amber fill:#ff8800,stroke:#000000,stroke-width:2px,color:#050608
+
     subgraph Frontend["🖥️ Hardware Studio Console"]
-        Landing["Landing Page (index.html)"]
-        Studio["Studio Console (studio.html)"]
-        Oscilloscope["Web Audio API Oscilloscope & VU Meter"]
-        ProfileMemory["localStorage Profile Persistence"]
+        Landing["Landing Page (index.html)"]:::frontend
+        Studio["Studio Console (studio.html)"]:::frontend
+        Oscilloscope["Web Audio API Oscilloscope & VU Meter"]:::accent
+        ProfileMemory["localStorage Profile Persistence"]:::frontend
     end
 
     subgraph Backend["⚡ FastAPI Application Layer"]
-        Router["REST & Streaming Endpoints (backend/app.py)"]
-        AudioPipeline["FFmpeg Audio Ingestion Pipeline (backend/audio_utils.py)"]
-        ProfileStore["Voice Profile Database (backend/profiles.py)"]
-        KittenEngine["Kitten-TTS 2 Model Runner (backend/engine.py)"]
+        Router["REST & Streaming Endpoints (backend/app.py)"]:::backend
+        AudioPipeline["FFmpeg Audio Ingestion Pipeline (backend/audio_utils.py)"]:::backend
+        ProfileStore["Voice Profile Database (backend/profiles.py)"]:::backend
+        KittenEngine["Kitten-TTS 2 Model Runner (backend/engine.py)"]:::amber
     end
 
-    subgraph Hardware["⚙️ Hardware Execution"]
-        CPU["CPU Execution (AVX2 Vectorized)"]
-        RAM["RAM Budget Guard (<1.5 GB Working Set)"]
+    subgraph Hardware["⚙️ Hardware Execution & Dynamic Routing"]
+        GPU["CUDA Acceleration (NVIDIA GPUs)"]:::accent
+        CPU["CPU AVX2 Execution (Seamless Fallback)"]:::hardware
+        RAM["RAM Budget Guard (<1.5 GB Working Set)"]:::hardware
     end
 
     Studio --> Router
     Router --> AudioPipeline
     AudioPipeline --> ProfileStore
     ProfileStore --> KittenEngine
+    KittenEngine --> GPU
     KittenEngine --> CPU
     KittenEngine --> RAM
     KittenEngine --> Router
@@ -201,9 +216,9 @@ Contributions are welcomed! Please read our [Contributing Guidelines](CONTRIBUTI
 
 ## 📜 Credits & Acknowledgments
 
-This project is built by **Shuvransu** with the help of **Antigravity**:
+This project is built with ❤️ and ☕ by **Shuvransu** & **Antigravity**:
 
-- **[Shuvransu](https://github.com/SahooShuvranshu)**: Lead Developer, System Architecture, & Open-Source Author.
+- **[Shuvransu](https://sahooshuvranshu.is-a.dev)**: Lead Developer, System Architecture, & Open-Source Author.
 - **[Google DeepMind Antigravity](https://deepmind.google)**: Autonomous AI Architect & Agentic Co-Engineer.
 - **[KittenML Team](https://github.com/KittenML)**: Kitten-TTS 2 1.7B Speech Language Model and ternary quantization.
 
