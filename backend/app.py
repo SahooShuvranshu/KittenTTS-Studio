@@ -279,5 +279,23 @@ def serve_docs_showcase():
         raise HTTPException(status_code=404, detail="Docs showcase not found.")
     return FileResponse(docs_html, media_type="text/html")
 
+# Mount Documentation showcase directory
+app.mount("/docs", StaticFiles(directory=DOCS_DIR, html=True), name="docs")
+
+# Direct fallback routes for docs-showcase relative assets
+@app.get("/style.css")
+def serve_docs_style():
+    style_path = os.path.join(DOCS_DIR, "style.css")
+    if os.path.exists(style_path):
+        return FileResponse(style_path, media_type="text/css")
+    raise HTTPException(status_code=404)
+
+@app.get("/demo.js")
+def serve_docs_demo():
+    demo_path = os.path.join(DOCS_DIR, "demo.js")
+    if os.path.exists(demo_path):
+        return FileResponse(demo_path, media_type="application/javascript")
+    raise HTTPException(status_code=404)
+
 # Serve Frontend static assets
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

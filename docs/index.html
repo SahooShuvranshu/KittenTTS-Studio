@@ -60,7 +60,8 @@
         <a href="#architecture" style="color:var(--text-secondary);">[ARCHITECTURE]</a>
         <a href="#hardware" style="color:var(--text-secondary);">[HARDWARE]</a>
         <a href="#api" style="color:var(--text-secondary);">[API]</a>
-        <a href="#star-history" style="color:var(--signal-amber); font-weight:700;">[STARS]</a>
+        <a href="#metrics" style="color:var(--signal-amber); font-weight:700;">[METRICS]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio#quickstart" target="_blank" style="color:var(--phosphor-green); font-weight:700;">[LAUNCH]</a>
       </nav>
       <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber">
         ★ STAR ON GITHUB
@@ -91,6 +92,7 @@
         <div class="telemetry-cell"><strong>MODEL:</strong> 1.7B TERNARY SLM</div>
         <div class="telemetry-cell"><strong>MEM_BUDGET:</strong> &lt; 1.4 GB WORKING SET</div>
         <div class="telemetry-cell"><strong>SAMPLING:</strong> 24.0 kHz MONO PCM</div>
+        <div class="telemetry-cell live"><strong>VISITORS:</strong> <img src="https://count.getloli.com/@KittenTTS2Studio?theme=rule34&darkmode=1" alt="Visitors" style="height:14px; vertical-align:middle;"></div>
         <div class="telemetry-cell live"><strong>STATUS:</strong> OPERATIONAL</div>
       </div>
 
@@ -171,40 +173,31 @@ flowchart TD
     classDef client fill:#11141b,stroke:#00ff88,stroke-width:2px,color:#eeebe3
     classDef backend fill:#181b22,stroke:#ff8800,stroke-width:2px,color:#eeebe3
     classDef hardware fill:#0e1016,stroke:#00ff88,stroke-width:2px,color:#eeebe3
-    classDef accent fill:#00ff88,stroke:#000000,stroke-width:2px,color:#050608
     classDef amber fill:#ff8800,stroke:#000000,stroke-width:2px,color:#050608
+    classDef accent fill:#00ff88,stroke:#000000,stroke-width:2px,color:#050608
 
-    subgraph UI["🖥️ Studio Interface Deck"]
-        Landing["Landing Portal (index.html)"]:::client
-        Console["3-Bay Rack Console (studio.html)"]:::client
-        Scope["CRT Phosphor Oscilloscope (visualizer.js)"]:::accent
-        State["Profile Cache (localStorage)"]:::client
-    end
+    UI["🖥️ Studio Web Workstation (studio.html)"]:::client
+    Router["⚡ FastAPI Core REST Gateway (app.py)"]:::backend
+    Transcoder["🎛️ Audio Ingestion &amp; Transcoder (24kHz PCM16)"]:::backend
+    ProfileStore["📁 Voice Profile Storage Vault (profiles.json)"]:::backend
+    Engine["🧠 KittenTTS-2 Engine Singleton (1.7B Ternary SLM)"]:::amber
+    CUDA["🚀 GPU CUDA Acceleration (FP16 / BF16)"]:::accent
+    CPU["⚡ CPU AVX2 Vectorized Execution (Auto-Fallback)"]:::hardware
+    Writer["💾 Resilient Dual-Engine Writer (soundfile + scipy)"]:::amber
+    Stream["📡 24kHz HTTP Range Stream &amp; CRT Oscilloscope"]:::client
 
-    subgraph Service["⚡ FastAPI Service Core"]
-        Router["REST Router (backend/app.py)"]:::backend
-        Ingest["Audio Transcoder (backend/audio_utils.py)"]:::backend
-        Profiles["Voice Profile Store (backend/profiles.py)"]:::backend
-        Engine["Acoustic Engine (backend/engine.py)"]:::amber
-    end
-
-    subgraph EngineCore["⚙️ Hardware Execution &amp; Memory Envelope"]
-        CUDA["CUDA GPU Acceleration (NVIDIA)"]:::accent
-        AVX2["CPU AVX2 SIMD Fallback"]:::hardware
-        AudioSave["Dual-Engine Writer (soundfile + scipy)"]:::amber
-        RAMLimit["RAM Budget Guard (&lt; 1.5 GB RSS)"]:::hardware
-    end
-
-    Console --> Router
-    Router --> Ingest
-    Ingest --> Profiles
-    Profiles --> Engine
-    Engine --> CUDA
-    CUDA -.->|Auto Fallback on OOM| AVX2
-    Engine --> AVX2
-    AVX2 --> AudioSave
-    AudioSave --> Router
-    Router --> Scope
+    UI -->|1. Ingest Sample / Prompt| Router
+    Router -->|2. Transcode WebM/MP3/FLAC| Transcoder
+    Transcoder -->|3. Register Voice Profile| ProfileStore
+    ProfileStore -->|4. Pass Reference Audio Formants| Engine
+    Engine -->|Primary Route| CUDA
+    CUDA -.->|Auto Fallback on OOM / Error| CPU
+    Engine -->|CPU Direct| CPU
+    CUDA -->|Raw 24kHz Waveform| Writer
+    CPU -->|Raw 24kHz Waveform| Writer
+    Writer -->|Save 24kHz Mono WAV| Router
+    Router -->|HTTP Range Audio Stream| Stream
+    Stream -->|Real-Time Phosphor Trace| UI
         </pre>
       </div>
 
@@ -426,18 +419,19 @@ flowchart TD
       </div>
     </section>
 
-    <!-- STAR HISTORY -->
-    <section id="star-history" style="margin:48px 0; display:flex; flex-direction:column; gap:16px;">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <!-- METRICS: STAR HISTORY & VISITOR TELEMETRY -->
+    <section id="metrics" style="margin:48px 0; display:flex; flex-direction:column; gap:24px;">
+      <div id="star-history" style="display:flex; justify-content:space-between; align-items:flex-end;">
         <div>
-          <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📈 GitHub Star History</h2>
-          <p style="color:var(--text-secondary); font-size:14px;">Real-time growth and stargazer metrics for Kitten-TTS 2 Studio.</p>
+          <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:var(--bone-cream);">📈 Community Growth &amp; Telemetry Metrics</h2>
+          <p style="color:var(--text-secondary); font-size:14px;">Real-time stargazer metrics and visitor traffic for Kitten-TTS 2 Studio.</p>
         </div>
         <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers" target="_blank" class="btn btn-amber">
           ★ STAR ON GITHUB
         </a>
       </div>
 
+      <!-- Star History Chart -->
       <div class="star-history-frame">
         <div class="star-history-header">
           <span>METRICS // REPO_STAR_TRAJECTORY: SAHOOSHUVRANSHU / KITTENTTS-STUDIO</span>
@@ -451,6 +445,29 @@ flowchart TD
               class="star-history-img"
             />
           </a>
+        </div>
+      </div>
+
+      <!-- Live Visitor Counter Frame -->
+      <div class="visitor-counter-frame">
+        <div class="star-history-header">
+          <span>TELEMETRY // ACCESS_MONITOR: UNIQUE_VISITORS</span>
+          <span style="color:var(--phosphor-green);">● ACTIVE COUNT</span>
+        </div>
+        <div class="visitor-counter-body">
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--bone-cream); letter-spacing:1px; text-transform:uppercase;">
+            TOTAL WORKSTATION VISITOR IMPRESSIONS
+          </div>
+          <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank">
+            <img 
+              src="https://count.getloli.com/@KittenTTS2Studio?theme=3d-num&darkmode=1" 
+              alt="Kitten-TTS 2 Studio Visitor Counter" 
+              class="visitor-counter-img"
+            />
+          </a>
+          <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">
+            Real-time telemetry tracked across GitHub Pages &amp; local instances
+          </div>
         </div>
       </div>
     </section>

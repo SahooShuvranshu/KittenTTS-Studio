@@ -665,6 +665,42 @@ a {
   margin-top: 16px;
 }
 
+.mermaid-box pre.mermaid {
+  width: 100%;
+  max-width: 820px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==================== VISITOR COUNTER FRAME ==================== */
+.visitor-counter-frame {
+  background: var(--bg-surface);
+  border: 2.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: 4px 4px 0px var(--phosphor-green);
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.visitor-counter-body {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-surface-sunken);
+}
+
+.visitor-counter-img {
+  height: 48px;
+  max-width: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.25));
+}
+
+
 /* ==================== FOOTER ==================== */
 footer {
   border-top: 2.5px solid var(--border-dark);
