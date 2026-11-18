@@ -1,43 +1,42 @@
 /* ==========================================================================
-   KITTEN-TTS 2 STUDIO — CUTE BRUTALIST HARDWARE CONSOLE
-   Brutalism × Kitty Aesthetic • 2.5px Solid Black Borders • Hard Offset Shadows
+   KITTEN-TTS 2 STUDIO — MINIMAL RETRO-FUTURIST HARDWARE WORKSTATION CONSOLE
+   Industrial Brutalism × Minimal Retro-Futurism • Hardware Rack Instrumentation
+   Dieter Rams / Teenage Engineering / Braun Hardware Inspired
    ========================================================================== */
 
 :root {
-  --bg-base: #0c0e14;
-  --bg-surface: #141722;
-  --bg-surface-raised: #1c202e;
-  --bg-surface-sunken: #08090d;
-  
+  --bg-base: #090a0d;
+  --bg-surface: #111318;
+  --bg-surface-raised: #181b22;
+  --bg-surface-sunken: #060709;
+
   --border-dark: #000000;
-  --border-subtle: #242938;
-  --border-focus: #ff70a6;
-  
-  --text-primary: #fdfdfd;
-  --text-secondary: #9aa1b2;
-  --text-muted: #5d6579;
-  
-  --kitty-pink: #ff70a6;
-  --kitty-pink-light: #ffb3ce;
-  --kitty-pink-bg: rgba(255, 112, 166, 0.15);
+  --border-subtle: #1e222d;
+  --border-focus: #ff8800;
 
-  --kitty-mint: #00f59b;
-  --kitty-mint-bg: rgba(0, 245, 155, 0.15);
+  --text-primary: #eeebe3;
+  --text-secondary: #8c93a4;
+  --text-muted: #535969;
 
-  --kitty-cream: #fff9e6;
-  --kitty-lavender: #b388ff;
-  --kitty-yellow: #ffd166;
-  --kitty-coral: #ff4757;
-  --kitty-coral-bg: rgba(255, 71, 87, 0.2);
+  --signal-amber: #ff8800;
+  --signal-amber-bg: rgba(255, 136, 0, 0.12);
+  --signal-green: #00ff88;
+  --signal-green-bg: rgba(0, 255, 136, 0.12);
+  --signal-orange: #ff5722;
+  --signal-cream: #eeebe3;
+
+  --accent-meter: #00ff88;
+  --accent-meter-bg: rgba(0, 255, 136, 0.15);
+
 
   --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  
-  --radius-brutal: 4px;
+
+  --radius-brutal: 3px;
   --shadow-brutal: 4px 4px 0px #000000;
   --shadow-brutal-sm: 2px 2px 0px #000000;
-  --shadow-brutal-pink: 4px 4px 0px #ff70a6;
-  --shadow-brutal-mint: 4px 4px 0px #00f59b;
+  --shadow-brutal-amber: 4px 4px 0px #ff8800;
+  --shadow-brutal-green: 4px 4px 0px #00ff88;
 }
 
 * {
@@ -56,13 +55,20 @@ body {
   -webkit-font-smoothing: antialiased;
   display: flex;
   flex-direction: column;
-  background-image: radial-gradient(rgba(255, 112, 166, 0.04) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 .tabular {
   font-variant-numeric: tabular-nums;
   font-family: var(--font-mono);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ==================== TOP TELEMETRY HUD ==================== */
@@ -82,27 +88,28 @@ body {
 .hud-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .hud-back-btn {
   color: #000000;
-  background: var(--kitty-cream);
+  background: var(--signal-cream);
   text-decoration: none;
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 4px 10px;
   border: 2px solid var(--border-dark);
   border-radius: var(--radius-brutal);
   box-shadow: 2px 2px 0px #000000;
-  transition: transform 60ms ease, box-shadow 60ms ease;
+  transition: transform 60ms ease, box-shadow 60ms ease, background-color 80ms ease;
 }
 
 .hud-back-btn:hover {
+  background-color: #ffffff;
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0px #000000;
 }
@@ -137,15 +144,15 @@ body {
 }
 
 .hud-val.active {
-  color: var(--kitty-mint);
+  color: var(--signal-green);
 }
 
 .hud-status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--kitty-mint);
-  box-shadow: 0 0 6px var(--kitty-mint);
+  background-color: var(--signal-green);
+  box-shadow: 0 0 6px var(--signal-green);
   display: inline-block;
 }
 
@@ -193,6 +200,24 @@ body {
   gap: 8px;
 }
 
+.panel-icon {
+  background: #000000;
+  color: var(--signal-green);
+  border: 1px solid var(--border-subtle);
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+}
+
+.panel-spec-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
 .panel-body {
   padding: 16px;
   display: flex;
@@ -237,7 +262,7 @@ button, .btn {
 }
 
 button:hover, .btn:hover {
-  background-color: #242a3b;
+  background-color: #212530;
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0px #000000;
 }
@@ -248,32 +273,54 @@ button:active, .btn:active {
 }
 
 button:focus-visible {
-  outline: 2px solid var(--kitty-pink);
+  outline: 2px solid var(--signal-amber);
   outline-offset: 1px;
 }
 
-/* Primary Brutalist Button (Cute Pink) */
-.btn-primary {
-  background-color: var(--kitty-pink);
+/* Primary Signal Amber Button */
+.btn-primary, .btn-signal {
+  background-color: var(--signal-amber);
   color: #000000;
   font-weight: 800;
+  border-color: #000000;
   box-shadow: 4px 4px 0px #000000;
 }
 
-.btn-primary:hover {
-  background-color: #ff85b3;
+.btn-primary:hover, .btn-signal:hover {
+  background-color: #ffa033;
   box-shadow: 5px 5px 0px #000000;
 }
 
-/* Danger / Recording Button */
+.btn-green {
+  background-color: var(--signal-green);
+  color: #000000;
+  font-weight: 800;
+  border-color: #000000;
+}
+
+.btn-green:hover {
+  background-color: #33ff9f;
+}
+
+.btn-cream {
+  background-color: var(--signal-cream);
+  color: #000000;
+  font-weight: 700;
+}
+
+.btn-cream:hover {
+  background-color: #ffffff;
+}
+
+/* Danger / Alert Button */
 .btn-danger {
-  background-color: var(--kitty-coral);
+  background-color: var(--signal-orange);
   color: #ffffff;
   border-color: var(--border-dark);
 }
 
 .btn-danger:hover {
-  background-color: #ff5e6e;
+  background-color: #ff6e40;
 }
 
 /* Expression & Micro Tags */
@@ -288,7 +335,7 @@ button:focus-visible {
 }
 
 .btn-tag:hover {
-  background-color: var(--kitty-pink);
+  background-color: var(--signal-amber);
   color: #000000;
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0px #000000;
@@ -316,15 +363,19 @@ button:focus-visible {
   transition: all 80ms ease;
 }
 
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
 .tab-btn.active {
-  background-color: var(--kitty-pink);
+  background-color: var(--signal-amber);
   color: #000000;
   box-shadow: 3px 3px 0px #000000;
 }
 
 /* ==================== DRAG & DROP UPLOAD ZONE ==================== */
 .dropzone {
-  border: 2.5px dashed var(--kitty-pink);
+  border: 2px dashed #2f3545;
   background-color: var(--bg-surface-sunken);
   border-radius: var(--radius-brutal);
   padding: 24px 16px;
@@ -339,13 +390,13 @@ button:focus-visible {
 }
 
 .dropzone:hover, .dropzone.dragover {
-  border-color: var(--kitty-mint);
-  background-color: rgba(0, 245, 155, 0.05);
-  box-shadow: 4px 4px 0px var(--kitty-mint);
+  border-color: var(--signal-green);
+  background-color: var(--signal-green-bg);
+  box-shadow: 4px 4px 0px var(--signal-green);
 }
 
 .dropzone-icon {
-  color: var(--kitty-pink);
+  color: var(--signal-amber);
 }
 
 .dropzone-text {
@@ -400,8 +451,8 @@ button:focus-visible {
 }
 
 .rec-indicator.active {
-  color: var(--kitty-coral);
-  border-color: var(--kitty-coral);
+  color: var(--signal-orange);
+  border-color: var(--signal-orange);
 }
 
 .rec-dot {
@@ -412,8 +463,8 @@ button:focus-visible {
 }
 
 .rec-indicator.active .rec-dot {
-  background-color: var(--kitty-coral);
-  box-shadow: 0 0 6px var(--kitty-coral);
+  background-color: var(--signal-orange);
+  box-shadow: 0 0 6px var(--signal-orange);
 }
 
 /* Audio Level VU Meter */
@@ -429,7 +480,7 @@ button:focus-visible {
 .vu-meter-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--kitty-mint) 0%, var(--kitty-yellow) 75%, var(--kitty-coral) 100%);
+  background: linear-gradient(90deg, var(--signal-green) 0%, var(--signal-amber) 75%, var(--signal-orange) 100%);
   transition: width 60ms linear;
 }
 
@@ -461,9 +512,9 @@ button:focus-visible {
 }
 
 .profile-card.selected {
-  border-color: var(--kitty-pink);
-  background-color: rgba(255, 112, 166, 0.08);
-  box-shadow: 3px 3px 0px var(--kitty-pink);
+  border-color: var(--signal-amber);
+  background-color: var(--signal-amber-bg);
+  box-shadow: 3px 3px 0px var(--signal-amber);
 }
 
 .profile-info {
@@ -510,8 +561,8 @@ button:focus-visible {
 
 .studio-textarea:focus {
   outline: none;
-  border-color: var(--kitty-pink);
-  box-shadow: 4px 4px 0px var(--kitty-pink);
+  border-color: var(--signal-amber);
+  box-shadow: 4px 4px 0px var(--signal-amber);
 }
 
 .tag-toolbar {
@@ -526,7 +577,7 @@ button:focus-visible {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 800;
-  color: var(--kitty-pink);
+  color: var(--signal-amber);
   text-transform: uppercase;
   margin-right: 4px;
 }
@@ -563,12 +614,12 @@ select {
 
 select:focus {
   outline: none;
-  border-color: var(--kitty-pink);
+  border-color: var(--signal-amber);
 }
 
 /* ==================== AUDIO VAULT & OSCILLOSCOPE ==================== */
 .waveform-canvas-box {
-  background-color: var(--bg-surface-sunken);
+  background-color: #060a08;
   border: 2.5px solid var(--border-dark);
   border-radius: var(--radius-brutal);
   box-shadow: var(--shadow-brutal);
@@ -612,7 +663,7 @@ select:focus {
   width: 14px;
   height: 14px;
   border-radius: 2px;
-  background-color: var(--kitty-pink);
+  background-color: var(--signal-amber);
   border: 1.5px solid #000000;
   box-shadow: 1px 1px 0px #000000;
   cursor: pointer;
@@ -686,7 +737,7 @@ select:focus {
 }
 
 .toast {
-  background-color: var(--kitty-cream);
+  background-color: var(--signal-cream);
   border: 2.5px solid var(--border-dark);
   color: #000000;
   font-family: var(--font-mono);

@@ -1,6 +1,7 @@
 /**
  * Kitten-TTS 2 Studio — Oscilloscope Visualizer
- * Real-time Cute Brutalist waveform rendering with dual neon glow
+ * Real-time Minimal Retro-Futurist Waveform Rendering with Phosphor CRT Green Trace
+ * Inspired by Dieter Rams / Teenage Engineering / Tektronix Laboratory Oscilloscopes
  */
 class OscilloscopeVisualizer {
   constructor(canvasId, audioElement) {
@@ -69,25 +70,47 @@ class OscilloscopeVisualizer {
     const h = this.height;
     const ctx = this.ctx;
 
-    ctx.strokeStyle = '#1a1e2c';
+    // Dark phosphor CRT screen tint
+    ctx.fillStyle = '#060a08';
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle phosphor graticule grid
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.08)';
     ctx.lineWidth = 1;
 
-    // Horizontal center and quarter lines
+    // Horizontal division lines
     ctx.beginPath();
     ctx.moveTo(0, h * 0.25);
     ctx.lineTo(w, h * 0.25);
-    ctx.moveTo(0, h * 0.5);
-    ctx.lineTo(w, h * 0.5);
     ctx.moveTo(0, h * 0.75);
     ctx.lineTo(w, h * 0.75);
     ctx.stroke();
 
-    // Subtle vertical ticks
-    const step = 40;
+    // Primary center axes with slightly higher contrast
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.18)';
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.5);
+    ctx.lineTo(w, h * 0.5);
+    ctx.moveTo(w * 0.5, 0);
+    ctx.lineTo(w * 0.5, h);
+    ctx.stroke();
+
+    // Precision graticule ticks along center horizontal axis
+    const step = 20;
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.25)';
     ctx.beginPath();
     for (let x = step; x < w; x += step) {
-      ctx.moveTo(x, h * 0.5 - 4);
-      ctx.lineTo(x, h * 0.5 + 4);
+      const isMajor = (x % (step * 2) === 0);
+      const tickH = isMajor ? 4 : 2;
+      ctx.moveTo(x, h * 0.5 - tickH);
+      ctx.lineTo(x, h * 0.5 + tickH);
+    }
+    // Vertical ticks along center vertical axis
+    for (let y = step; y < h; y += step) {
+      const isMajor = (y % (step * 2) === 0);
+      const tickW = isMajor ? 4 : 2;
+      ctx.moveTo(w * 0.5 - tickW, y);
+      ctx.lineTo(w * 0.5 + tickW, y);
     }
     ctx.stroke();
   }
@@ -100,15 +123,16 @@ class OscilloscopeVisualizer {
     ctx.clearRect(0, 0, w, h);
     this.drawGrid();
 
-    // Quiet center line with cute kitty pink & mint dots
-    ctx.strokeStyle = '#ff70a6';
+    // CRT standby phosphor beam trace
+    ctx.strokeStyle = '#00ff88';
     ctx.lineWidth = 1.5;
-    ctx.setLineDash([4, 4]);
+    ctx.shadowColor = '#00ff88';
+    ctx.shadowBlur = 4;
     ctx.beginPath();
     ctx.moveTo(0, h * 0.5);
     ctx.lineTo(w, h * 0.5);
     ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.shadowBlur = 0;
   }
 
   render() {
@@ -124,15 +148,10 @@ class OscilloscopeVisualizer {
     ctx.clearRect(0, 0, w, h);
     this.drawGrid();
 
-    // Waveform line in vibrant Cute Brutalist Cyber Mint -> Bubblegum Pink gradient
-    const grad = ctx.createLinearGradient(0, 0, w, 0);
-    grad.addColorStop(0, '#00f59b');
-    grad.addColorStop(0.5, '#fff9e6');
-    grad.addColorStop(1, '#ff70a6');
-
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = grad;
-    ctx.shadowColor = '#ff70a6';
+    // Oscilloscope trace in crisp Retro Phosphor CRT Green
+    ctx.lineWidth = 2.0;
+    ctx.strokeStyle = '#00ff88';
+    ctx.shadowColor = '#00ff88';
     ctx.shadowBlur = 6;
     ctx.beginPath();
 

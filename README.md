@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎙️ Kitten-TTS 2 Studio
+# 🎛️ Kitten-TTS 2 Studio
 
-**An industrial, high-performance local speech synthesis and zero-shot voice cloning console.**  
+**An industrial, minimal retro-futurist speech synthesis and zero-shot voice cloning console.**  
 *Powered by Kitten-TTS 2 (1.7B Ternary SLM) • 100% Offline • Built by Shuvransu with the help of Antigravity*
 
 <br/>
@@ -14,24 +14,24 @@
 [![Model](https://img.shields.io/badge/Model-Kitten--TTS%202%20(1.7B)-10B981?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/KittenML/kitten-tts-2)
 [![Weights](https://img.shields.io/badge/Weights-1.6--bit%20Ternary%20SLM-2B3245?style=for-the-badge&labelColor=0E1116)]()
 [![Audio Output](https://img.shields.io/badge/Audio-24kHz%20PCM%20WAV-2563EB?style=for-the-badge&logo=audio-technica&logoColor=white)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge&labelColor=0E1116)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-FF8800?style=for-the-badge&labelColor=0E1116)](LICENSE)
 
-[![Built with Antigravity AI](https://img.shields.io/badge/Built%20with-Antigravity%20AI-00E599?style=for-the-badge&logo=google&logoColor=white&labelColor=0E1116)](https://deepmind.google)
+[![Built with Antigravity AI](https://img.shields.io/badge/Built%20with-Antigravity%20AI-00FF88?style=for-the-badge&logo=google&logoColor=black&labelColor=0E1116)](https://deepmind.google)
 [![RAM Budget](https://img.shields.io/badge/RAM%20Envelope-8GB%20Safe-8B5CF6?style=for-the-badge&labelColor=0E1116)]()
 [![Execution](https://img.shields.io/badge/Execution-CPU%20AVX2-6366F1?style=for-the-badge&labelColor=0E1116)]()
-[![Offline](https://img.shields.io/badge/Privacy-100%25%20Offline-EC4899?style=for-the-badge&labelColor=0E1116)]()
+[![Offline](https://img.shields.io/badge/Privacy-100%25%20Offline-00FF88?style=for-the-badge&labelColor=0E1116)]()
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-14B8A6?style=for-the-badge&logo=linux&logoColor=white)]()
 
-[![GitHub Stars](https://img.shields.io/github/stars/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FFE600&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=EDEDEF&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FF5A52&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-10B981?style=for-the-badge&labelColor=0E1116)](CONTRIBUTING.md)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-00E599?style=for-the-badge&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio)
+[![GitHub Stars](https://img.shields.io/github/stars/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FF8800&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=EEEBE3&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/SahooShuvranshu/KittenTTS-Studio?style=for-the-badge&color=FF3744&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-00FF88?style=for-the-badge&labelColor=0E1116)](CONTRIBUTING.md)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-00FF88?style=for-the-badge&labelColor=0E1116)](https://github.com/SahooShuvranshu/KittenTTS-Studio)
 
 <br/>
 
 <p align="center">
-  <img src="frontend/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface" width="100%" style="border-radius:6px; border:2px solid #000;" />
+  <img src="frontend/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface" width="100%" style="border-radius:4px; border:2px solid #282d3b; box-shadow:4px 4px 0px #000;" />
 </p>
 
 <br/>
@@ -46,22 +46,24 @@
 
 **Kitten-TTS 2 Studio** is an open-source, local audio workstation built by **Shuvransu** with the help of **Antigravity** (Google DeepMind) to clone human voices and synthesize expressive speech with zero cloud dependencies.
 
+Inspired by Dieter Rams, Teenage Engineering, and NASA instrumentation aesthetics, the interface embraces a tactile brutalist design with high-contrast hardware telemetry, real-time CRT phosphor oscilloscope monitoring, and strict zero-shot offline execution.
+
 Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language model compressed using exact 1.6-bit ternary weights—this studio runs comfortably on standard laptop CPUs within a strict **8 GB physical RAM budget**, producing broadcast-ready 24,000 Hz audio.
 
 ---
 
-## ✨ Key Highlights
+## 🎛️ Key Highlights & Instrumentation
 
 - **Zero-Shot Voice Cloning**: Clone any voice in real time using a 5–30 second reference sample. No fine-tuning, training, or cloud upload required.
-- **Dual Voice Ingestion**:
-  - **Drag & Drop Upload**: Accepts `.wav`, `.mp3`, `.m4a`, `.flac`, and `.ogg`. Automatically normalized to 24 kHz mono 16-bit PCM WAV via FFmpeg.
-  - **Live Browser Recording**: Capture reference samples directly from your microphone with real-time VU-level dynamics.
+- **Dual Ingestion Hardware Bay**:
+  - **Tactile Drag & Drop**: Accepts `.wav`, `.mp3`, `.m4a`, `.flac`, and `.ogg`. Automatically normalized to 24 kHz mono 16-bit PCM WAV via FFmpeg.
+  - **Live Microphone Capture**: Capture reference audio directly from your microphone with calibrated VU-level dynamics.
 - **Voice Profile Registry & Memory**: Save, tag, and audition multiple voice identities. Selections persist automatically across browser reloads via `localStorage`.
-- **Expression & Event Tags**: Control speech inflection with native tags:
+- **Expression & Event Syntax**: Control speech inflection with native tags:
   - Emotions: `[happy]`, `[whisper]`, `[serious]`, `[excited]`
   - Non-Speech Events: `<laugh>`, `<sigh>`
   - Stress & Prosody: `(((emphasis)))`
-- **Minimalist Studio Dashboard**: Clean, tactile audio engineering workstation layout featuring a real-time oscilloscope canvas and a strict 4px layout grid.
+- **Minimal Retro-Futurist Workstation**: Clean hardware rack chassis featuring a real-time CRT phosphor oscilloscope trace (`#00ff88`) and strict 4px instrumentation grid.
 - **100% Offline & Private**: Zero analytics, zero cloud transmission, zero telemetry.
 
 ---
@@ -70,7 +72,7 @@ Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language m
 
 ```mermaid
 flowchart TD
-    subgraph Frontend["🖥️ Modern Studio Frontend"]
+    subgraph Frontend["🖥️ Hardware Studio Console"]
         Landing["Landing Page (index.html)"]
         Studio["Studio Console (studio.html)"]
         Oscilloscope["Web Audio API Oscilloscope & VU Meter"]
