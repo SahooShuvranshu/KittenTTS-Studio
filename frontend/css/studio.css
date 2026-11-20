@@ -298,6 +298,9 @@ button:focus-visible {
   font-size: 10px;
   font-weight: 700;
   padding: 4px 9px;
+  min-height: 24px;
+  min-width: 24px;
+  line-height: 14px;
   background-color: var(--bg-surface-sunken);
   border: 1.5px solid var(--border-dark);
   color: var(--text-primary);
@@ -363,6 +366,12 @@ button:focus-visible {
   border-color: var(--signal-green);
   background-color: var(--signal-green-bg);
   box-shadow: 4px 4px 0px var(--signal-green);
+}
+
+.dropzone.uploading {
+  opacity: 0.6;
+  pointer-events: none;
+  border-color: var(--signal-amber);
 }
 
 .dropzone-icon {

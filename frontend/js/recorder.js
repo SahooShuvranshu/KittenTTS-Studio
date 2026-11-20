@@ -21,9 +21,39 @@ class StudioRecorder {
   }
 
   async start() {
+    // 1. Insecure HTTP Context check (Browsers disable getUserMedia on insecure origins except localhost)
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!window.isSecureContext && !isLocalhost) {
+      this.onStateChange('error', 'Microphone recording requires a secure (HTTPS) context.');
+      return;
+    }
+
+    // 2. MediaDevices API availability check
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.onStateChange('error', 'Audio input API is not supported in this browser environment.');
+      return;
+    }
+
+    // 3. MediaRecorder API support check
+    if (typeof MediaRecorder === 'undefined') {
+      this.onStateChange('error', 'MediaRecorder API is not available in your browser.');
+      return;
+    }
+
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       this.audioChunks = [];
+
+      // Guard against microphone unplugged / stream track termination mid-recording
+      const tracks = this.stream.getAudioTracks();
+      if (tracks.length > 0) {
+        tracks[0].onended = () => {
+          if (this.isRecording) {
+            this.stop();
+            this.onStateChange('error', 'Microphone was unplugged or disconnected.');
+          }
+        };
+      }
 
       // Audio Context for VU level meter
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -40,9 +70,15 @@ class StudioRecorder {
         }
       };
 
+      this.mediaRecorder.onerror = (e) => {
+        this.cleanup();
+        this.onStateChange('error', 'Recording error: ' + (e.error ? e.error.message : 'MediaRecorder failed'));
+      };
+
       this.mediaRecorder.onstop = () => {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-        this.onRecorded(audioBlob);
+        const finalDuration = (Date.now() - this.startTime) / 1000;
+        this.onRecorded(audioBlob, finalDuration);
         this.cleanup();
       };
 
@@ -77,14 +113,29 @@ class StudioRecorder {
 
     } catch (err) {
       console.error("Microphone access error:", err);
-      this.onStateChange('error', err.message);
+      let errorMsg = err.message || 'Microphone access failed.';
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        errorMsg = 'Microphone permission was denied by user or system policy.';
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        errorMsg = 'No audio input microphone device found on your system.';
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        errorMsg = 'Microphone hardware is busy or was disconnected.';
+      } else if (err.name === 'OverconstrainedError') {
+        errorMsg = 'Microphone audio constraints could not be satisfied.';
+      }
+      this.cleanup();
+      this.onStateChange('error', errorMsg);
     }
   }
 
   stop() {
     if (this.mediaRecorder && this.isRecording) {
       this.isRecording = false;
-      this.mediaRecorder.stop();
+      try {
+        if (this.mediaRecorder.state !== 'inactive') {
+          this.mediaRecorder.stop();
+        }
+      } catch (e) {}
       if (this.timerInterval) {
         clearInterval(this.timerInterval);
         this.timerInterval = null;
@@ -99,12 +150,26 @@ class StudioRecorder {
   }
 
   cleanup() {
+    this.isRecording = false;
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+    if (this.meterAnim) {
+      cancelAnimationFrame(this.meterAnim);
+      this.meterAnim = null;
+    }
     if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+      this.stream.getTracks().forEach(track => {
+        track.onended = null;
+        track.stop();
+      });
       this.stream = null;
     }
     if (this.audioCtx) {
-      this.audioCtx.close();
+      try {
+        this.audioCtx.close();
+      } catch (e) {}
       this.audioCtx = null;
     }
   }

@@ -3,23 +3,57 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Safe Storage Helpers (prevent throws in restricted/private modes)
-  function safeGetStorage(key) {
-    try {
-      return localStorage.getItem(key);
-    } catch (e) {
-      return null;
+  // Versioned Storage Manager (Schema v1 with quota guard & migration)
+  const StorageManager = {
+    SCHEMA_VERSION: 1,
+    PREFIX: 'kitten_tts_v1_',
+    get(key, defaultValue = null) {
+      try {
+        const raw = localStorage.getItem(this.PREFIX + key);
+        if (!raw) {
+          const legacy = localStorage.getItem('kitten_tts_' + key);
+          return legacy !== null ? legacy : defaultValue;
+        }
+        const envelope = JSON.parse(raw);
+        if (envelope && typeof envelope === 'object' && envelope.v === this.SCHEMA_VERSION) {
+          return envelope.data;
+        }
+        return envelope !== null && envelope.data !== undefined ? envelope.data : defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    },
+    set(key, value) {
+      try {
+        const envelope = {
+          v: this.SCHEMA_VERSION,
+          data: value,
+          updated_at: Date.now()
+        };
+        localStorage.setItem(this.PREFIX + key, JSON.stringify(envelope));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+    remove(key) {
+      try {
+        localStorage.removeItem(this.PREFIX + key);
+        localStorage.removeItem('kitten_tts_' + key);
+      } catch (e) {}
     }
-  }
-  function safeSetStorage(key, value) {
-    try {
-      localStorage.setItem(key, value);
-    } catch (e) {}
-  }
-  function safeRemoveStorage(key) {
-    try {
-      localStorage.removeItem(key);
-    } catch (e) {}
+  };
+
+  // Consistent Error Response Formatter
+  function formatErrorMessage(data, fallback = 'Unknown error') {
+    if (!data) return fallback;
+    if (typeof data === 'string') return data;
+    if (Array.isArray(data.detail)) {
+      return data.detail.map(d => d.msg || (typeof d === 'string' ? d : JSON.stringify(d))).join(' • ');
+    }
+    if (typeof data.detail === 'string') return data.detail;
+    if (data.message) return data.message;
+    return fallback;
   }
 
   // Offline status banner management
@@ -61,8 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (resetVoiceBtn) {
     resetVoiceBtn.addEventListener('click', () => {
+      if (isSynthesizing) {
+        showToast('Generation in progress. Please wait before changing voice.');
+        return;
+      }
       selectedProfileId = null;
-      safeRemoveStorage('kitten_tts_selected_profile');
+      StorageManager.remove('selected_profile');
       if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
       document.querySelectorAll('.profile-card').forEach(el => {
         el.classList.remove('selected');
@@ -95,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentUploadedSample = null; // { filename, metadata }
   let currentRecordedBlob = null;
   let currentRecordedUrl = null; // Track object URL to prevent memory leaks
+  let isSynthesizing = false;
 
   // Initialize Oscilloscope Visualizer
   const visualizer = new OscilloscopeVisualizer('oscilloscopeCanvas', audioPlayer);
@@ -122,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
       vuMeterBar.style.width = level + '%';
       vuMeterBar.parentElement.setAttribute('aria-valuenow', level);
     },
-    onRecorded: async (blob) => {
+    onRecorded: async (blob, duration = 0) => {
       currentRecordedBlob = blob;
       recPreview.style.display = 'flex';
       // Revoke previous object URL to avoid memory leak
@@ -131,6 +170,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       currentRecordedUrl = URL.createObjectURL(blob);
       document.getElementById('recAudioPreview').src = currentRecordedUrl;
+      const durSec = typeof duration === 'number' ? duration.toFixed(1) : '0.0';
+      if (duration < 5.0) {
+        showToast(`Recorded ${durSec}s. Short sample: 5-30s recommended for best fidelity.`);
+      } else if (duration > 30.0) {
+        showToast(`Recorded ${durSec}s. Long sample: 5-30s optimal for voice prompt.`);
+      } else {
+        showToast(`Recorded ${durSec}s clean sample. Ready to save voice profile.`);
+      }
     }
   });
 
@@ -226,6 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function handleFileUpload(file) {
+    if (!file || file.size === 0) {
+      showToast('Uploaded audio file is empty (0 bytes).');
+      return;
+    }
+
     // Client-side file extension and size pre-checks
     const validExts = ['.wav', '.mp3', '.m4a', '.flac', '.ogg', '.webm'];
     const fileName = file.name.toLowerCase();
@@ -243,6 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('file', file);
 
     try {
+      dropzone.classList.add('uploading');
       showToast('Processing audio sample...');
       const res = await fetch('/api/upload-sample', {
         method: 'POST',
@@ -264,10 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('uploadAudioPreview').src = `/api/audio/${data.filename}?temp=1`;
         profileNameInput.value = file.name.replace(/\.[^/.]+$/, "");
       } else {
-        showToast('Upload failed: ' + (data.detail || 'Unknown error'));
+        showToast('Upload failed: ' + formatErrorMessage(data, 'Upload error'));
       }
     } catch (e) {
       showToast('Error uploading: ' + e.message);
+    } finally {
+      dropzone.classList.remove('uploading');
     }
   }
 
@@ -293,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadProfiles();
         selectProfile(data.id);
       } else {
-        showToast('Failed to save profile: ' + (data.detail || 'Error'));
+        showToast('Failed to save profile: ' + formatErrorMessage(data, 'Save error'));
       }
     } catch (e) {
       showToast('Error: ' + e.message);
@@ -315,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
         profileList.innerHTML = '<div style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px;padding:8px;">No voice profiles saved yet. Upload or record a 5-30s sample above.</div>';
         selectedProfileId = null;
         if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
-        safeRemoveStorage('kitten_tts_selected_profile');
+        StorageManager.remove('selected_profile');
         return;
       }
 
       // Check localStorage for remembered profile
-      const rememberedId = safeGetStorage('kitten_tts_selected_profile');
+      const rememberedId = StorageManager.get('selected_profile');
       let foundRemembered = false;
 
       profiles.forEach(p => {
@@ -366,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectProfile(profiles[0].id, profiles[0].name, false);
       } else if (!foundRemembered && rememberedId) {
         // Stale profile ID no longer on backend
-        safeRemoveStorage('kitten_tts_selected_profile');
+        StorageManager.remove('selected_profile');
       }
     } catch (e) {
       console.warn('Failed to load profiles:', e);
@@ -376,8 +431,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function selectProfile(id, name, notify = true) {
+    if (isSynthesizing) {
+      showToast('Speech generation in progress. Cannot change profile right now.');
+      return;
+    }
     selectedProfileId = id;
-    safeSetStorage('kitten_tts_selected_profile', id);
+    StorageManager.set('selected_profile', id);
     if (activeVoiceName) {
       activeVoiceName.textContent = name || id;
     }
@@ -397,14 +456,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         el.classList.remove('selected');
-        const activeBadge = el.querySelector('span[style*="ACTIVE"], .tabular');
-        if (activeBadge && activeBadge.textContent === 'ACTIVE') {
-          activeBadge.remove();
-        }
+        const b = el.querySelector('.tabular');
+        if (b && b.textContent === 'ACTIVE') b.remove();
       }
     });
     if (notify) {
-      showToast(`Armed profile: ${name || id}`);
+      showToast(`Selected voice profile: ${name || id}`);
     }
   }
 
@@ -428,26 +485,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  function safePlay(audioEl) {
+    const playPromise = audioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn('Autoplay prevented by browser policy:', err);
+        if (playBtn) playBtn.textContent = '▶ PLAY';
+        visualizer.stop();
+        showToast('Audio ready. Click ▶ PLAY to start playback.');
+      });
+    }
+  }
+
   window.playProfileAudio = (filename) => {
     audioPlayer.src = `/api/audio/${filename}?profile=1`;
-    audioPlayer.play();
+    safePlay(audioPlayer);
     visualizer.start();
   };
 
   window.deleteProfile = async (id) => {
+    if (isSynthesizing && selectedProfileId === id) {
+      showToast('Generation in progress. Cannot delete armed voice profile.');
+      return;
+    }
     if (!confirm('Delete this voice profile?')) return;
     try {
       const res = await fetch(`/api/profiles/${id}`, { method: 'DELETE' });
       if (res.ok) {
         if (selectedProfileId === id) {
           selectedProfileId = null;
-          safeRemoveStorage('kitten_tts_selected_profile');
+          StorageManager.remove('selected_profile');
           if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
         }
         await loadProfiles();
         showToast('Profile deleted.');
       } else {
-        showToast('Delete failed.');
+        const errData = await res.json().catch(() => ({}));
+        showToast('Delete failed: ' + formatErrorMessage(errData, 'Could not delete profile'));
       }
     } catch (e) {
       showToast('Error deleting profile: ' + e.message);
@@ -474,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const len = val.length;
     let warning = '';
 
-    // Check unclosed emotion brackets [xxx or <xxx or (((xxx
+    // Check unclosed brackets [xxx or <xxx or (((xxx
     const openSquare = (val.match(/\[/g) || []).length;
     const closeSquare = (val.match(/\]/g) || []).length;
     const openAngle = (val.match(/</g) || []).length;
@@ -482,12 +556,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const openParen = (val.match(/\(\(\(/g) || []).length;
     const closeParen = (val.match(/\)\)\)/g) || []).length;
 
+    // Check for malformed emphasis like ((text)) instead of (((text)))
+    const malformedEmphasis = /(^|[^(])\(\([^(][^)]*?\)\)(?:[^)]|$)/.test(val);
+
+    // Check for unknown emotion tags
+    const knownBracketTags = new Set(['happy', 'whisper', 'serious', 'excited']);
+    const knownAngleTags = new Set(['laugh', 'sigh']);
+    const bracketMatches = [...val.matchAll(/\[([a-zA-Z0-9_\-]+)\]/g)];
+    const angleMatches = [...val.matchAll(/<([a-zA-Z0-9_\-]+)>/g)];
+
+    let unknownTag = null;
+    for (const m of bracketMatches) {
+      if (!knownBracketTags.has(m[1].toLowerCase())) {
+        unknownTag = `[${m[1]}]`;
+        break;
+      }
+    }
+    if (!unknownTag) {
+      for (const m of angleMatches) {
+        if (!knownAngleTags.has(m[1].toLowerCase())) {
+          unknownTag = `<${m[1]}>`;
+          break;
+        }
+      }
+    }
+
     if (openSquare !== closeSquare) {
       warning = ' • [unclosed tag]';
     } else if (openAngle !== closeAngle) {
       warning = ' • <unclosed tag>';
     } else if (openParen !== closeParen) {
       warning = ' • (((unclosed emphasis)))';
+    } else if (malformedEmphasis) {
+      warning = ' • (((use 3 parentheses for emphasis)))';
+    } else if (unknownTag) {
+      warning = ` • ${unknownTag} (unrecognized tag)`;
     }
 
     if (warning) {
@@ -499,10 +602,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentDeviceName = 'CPU';
   let synthStopwatchTimer = null;
+  let synthTimeoutTimer = null;
   let activeSynthController = null;
 
   // ==================== SYNTHESIZE AUDIO ====================
   synthesizeBtn.addEventListener('click', async () => {
+    // If generation is already active, clicking cancels the in-flight synthesis
+    if (isSynthesizing) {
+      if (activeSynthController) {
+        activeSynthController.abort();
+        synthesizeBtn.textContent = '⏹ ABORTING...';
+        showToast('Aborting speech synthesis request...');
+      }
+      return;
+    }
+
     const text = textInput.value.trim();
     if (!text) {
       showToast('Please enter text to synthesize.');
@@ -519,15 +633,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTimeMs = Date.now();
     const updateStopwatch = () => {
       const elapsedSec = Math.floor((Date.now() - startTimeMs) / 1000);
-      synthesizeBtn.textContent = `⚡ SYNTHESIZING ON ${currentDeviceName} (${elapsedSec}s)...`;
+      synthesizeBtn.textContent = `⏹ CANCEL (${elapsedSec}s)...`;
       latencyBadge.textContent = `Crunching audio on ${currentDeviceName} (${elapsedSec}s)...`;
     };
 
     try {
-      synthesizeBtn.disabled = true;
+      isSynthesizing = true;
+      synthesizeBtn.classList.add('btn-danger');
       updateStopwatch();
       synthStopwatchTimer = setInterval(updateStopwatch, 1000);
       activeSynthController = new AbortController();
+
+      // Client-side 60s timeout guard
+      synthTimeoutTimer = setTimeout(() => {
+        if (activeSynthController) {
+          activeSynthController.abort();
+          showToast('Synthesis timed out after 60s. Server may be heavily loaded.');
+        }
+      }, 60000);
 
       const t0 = performance.now();
       const res = await fetch('/api/synthesize', {
@@ -540,6 +663,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (synthStopwatchTimer) {
         clearInterval(synthStopwatchTimer);
         synthStopwatchTimer = null;
+      }
+      if (synthTimeoutTimer) {
+        clearTimeout(synthTimeoutTimer);
+        synthTimeoutTimer = null;
       }
 
       const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
@@ -555,19 +682,19 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadLink.download = data.filename;
         downloadLink.style.display = 'inline-flex';
 
-        audioPlayer.play();
+        safePlay(audioPlayer);
         visualizer.start();
         showToast(`Speech synthesized in ${elapsed}s on ${devTag}!`);
         await loadHistory();
       } else {
         if (res.status === 404 && payload.profile_id) {
-          // Stale profile ID
-          safeRemoveStorage('kitten_tts_selected_profile');
+          // Stale profile ID no longer on backend
+          StorageManager.remove('selected_profile');
           selectedProfileId = null;
           if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
           await loadProfiles();
         }
-        showToast('Synthesis failed: ' + (data.detail || 'Unknown error'));
+        showToast('Synthesis failed: ' + formatErrorMessage(data, 'Unknown error'));
         latencyBadge.textContent = `Failed (${elapsed}s)`;
       }
     } catch (e) {
@@ -575,9 +702,13 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(synthStopwatchTimer);
         synthStopwatchTimer = null;
       }
+      if (synthTimeoutTimer) {
+        clearTimeout(synthTimeoutTimer);
+        synthTimeoutTimer = null;
+      }
       if (e.name === 'AbortError') {
-        showToast('Synthesis aborted.');
-        latencyBadge.textContent = 'Aborted';
+        showToast('Synthesis canceled by user.');
+        latencyBadge.textContent = 'Canceled';
       } else {
         setOfflineState(true);
         showToast('Synthesis failed: Local server is unreachable. Check ./run_studio.sh');
@@ -588,8 +719,13 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(synthStopwatchTimer);
         synthStopwatchTimer = null;
       }
+      if (synthTimeoutTimer) {
+        clearTimeout(synthTimeoutTimer);
+        synthTimeoutTimer = null;
+      }
+      isSynthesizing = false;
       activeSynthController = null;
-      synthesizeBtn.disabled = false;
+      synthesizeBtn.classList.remove('btn-danger');
       synthesizeBtn.textContent = '⚡ SYNTHESIZE SPEECH';
     }
   });
@@ -597,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==================== AUDIO CONTROLS ====================
   playBtn.addEventListener('click', () => {
     if (audioPlayer.paused) {
-      audioPlayer.play();
+      safePlay(audioPlayer);
       playBtn.textContent = '⏸ PAUSE';
       visualizer.start();
     } else {
@@ -682,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.playHistoryItem = (url, textEncoded) => {
     audioPlayer.src = url;
-    audioPlayer.play();
+    safePlay(audioPlayer);
     visualizer.start();
     textInput.value = decodeURIComponent(textEncoded);
     updateCharCount();

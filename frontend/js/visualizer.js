@@ -16,6 +16,19 @@ class OscilloscopeVisualizer {
 
     this.resize();
     window.addEventListener('resize', () => this.resize());
+    
+    // Tab backgrounding guard to prevent memory/CPU leaks when hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (this.animId) {
+          cancelAnimationFrame(this.animId);
+          this.animId = null;
+        }
+      } else if (this.isPlaying) {
+        this.render();
+      }
+    });
+
     this.drawIdle();
   }
 
@@ -148,11 +161,14 @@ class OscilloscopeVisualizer {
     ctx.clearRect(0, 0, w, h);
     this.drawGrid();
 
+    // Respect prefers-reduced-motion
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Oscilloscope trace in crisp Retro Phosphor CRT Green
     ctx.lineWidth = 2.0;
     ctx.strokeStyle = '#00ff88';
-    ctx.shadowColor = '#00ff88';
-    ctx.shadowBlur = 6;
+    ctx.shadowColor = reducedMotion ? 'transparent' : '#00ff88';
+    ctx.shadowBlur = reducedMotion ? 0 : 6;
     ctx.beginPath();
 
     const sliceWidth = w / this.dataArray.length;
