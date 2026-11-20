@@ -36,15 +36,46 @@ app = FastAPI(
     openapi_url="/api/openapi.json"
 )
 
-# Remote & Cloud CORS Configuration
-cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins if cors_origins != ["*"] else ["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Secure CORS Configuration
+raw_cors = os.getenv("CORS_ORIGINS", "http://localhost:8765,http://127.0.0.1:8765,http://localhost:8000,http://127.0.0.1:8000")
+cors_origins = [o.strip() for o in raw_cors.split(",") if o.strip()]
+
+if "*" in cors_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
+
+ALLOWED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".webm"}
+MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB
+
+def cleanup_temp_files(max_age_seconds: int = 7200):
+    """Purges expired temporary samples from storage/temp older than max_age_seconds (default 2 hours)."""
+    now = time.time()
+    if not os.path.exists(TEMP_DIR):
+        return
+    for fname in os.listdir(TEMP_DIR):
+        fpath = os.path.join(TEMP_DIR, fname)
+        if os.path.isfile(fpath):
+            try:
+                if now - os.path.getmtime(fpath) > max_age_seconds:
+                    os.remove(fpath)
+            except OSError:
+                pass
+
+# Run startup purge
+cleanup_temp_files()
 
 # Request Schemas
 class SynthesizeRequest(BaseModel):
@@ -60,7 +91,7 @@ class SaveSampleProfileRequest(BaseModel):
 
 class UpdateProfileRequest(BaseModel):
     name: Optional[str] = None
-    description: Optional[str] = ""
+    description: Optional[str] = None
 
 def _read_history() -> List[Dict[str, Any]]:
     if not os.path.exists(HISTORY_FILE):
@@ -89,19 +120,35 @@ def get_telemetry():
 @app.post("/api/upload-sample")
 async def upload_sample(file: UploadFile = File(...)):
     """
-    Accepts user audio file (.wav, .mp3, .m4a, .flac, .ogg), normalizes to 24kHz mono WAV.
+    Accepts user audio file (.wav, .mp3, .m4a, .flac, .ogg, .webm), normalizes to 24kHz mono WAV.
+    Enforces format whitelisting and 50 MB size limits.
     """
-    ext = os.path.splitext(file.filename)[1].lower() or ".wav"
+    orig_name = file.filename or "sample.wav"
+    ext = os.path.splitext(orig_name)[1].lower()
+    if ext not in ALLOWED_AUDIO_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported audio format '{ext}'. Allowed: {', '.join(sorted(ALLOWED_AUDIO_EXTENSIONS))}"
+        )
+
     raw_filename = f"raw_{uuid.uuid4().hex[:8]}{ext}"
     raw_path = os.path.join(TEMP_DIR, raw_filename)
 
-    with open(raw_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    clean_filename = f"sample_{uuid.uuid4().hex[:8]}.wav"
-    clean_path = os.path.join(TEMP_DIR, clean_filename)
-
+    total_bytes = 0
     try:
+        with open(raw_path, "wb") as buffer:
+            while chunk := await file.read(1024 * 1024):  # 1MB chunks
+                total_bytes += len(chunk)
+                if total_bytes > MAX_UPLOAD_SIZE:
+                    raise HTTPException(status_code=413, detail="File size exceeds maximum 50 MB limit.")
+                buffer.write(chunk)
+
+        if total_bytes < 100:
+            raise HTTPException(status_code=400, detail="Uploaded file is empty or corrupted.")
+
+        clean_filename = f"sample_{uuid.uuid4().hex[:8]}.wav"
+        clean_path = os.path.join(TEMP_DIR, clean_filename)
+
         convert_to_wav(raw_path, clean_path, target_sr=24000)
         val = validate_reference_audio(clean_path)
         meta = val["metadata"]
@@ -113,23 +160,29 @@ async def upload_sample(file: UploadFile = File(...)):
         return {
             "status": "success",
             "filename": clean_filename,
-            "original_filename": file.filename,
+            "original_filename": orig_name,
             "duration": meta["duration"],
             "sample_rate": meta["sample_rate"],
             "size_kb": meta["size_kb"],
             "validation": val
         }
+    except HTTPException:
+        if os.path.exists(raw_path):
+            os.remove(raw_path)
+        raise
     except Exception as e:
         if os.path.exists(raw_path):
             os.remove(raw_path)
-        if os.path.exists(clean_path):
-            os.remove(clean_path)
         raise HTTPException(status_code=400, detail=f"Audio processing failed: {str(e)}")
 
 @app.post("/api/profiles/save-sample")
 def save_sample_as_profile(req: SaveSampleProfileRequest):
-    src_path = os.path.join(TEMP_DIR, req.filename)
-    if not os.path.exists(src_path):
+    safe_filename = os.path.basename(req.filename)
+    if safe_filename != req.filename or ".." in req.filename or not safe_filename.endswith(".wav"):
+        raise HTTPException(status_code=400, detail="Invalid sample filename.")
+
+    src_path = os.path.abspath(os.path.join(TEMP_DIR, safe_filename))
+    if not src_path.startswith(os.path.abspath(TEMP_DIR)) or not os.path.exists(src_path):
         raise HTTPException(status_code=404, detail="Temporary sample not found or expired.")
 
     profile = create_profile(name=req.name, src_audio_path=src_path, description=req.description or "")
@@ -144,15 +197,30 @@ async def record_profile(
     """
     Receives browser MediaRecorder audio blob and registers a new voice profile.
     """
-    raw_path = os.path.join(TEMP_DIR, f"rec_raw_{uuid.uuid4().hex[:8]}.webm")
-    with open(raw_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    if not name or not name.strip():
+        raise HTTPException(status_code=400, detail="Profile name cannot be blank.")
 
+    raw_path = os.path.join(TEMP_DIR, f"rec_raw_{uuid.uuid4().hex[:8]}.webm")
+    total_bytes = 0
     try:
-        profile = create_profile(name=name, src_audio_path=raw_path, description=description or "")
+        with open(raw_path, "wb") as buffer:
+            while chunk := await file.read(1024 * 1024):
+                total_bytes += len(chunk)
+                if total_bytes > MAX_UPLOAD_SIZE:
+                    raise HTTPException(status_code=413, detail="Recording exceeds 50 MB limit.")
+                buffer.write(chunk)
+
+        if total_bytes < 100:
+            raise HTTPException(status_code=400, detail="Recorded audio is empty or corrupted.")
+
+        profile = create_profile(name=name.strip(), src_audio_path=raw_path, description=description or "")
         if os.path.exists(raw_path):
             os.remove(raw_path)
         return profile
+    except HTTPException:
+        if os.path.exists(raw_path):
+            os.remove(raw_path)
+        raise
     except Exception as e:
         if os.path.exists(raw_path):
             os.remove(raw_path)
@@ -181,29 +249,39 @@ def synthesize_speech(req: SynthesizeRequest):
     """
     Main speech generation endpoint. Clones speaker voice if profile or temp_sample is given.
     """
+    clean_text = req.text.strip()
+    if not clean_text:
+        raise HTTPException(status_code=422, detail="Text prompt cannot be empty or whitespace.")
+
+    if len(clean_text) > 5000:
+        raise HTTPException(status_code=422, detail="Text prompt exceeds maximum 5000 character limit.")
+
     ref_audio_path = None
     voice_label = "Default Voice"
 
     if req.profile_id:
         profile = get_profile(req.profile_id)
-        if profile:
-            ref_audio_path = os.path.join(PROFILES_DIR, profile["filename"])
-            voice_label = f"Profile: {profile.get('name', req.profile_id)}"
-        else:
-            voice_label = f"Profile ID: {req.profile_id}"
+        if not profile:
+            raise HTTPException(status_code=404, detail=f"Voice profile '{req.profile_id}' not found.")
+        ref_audio_path = os.path.join(PROFILES_DIR, profile["filename"])
+        voice_label = f"Profile: {profile.get('name', req.profile_id)}"
     elif req.temp_sample:
-        temp_path = os.path.join(TEMP_DIR, req.temp_sample)
-        if os.path.exists(temp_path):
-            ref_audio_path = temp_path
-            voice_label = f"Temp Sample: {req.temp_sample}"
+        safe_temp = os.path.basename(req.temp_sample)
+        if safe_temp != req.temp_sample or ".." in req.temp_sample:
+            raise HTTPException(status_code=400, detail="Invalid reference sample filename.")
+        temp_path = os.path.abspath(os.path.join(TEMP_DIR, safe_temp))
+        if not temp_path.startswith(os.path.abspath(TEMP_DIR)) or not os.path.exists(temp_path):
+            raise HTTPException(status_code=404, detail="Temporary reference sample not found or expired.")
+        ref_audio_path = temp_path
+        voice_label = f"Temp Sample: {safe_temp}"
 
     engine = KittenTTSEngine.get_instance()
     t0 = time.time()
-    char_count = len(req.text)
+    char_count = len(clean_text)
 
     try:
         filename, duration = engine.synthesize(
-            text=req.text,
+            text=clean_text,
             reference_path=ref_audio_path,
             speed=req.speed or 1.0,
             output_dir=OUTPUTS_DIR
@@ -224,7 +302,7 @@ def synthesize_speech(req: SynthesizeRequest):
         entry = {
             "id": filename.replace(".wav", ""),
             "filename": filename,
-            "text": req.text,
+            "text": clean_text,
             "duration": duration,
             "latency": elapsed,
             "device": engine.device,
@@ -235,6 +313,8 @@ def synthesize_speech(req: SynthesizeRequest):
         _append_history(entry)
 
         return entry
+    except HTTPException:
+        raise
     except Exception as e:
         elapsed = round(time.time() - t0, 2)
         print(
@@ -251,18 +331,24 @@ def synthesize_speech(req: SynthesizeRequest):
 def serve_audio(filename: str, temp: Optional[int] = 0, profile: Optional[int] = 0):
     """
     Streams audio files (.wav) from outputs, profiles, or temp directories.
+    Strictly prevents path traversal outside the storage envelope.
     """
-    if profile:
-        file_path = os.path.join(PROFILES_DIR, filename)
-    elif temp:
-        file_path = os.path.join(TEMP_DIR, filename)
-    else:
-        file_path = os.path.join(OUTPUTS_DIR, filename)
+    safe_filename = os.path.basename(filename)
+    if safe_filename != filename or ".." in filename or "/" in filename or "\\" in filename:
+        raise HTTPException(status_code=400, detail="Invalid audio filename.")
 
-    if not os.path.exists(file_path):
+    if profile:
+        base_dir = PROFILES_DIR
+    elif temp:
+        base_dir = TEMP_DIR
+    else:
+        base_dir = OUTPUTS_DIR
+
+    file_path = os.path.abspath(os.path.join(base_dir, safe_filename))
+    if not file_path.startswith(os.path.abspath(base_dir)) or not os.path.isfile(file_path):
         raise HTTPException(status_code=404, detail="Audio file not found.")
 
-    return FileResponse(file_path, media_type="audio/wav", filename=filename)
+    return FileResponse(file_path, media_type="audio/wav", filename=safe_filename)
 
 @app.get("/api/history")
 def get_history():

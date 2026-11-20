@@ -27,7 +27,12 @@ class KittenTTSEngine:
             try:
                 import torch
                 if torch.cuda.is_available():
-                    self.device = "cuda"
+                    major, minor = torch.cuda.get_device_capability(0)
+                    if major < 7:
+                        # Legacy GPU architecture (e.g. Pascal CC 6.1) lacking modern PyTorch kernels
+                        self.device = "cpu"
+                    else:
+                        self.device = "cuda"
                 else:
                     self.device = "cpu"
             except Exception:
