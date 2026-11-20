@@ -523,6 +523,45 @@ def serve_docs_subpage(page: str):
 app.mount("/docs", StaticFiles(directory=DOCS_DIR, html=True), name="docs")
 
 # Direct fallback routes for docs-showcase relative assets
+@app.get("/architecture.html")
+@app.get("/architecture")
+def serve_fallback_architecture():
+    html_path = os.path.join(DOCS_DIR, "architecture.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    raise HTTPException(status_code=404)
+
+@app.get("/hardware.html")
+@app.get("/hardware")
+def serve_fallback_hardware():
+    html_path = os.path.join(DOCS_DIR, "hardware.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    raise HTTPException(status_code=404)
+
+@app.get("/syntax.html")
+@app.get("/syntax")
+def serve_fallback_syntax():
+    html_path = os.path.join(DOCS_DIR, "syntax.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    raise HTTPException(status_code=404)
+
+@app.get("/api.html")
+def serve_fallback_api():
+    html_path = os.path.join(DOCS_DIR, "api.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    raise HTTPException(status_code=404)
+
+@app.get("/quickstart.html")
+@app.get("/quickstart")
+def serve_fallback_quickstart():
+    html_path = os.path.join(DOCS_DIR, "quickstart.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    raise HTTPException(status_code=404)
+
 @app.get("/style.css")
 def serve_docs_style():
     style_path = os.path.join(DOCS_DIR, "style.css")

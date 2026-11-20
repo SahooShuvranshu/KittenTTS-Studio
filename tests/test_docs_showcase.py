@@ -200,5 +200,25 @@ class TestDocsShowcase(unittest.TestCase):
         # Testing interface export
         self.assertIn("__kittenShowcase", js)
 
+    def test_multipage_docs_and_fallback_routes(self):
+        """Verify all documentation pages are accessible via /docs/* and root fallback routes."""
+        subpages = [
+            ("architecture.html", "System Architecture"),
+            ("hardware.html", "Hardware Matrix"),
+            ("syntax.html", "Expression"),
+            ("api.html", "REST API Reference"),
+            ("quickstart.html", "Quickstart")
+        ]
+        for page, title_fragment in subpages:
+            # 1. Under /docs/
+            r_docs = self.client.get(f"/docs/{page}")
+            self.assertEqual(r_docs.status_code, 200, f"/docs/{page} returned {r_docs.status_code}")
+            self.assertIn(title_fragment, r_docs.text)
+
+            # 2. As direct root fallback
+            r_root = self.client.get(f"/{page}")
+            self.assertEqual(r_root.status_code, 200, f"/{page} returned {r_root.status_code}")
+            self.assertIn(title_fragment, r_root.text)
+
 if __name__ == "__main__":
     unittest.main()
