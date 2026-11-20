@@ -1,14 +1,24 @@
 /**
  * KittenTTS-Studio — Documentation Platform Enhancements
- * 1. Fast Sidebar Search Filter with Keyboard Shortcut ("/")
+ * 1. Fast Sidebar Search Filter with Keyword Expansion & Keyboard Shortcut ("/")
  * 2. On-This-Page Scrollspy (IntersectionObserver)
- * 3. Tactile Brutalist Code Copy Buttons with Visual Feedback
+ * 3. Tactile Brutalist Code Copy Buttons (Terminal Blocks & Pre Blocks)
  * 4. Responsive Mobile Navigation Drawer & Keyboard Handling (Esc)
  * 100% Vanilla JS • Zero External Dependencies • Offline Sovereign
  */
 
 (function () {
   'use strict';
+
+  // Topic keywords & page aliases for intuitive real-time filtering
+  const PAGE_ALIASES = {
+    'index.html': 'overview audition laboratory showcase soundboard demo oscilloscope metrics telemetry',
+    'quickstart.html': 'quickstart install setup deploy run boot script uv pip docker systemd daemon containerization',
+    'architecture.html': 'architecture engine model slm ternary bitnet pipeline cuda avx2 ffmpeg vector schematic',
+    'hardware.html': 'hardware benchmark rtf ram memory budget cpu gpu telemetry vram self-healing allocation',
+    'syntax.html': 'syntax prosody emotion tags laugh whisper event emphasis punctuation composition dialogue',
+    'api.html': 'api rest curl endpoints schemas routes json python client integration synthesize telemetry'
+  };
 
   document.addEventListener('DOMContentLoaded', () => {
     initSidebarFilter();
@@ -32,7 +42,6 @@
       const q = e.target.value.trim().toLowerCase();
 
       if (!q) {
-        // Show everything
         links.forEach((l) => (l.style.display = ''));
         groups.forEach((g) => (g.style.display = ''));
         return;
@@ -44,7 +53,10 @@
 
         groupLinks.forEach((link) => {
           const text = link.textContent.toLowerCase();
-          const match = text.includes(q);
+          const href = (link.getAttribute('href') || '').toLowerCase();
+          const extra = (PAGE_ALIASES[href] || '').toLowerCase();
+          const match = text.includes(q) || href.includes(q) || extra.includes(q);
+
           link.style.display = match ? '' : 'none';
           if (match) groupHasMatch = true;
         });
@@ -146,10 +158,10 @@
      3. TACTILE BRUTALIST CODE COPY BUTTONS
      ========================================================================== */
   function initCodeCopyButtons() {
+    // 1. Dynamic buttons for pre blocks
     const preBlocks = document.querySelectorAll('.docs-content pre');
     preBlocks.forEach((pre) => {
-      // Avoid duplicate injection
-      if (pre.querySelector('.copy-code-btn')) return;
+      if (pre.querySelector('.copy-code-btn') || pre.closest('.terminal-block')) return;
 
       const btn = document.createElement('button');
       btn.className = 'copy-code-btn';
@@ -157,42 +169,65 @@
       btn.setAttribute('aria-label', 'Copy code snippet to clipboard');
       btn.textContent = 'COPY';
 
-      btn.addEventListener('click', async () => {
+      btn.addEventListener('click', () => {
         const codeEl = pre.querySelector('code');
         const codeText = codeEl ? codeEl.innerText : pre.innerText;
-
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(codeText);
-          } else {
-            // Fallback for older browsers
-            const textarea = document.createElement('textarea');
-            textarea.value = codeText;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-          }
-
-          btn.textContent = 'COPIED!';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = 'COPY';
-            btn.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          btn.textContent = 'FAILED';
-          setTimeout(() => {
-            btn.textContent = 'COPY';
-          }, 2000);
-        }
+        copyTextWithFeedback(codeText, btn);
       });
 
+      pre.style.position = 'relative';
       pre.appendChild(btn);
     });
+
+    // 2. Existing static .copy-btn buttons (in terminal blocks and tables)
+    const staticBtns = document.querySelectorAll('.copy-btn');
+    staticBtns.forEach((btn) => {
+      // Avoid attaching listeners multiple times
+      if (btn.dataset.copyInit) return;
+      btn.dataset.copyInit = 'true';
+
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          copyTextWithFeedback(targetEl.innerText.trim(), btn);
+        }
+      });
+    });
+  }
+
+  async function copyTextWithFeedback(text, btn) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      const orig = btn.innerText;
+      btn.innerText = 'COPIED!';
+      btn.classList.add('copied');
+      btn.style.color = '#00ff88';
+
+      setTimeout(() => {
+        btn.innerText = orig;
+        btn.classList.remove('copied');
+        btn.style.color = '';
+      }, 1800);
+    } catch (err) {
+      btn.innerText = 'FAILED';
+      setTimeout(() => {
+        btn.innerText = 'COPY';
+      }, 1800);
+    }
   }
 
   /* ==========================================================================
@@ -203,7 +238,6 @@
     const sidebar = document.getElementById('docsSidebar');
     if (!toggleBtn || !sidebar) return;
 
-    // Create backdrop element if not already in DOM
     let backdrop = document.querySelector('.sidebar-backdrop');
     if (!backdrop) {
       backdrop = document.createElement('div');
