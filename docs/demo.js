@@ -1245,10 +1245,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const telemetryCounterEl = document.getElementById('telemetryCounter');
   const odometerDisplayEl = document.getElementById('odometerDisplay');
 
-  // Local Session Impression Counter (Stored in LocalStorage)
-  let impressions = parseInt(localStorage.getItem('kitten_session_impressions') || '3892', 10);
-  impressions += 1;
-  localStorage.setItem('kitten_session_impressions', impressions.toString());
+  // Local Session Impression Counter (Stored safely in LocalStorage)
+  let impressions = 3892;
+  try {
+    impressions = parseInt(localStorage.getItem('kitten_session_impressions') || '3892', 10);
+    impressions += 1;
+    localStorage.setItem('kitten_session_impressions', impressions.toString());
+  } catch (e) {}
 
   if (telemetryCounterEl) {
     telemetryCounterEl.textContent = impressions.toLocaleString();

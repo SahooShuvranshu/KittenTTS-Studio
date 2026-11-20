@@ -3,6 +3,44 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Safe Storage Helpers (prevent throws in restricted/private modes)
+  function safeGetStorage(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+  function safeSetStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {}
+  }
+  function safeRemoveStorage(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {}
+  }
+
+  // Offline status banner management
+  function setOfflineState(isOffline) {
+    const offlineNotice = document.getElementById('offlineNotice');
+    const hudModel = document.getElementById('hudModel');
+    if (isOffline) {
+      if (offlineNotice) offlineNotice.style.display = 'block';
+      if (hudModel) {
+        hudModel.textContent = 'OFFLINE';
+        hudModel.className = 'hud-val';
+        hudModel.style.color = 'var(--signal-amber)';
+      }
+    } else {
+      if (offlineNotice) offlineNotice.style.display = 'none';
+      if (hudModel) {
+        hudModel.style.color = '';
+      }
+    }
+  }
+
   // UI Elements
   const audioPlayer = document.getElementById('audioPlayer');
   const playBtn = document.getElementById('playBtn');
@@ -24,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (resetVoiceBtn) {
     resetVoiceBtn.addEventListener('click', () => {
       selectedProfileId = null;
-      localStorage.removeItem('kitten_tts_selected_profile');
+      safeRemoveStorage('kitten_tts_selected_profile');
       if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
       document.querySelectorAll('.profile-card').forEach(el => {
         el.classList.remove('selected');
@@ -56,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeAudioUrl = null;
   let currentUploadedSample = null; // { filename, metadata }
   let currentRecordedBlob = null;
+  let currentRecordedUrl = null; // Track object URL to prevent memory leaks
 
   // Initialize Oscilloscope Visualizer
   const visualizer = new OscilloscopeVisualizer('oscilloscopeCanvas', audioPlayer);
@@ -81,12 +120,17 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     onLevelUpdate: (level) => {
       vuMeterBar.style.width = level + '%';
+      vuMeterBar.parentElement.setAttribute('aria-valuenow', level);
     },
     onRecorded: async (blob) => {
       currentRecordedBlob = blob;
       recPreview.style.display = 'flex';
-      const tempAudioUrl = URL.createObjectURL(blob);
-      document.getElementById('recAudioPreview').src = tempAudioUrl;
+      // Revoke previous object URL to avoid memory leak
+      if (currentRecordedUrl) {
+        URL.revokeObjectURL(currentRecordedUrl);
+      }
+      currentRecordedUrl = URL.createObjectURL(blob);
+      document.getElementById('recAudioPreview').src = currentRecordedUrl;
     }
   });
 
@@ -118,6 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Profile "${name}" created.`);
         recPreview.style.display = 'none';
         currentRecordedBlob = null;
+        if (currentRecordedUrl) {
+          URL.revokeObjectURL(currentRecordedUrl);
+          currentRecordedUrl = null;
+        }
         recProfileNameInput.value = '';
         await loadProfiles();
         selectProfile(data.id);
@@ -153,6 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ==================== DRAG & DROP UPLOAD ====================
   dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
   dropzone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropzone.classList.add('dragover');
@@ -172,6 +226,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function handleFileUpload(file) {
+    // Client-side file extension and size pre-checks
+    const validExts = ['.wav', '.mp3', '.m4a', '.flac', '.ogg', '.webm'];
+    const fileName = file.name.toLowerCase();
+    const hasValidExt = validExts.some(ext => fileName.endsWith(ext));
+    if (!hasValidExt) {
+      showToast(`Unsupported audio format. Please choose: ${validExts.join(', ')}`);
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('File exceeds 50 MB maximum limit.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -186,10 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentUploadedSample = data;
         uploadPreview.style.display = 'flex';
         document.getElementById('uploadFileName').textContent = data.original_filename;
-        document.getElementById('uploadFileMeta').textContent = `${data.duration}s • 24kHz Mono WAV • ${data.size_kb} KB`;
+        let metaText = `${data.duration}s • 24kHz Mono WAV • ${data.size_kb} KB`;
+        if (data.validation && data.validation.status === 'warning') {
+          metaText += ` (${data.validation.message})`;
+          showToast(`Sample note: ${data.validation.message}`);
+        } else {
+          showToast('Sample processed and ready for cloning.');
+        }
+        document.getElementById('uploadFileMeta').textContent = metaText;
         document.getElementById('uploadAudioPreview').src = `/api/audio/${data.filename}?temp=1`;
         profileNameInput.value = file.name.replace(/\.[^/.]+$/, "");
-        showToast('Sample processed and ready.');
       } else {
         showToast('Upload failed: ' + (data.detail || 'Unknown error'));
       }
@@ -233,18 +306,21 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadProfiles() {
     try {
       const res = await fetch('/api/profiles');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const profiles = await res.json();
+      setOfflineState(false);
       profileList.innerHTML = '';
 
       if (profiles.length === 0) {
         profileList.innerHTML = '<div style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px;padding:8px;">No voice profiles saved yet. Upload or record a 5-30s sample above.</div>';
         selectedProfileId = null;
         if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
+        safeRemoveStorage('kitten_tts_selected_profile');
         return;
       }
 
       // Check localStorage for remembered profile
-      const rememberedId = localStorage.getItem('kitten_tts_selected_profile');
+      const rememberedId = safeGetStorage('kitten_tts_selected_profile');
       let foundRemembered = false;
 
       profiles.forEach(p => {
@@ -258,6 +334,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.className = 'profile-card' + (isSelected ? ' selected' : '');
         card.setAttribute('data-id', p.id);
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Select voice profile: ${p.name}`);
         card.innerHTML = `
           <div class="profile-info">
             <div style="display:flex;align-items:center;gap:6px;">
@@ -266,28 +345,39 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <span class="profile-meta">${p.description ? p.description + ' • ' : ''}${p.duration}s • 24kHz</span>
           </div>
-          <div style="display:flex;gap:4px;">
-            <button class="btn btn-tag" style="padding:2px 6px;" title="Preview Audio" onclick="event.stopPropagation(); window.playProfileAudio('${p.filename}')">▶</button>
-            <button class="btn btn-tag" style="padding:2px 6px;" title="Rename Profile" onclick="event.stopPropagation(); window.renameProfile('${p.id}', '${p.name.replace(/'/g, "\\'")}')">✏</button>
-            <button class="btn btn-tag btn-danger" style="padding:2px 6px;" title="Delete" onclick="event.stopPropagation(); window.deleteProfile('${p.id}')">✕</button>
+          <div class="profile-actions" style="display:flex;gap:4px;">
+            <button class="btn btn-tag" aria-label="Preview audio for ${p.name}" style="padding:4px 8px; min-width:28px; min-height:28px;" title="Preview Audio" onclick="event.stopPropagation(); window.playProfileAudio('${p.filename}')">▶</button>
+            <button class="btn btn-tag" aria-label="Rename profile ${p.name}" style="padding:4px 8px; min-width:28px; min-height:28px;" title="Rename Profile" onclick="event.stopPropagation(); window.renameProfile('${p.id}', '${p.name.replace(/'/g, "\\'")}')">✏</button>
+            <button class="btn btn-tag btn-danger" aria-label="Delete profile ${p.name}" style="padding:4px 8px; min-width:28px; min-height:28px;" title="Delete" onclick="event.stopPropagation(); window.deleteProfile('${p.id}')">✕</button>
           </div>
         `;
         card.addEventListener('click', () => selectProfile(p.id, p.name));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectProfile(p.id, p.name);
+          }
+        });
         profileList.appendChild(card);
       });
 
       if (!foundRemembered && selectedProfileId === null && profiles.length > 0) {
         // Automatically select first profile if none remembered
         selectProfile(profiles[0].id, profiles[0].name, false);
+      } else if (!foundRemembered && rememberedId) {
+        // Stale profile ID no longer on backend
+        safeRemoveStorage('kitten_tts_selected_profile');
       }
     } catch (e) {
-      console.error('Failed to load profiles:', e);
+      console.warn('Failed to load profiles:', e);
+      setOfflineState(true);
+      profileList.innerHTML = '<div style="color:var(--signal-amber);font-family:var(--font-mono);font-size:11px;padding:8px;">Disconnected from local studio backend. Run <code>./run_studio.sh</code> to enable speech generation.</div>';
     }
   }
 
   function selectProfile(id, name, notify = true) {
     selectedProfileId = id;
-    localStorage.setItem('kitten_tts_selected_profile', id);
+    safeSetStorage('kitten_tts_selected_profile', id);
     if (activeVoiceName) {
       activeVoiceName.textContent = name || id;
     }
@@ -351,11 +441,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         if (selectedProfileId === id) {
           selectedProfileId = null;
-          localStorage.removeItem('kitten_tts_selected_profile');
-          activeVoiceName.textContent = 'None (Default / Uploaded)';
+          safeRemoveStorage('kitten_tts_selected_profile');
+          if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
         }
         await loadProfiles();
         showToast('Profile deleted.');
+      } else {
+        showToast('Delete failed.');
       }
     } catch (e) {
       showToast('Error deleting profile: ' + e.message);
@@ -378,11 +470,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   textInput.addEventListener('input', updateCharCount);
   function updateCharCount() {
-    charCounter.textContent = `${textInput.value.length} chars`;
+    const val = textInput.value;
+    const len = val.length;
+    let warning = '';
+
+    // Check unclosed emotion brackets [xxx or <xxx or (((xxx
+    const openSquare = (val.match(/\[/g) || []).length;
+    const closeSquare = (val.match(/\]/g) || []).length;
+    const openAngle = (val.match(/</g) || []).length;
+    const closeAngle = (val.match(/>/g) || []).length;
+    const openParen = (val.match(/\(\(\(/g) || []).length;
+    const closeParen = (val.match(/\)\)\)/g) || []).length;
+
+    if (openSquare !== closeSquare) {
+      warning = ' • [unclosed tag]';
+    } else if (openAngle !== closeAngle) {
+      warning = ' • <unclosed tag>';
+    } else if (openParen !== closeParen) {
+      warning = ' • (((unclosed emphasis)))';
+    }
+
+    if (warning) {
+      charCounter.innerHTML = `<span style="color:var(--signal-amber);">${len} chars${warning}</span>`;
+    } else {
+      charCounter.textContent = `${len} chars`;
+    }
   }
 
   let currentDeviceName = 'CPU';
   let synthStopwatchTimer = null;
+  let activeSynthController = null;
 
   // ==================== SYNTHESIZE AUDIO ====================
   synthesizeBtn.addEventListener('click', async () => {
@@ -410,12 +527,14 @@ document.addEventListener('DOMContentLoaded', () => {
       synthesizeBtn.disabled = true;
       updateStopwatch();
       synthStopwatchTimer = setInterval(updateStopwatch, 1000);
+      activeSynthController = new AbortController();
 
       const t0 = performance.now();
       const res = await fetch('/api/synthesize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: activeSynthController.signal
       });
 
       if (synthStopwatchTimer) {
@@ -427,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
 
       if (res.ok) {
+        setOfflineState(false);
         const devTag = data.device ? data.device.toUpperCase() : currentDeviceName;
         latencyBadge.textContent = `Latency: ${elapsed}s [${devTag}] (Gen: ${data.duration}s @ 24kHz)`;
         activeAudioUrl = data.audio_url;
@@ -440,6 +560,13 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Speech synthesized in ${elapsed}s on ${devTag}!`);
         await loadHistory();
       } else {
+        if (res.status === 404 && payload.profile_id) {
+          // Stale profile ID
+          safeRemoveStorage('kitten_tts_selected_profile');
+          selectedProfileId = null;
+          if (activeVoiceName) activeVoiceName.textContent = 'None (Default / Uploaded)';
+          await loadProfiles();
+        }
         showToast('Synthesis failed: ' + (data.detail || 'Unknown error'));
         latencyBadge.textContent = `Failed (${elapsed}s)`;
       }
@@ -448,13 +575,20 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(synthStopwatchTimer);
         synthStopwatchTimer = null;
       }
-      showToast('Error: ' + e.message);
-      latencyBadge.textContent = 'Error';
+      if (e.name === 'AbortError') {
+        showToast('Synthesis aborted.');
+        latencyBadge.textContent = 'Aborted';
+      } else {
+        setOfflineState(true);
+        showToast('Synthesis failed: Local server is unreachable. Check ./run_studio.sh');
+        latencyBadge.textContent = 'Disconnected';
+      }
     } finally {
       if (synthStopwatchTimer) {
         clearInterval(synthStopwatchTimer);
         synthStopwatchTimer = null;
       }
+      activeSynthController = null;
       synthesizeBtn.disabled = false;
       synthesizeBtn.textContent = '⚡ SYNTHESIZE SPEECH';
     }
@@ -492,6 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioPlayer.duration) {
       const pct = (audioPlayer.currentTime / audioPlayer.duration) * 100;
       scrubber.value = pct;
+      scrubber.setAttribute('aria-valuenow', pct.toFixed(1));
       currentTimeLabel.textContent = formatTime(audioPlayer.currentTime);
       totalTimeLabel.textContent = formatTime(audioPlayer.duration);
     }
@@ -515,6 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadHistory() {
     try {
       const res = await fetch('/api/history');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const items = await res.json();
       const list = document.getElementById('historyList');
       list.innerHTML = '';
@@ -532,15 +668,15 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="history-bottom">
             <span>${item.duration}s • ${item.created_at}</span>
             <div class="history-actions">
-              <button class="btn btn-tag" onclick="window.playHistoryItem('${item.audio_url}', '${encodeURIComponent(item.text)}')">▶ Play</button>
-              <a href="${item.audio_url}" download="${item.filename}" class="btn btn-tag">⬇</a>
+              <button class="btn btn-tag" aria-label="Play clip" onclick="window.playHistoryItem('${item.audio_url}', '${encodeURIComponent(item.text)}')">▶ Play</button>
+              <a href="${item.audio_url}" download="${item.filename}" class="btn btn-tag" aria-label="Download ${item.filename}">⬇</a>
             </div>
           </div>
         `;
         list.appendChild(card);
       });
     } catch (e) {
-      console.error('History load error:', e);
+      // History error non-fatal in disconnected mode
     }
   }
 
@@ -556,8 +692,9 @@ document.addEventListener('DOMContentLoaded', () => {
   async function updateTelemetry() {
     try {
       const res = await fetch('/api/telemetry');
-      if (!res.ok) return;
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+      setOfflineState(false);
       
       const hudRam = document.getElementById('hudRam');
       if (hudRam) hudRam.textContent = `${data.ram_used_gb}G / ${data.ram_total_gb}G`;
@@ -575,7 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.device && (data.device.toLowerCase().includes('cuda') || data.device.toLowerCase().includes('gpu'))) {
         currentDeviceName = 'GPU';
         if (hudDevice) {
-          hudDevice.textContent = 'GPU (NVIDIA MX250)';
+          hudDevice.textContent = 'GPU (CUDA)';
           hudDevice.className = 'hud-val active';
         }
       } else {
@@ -586,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } catch (e) {
-      // Telemetry poll error is non-fatal
+      setOfflineState(true);
     }
   }
 
@@ -604,9 +741,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3200);
   }
 
+  // Telemetry Polling with Tab Backgrounding Guard
+  let telemetryTimer = null;
+  function startPolling() {
+    if (!telemetryTimer) {
+      updateTelemetry();
+      telemetryTimer = setInterval(updateTelemetry, 5000);
+    }
+  }
+  function stopPolling() {
+    if (telemetryTimer) {
+      clearInterval(telemetryTimer);
+      telemetryTimer = null;
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopPolling();
+    } else {
+      startPolling();
+    }
+  });
+
   // Initial Boot
   loadProfiles();
   loadHistory();
-  updateTelemetry();
-  setInterval(updateTelemetry, 5000);
+  startPolling();
 });
