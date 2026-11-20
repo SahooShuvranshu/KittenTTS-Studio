@@ -34,8 +34,21 @@ class TestDocsShowcase(unittest.TestCase):
 
         # Assert title and brand
         self.assertIn("Kitten-TTS 2 Studio", html)
+        self.assertIn("Documentation &amp; Acoustic Speech Engine", html)
         self.assertIn("SahooShuvranshu", html)
         self.assertIn("Acoustic Audition Laboratory", html)
+
+        # Assert unified header navigation
+        self.assertIn("[DOCS]", html)
+        self.assertIn("[QUICKSTART]", html)
+        self.assertIn("[ARCHITECTURE]", html)
+        self.assertIn("[API]", html)
+        self.assertIn("[GITHUB ↗]", html)
+
+        # Assert breadcrumb navigation
+        self.assertIn("HOME", html)
+        self.assertIn("DOCS", html)
+        self.assertIn("OVERVIEW &amp; AUDITION", html)
 
         # Assert purge of NSFW visitor counters
         self.assertNotIn("rule34", html.lower())
@@ -211,6 +224,14 @@ class TestDocsShowcase(unittest.TestCase):
 
         # Testing interface export
         self.assertIn("__kittenShowcase", js)
+        self.assertIn("__kittenDocs", js)
+
+    def test_landing_page_documentation_links(self):
+        """Verify landing page links to /docs instead of /docs-showcase."""
+        r = self.client.get("/")
+        self.assertEqual(r.status_code, 200)
+        self.assertIn('href="/docs"', r.text)
+        self.assertNotIn('href="/docs-showcase"', r.text)
 
     def test_multipage_docs_and_fallback_routes(self):
         """Verify all documentation pages are accessible via /docs/* and root fallback routes."""
