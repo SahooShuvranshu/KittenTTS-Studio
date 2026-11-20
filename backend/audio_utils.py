@@ -9,11 +9,14 @@ def convert_to_wav(input_path: str, output_path: str, target_sr: int = TARGET_SA
     """
     Converts any audio file to a clean mono PCM 16-bit WAV at target_sr (default 24kHz)
     using ffmpeg. This handles mp3, m4a, flac, ogg, webm, and raw wavs effortlessly.
+    Secured with protocol whitelisting and non-interactive flags.
     """
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     cmd = [
         "ffmpeg",
         "-y",
+        "-nostdin",
+        "-protocol_whitelist", "file,pipe",
         "-loglevel", "error",
         "-i", input_path,
         "-ar", str(target_sr),

@@ -42,13 +42,6 @@
 
 ---
 
-<div align="center">
-   <h3>Visitors 👀:</h3>
-   <img src="https://count.getloli.com/@KittenTTS2Studio?theme=3d-num&darkmode=1" alt="Visitor Counter" />
-</div>
-
----
-
 ## ⚡ Overview
 
 **Kitten-TTS 2 Studio** is an open-source, local audio workstation built with ❤️ and ☕ by **Shuvransu** & **Antigravity** (Google DeepMind) to clone human voices and synthesize expressive speech with zero cloud dependencies.
@@ -153,18 +146,19 @@ The studio starts at **`http://127.0.0.1:8765`** and opens automatically in your
 
 ## 🌐 Remote & Cloud Deployment
 
-Kitten-TTS 2 Studio is cloud-ready and can be hosted on a remote server, VPS, or private Tailscale mesh:
+Kitten-TTS 2 Studio can be deployed on a remote server, VPS, or private network:
 
 ```bash
-# Bind to all network interfaces with custom port
-export HOST="0.0.0.0"
+# Secure default: bind locally or specify trusted origins
+export HOST="127.0.0.1"
 export PORT="8765"
-export CORS_ORIGINS="*"
+export CORS_ORIGINS="http://localhost:8765,http://127.0.0.1:8765"
 
 ./run_studio.sh
 ```
 
-Access the studio from any smartphone, laptop, or remote workstation over your network at `http://your-server-ip:8765`.
+> [!WARNING]
+> **Production Security Note**: When deploying remotely or binding to `0.0.0.0`, always run behind an authenticated reverse proxy (e.g. Caddy with `basic_auth`, Nginx with TLS, Tailscale, or Cloudflare Zero Trust). Never expose unauthenticated synthesis endpoints or wildcard CORS on public networks.
 
 ---
 
