@@ -2176,22 +2176,22 @@ footer {
 
 /* ==================== 19.2 MULTI-PAGE DOCUMENTATION LAYOUT & COMPONENTS ==================== */
 
-/* Master Documentation Shell */
+/* Master Documentation Shell (3-Column Cyber-Brutalist Layout) */
 .docs-layout,
 .docs-container {
   display: flex;
   width: 100%;
-  max-width: 1240px;
+  max-width: 1400px;
   margin: 0 auto;
-  gap: 32px;
+  gap: 28px;
   padding: 24px 20px 64px 20px;
   position: relative;
   align-items: flex-start;
 }
 
-/* 2-Column Sticky Sidebar (260px width) */
+/* 1. Left Sticky Navigation Sidebar (250px width) */
 .docs-sidebar {
-  width: 260px;
+  width: 250px;
   flex-shrink: 0;
   position: sticky;
   top: 76px;
@@ -2205,8 +2205,54 @@ footer {
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   z-index: 40;
+}
+
+/* Sidebar Search Filter Field */
+.sidebar-filter-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.sidebar-filter-input {
+  width: 100%;
+  background-color: var(--bg-surface-sunken);
+  color: var(--bone-cream);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 8px 28px 8px 10px;
+  border: 1.5px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  outline: none;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sidebar-filter-input:focus {
+  border-color: var(--signal-amber);
+  box-shadow: 0 0 6px var(--signal-amber-bg);
+}
+
+.sidebar-filter-input::placeholder {
+  color: var(--text-muted);
+}
+
+.sidebar-filter-shortcut {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  padding: 1px 5px;
+  pointer-events: none;
 }
 
 /* Minimal Custom Scrollbar for Documentation Sidebar */
@@ -2353,15 +2399,191 @@ footer {
   z-index: 39;
 }
 
-/* Fluid Main Documentation Content Area (max-width: 880px) */
+/* 2. Fluid Main Documentation Content Article (Center Column) */
 .docs-content,
 .docs-main {
   flex: 1;
   min-width: 0;
-  max-width: 880px;
+  max-width: 820px;
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
+
+/* 3. Right Sticky "On This Page" Table of Contents (TOC) */
+.docs-toc {
+  width: 230px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 76px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-brutal);
+  box-shadow: var(--shadow-brutal);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 30;
+}
+
+.docs-toc::-webkit-scrollbar {
+  width: 4px;
+}
+.docs-toc::-webkit-scrollbar-track {
+  background: var(--bg-surface-sunken);
+}
+.docs-toc::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: var(--radius-brutal);
+}
+
+.toc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.toc-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--signal-amber);
+}
+
+.toc-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.toc-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-link {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  padding: 5px 8px;
+  border-radius: var(--radius-brutal);
+  border-left: 2px solid transparent;
+  transition: all 0.12s ease;
+  text-decoration: none;
+}
+
+.toc-link:hover {
+  color: var(--bone-cream);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-left-color: var(--signal-amber);
+}
+
+.toc-link.active,
+.toc-link[aria-current="true"] {
+  color: var(--phosphor-green) !important;
+  border-left-color: var(--phosphor-green) !important;
+  background-color: var(--phosphor-green-bg);
+  font-weight: 700;
+}
+
+.toc-utility {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.toc-util-header {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.toc-util-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: var(--radius-brutal);
+  transition: all 0.12s ease;
+}
+
+.toc-util-link:hover {
+  color: var(--signal-amber);
+  background-color: rgba(255, 136, 0, 0.08);
+}
+
+.toc-icon {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Tactile Brutalist Code Copy Button */
+.copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-brutal);
+  padding: 3px 8px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0px #000000;
+  transition: all 0.12s ease;
+  z-index: 10;
+  letter-spacing: 0.5px;
+}
+
+.copy-code-btn:hover {
+  color: var(--bone-cream);
+  border-color: var(--signal-amber);
+  background-color: var(--bg-surface-raised);
+}
+
+.copy-code-btn.copied {
+  color: #000000 !important;
+  background-color: var(--phosphor-green) !important;
+  border-color: var(--phosphor-green) !important;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6) !important;
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 39;
+}
+
+.sidebar-backdrop.active {
+  display: block;
 }
 
 /* Breadcrumb Navigation Trail */
@@ -2849,7 +3071,7 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Documentation 2-Column Laptop Layout */
+  /* Documentation 2-Column Laptop Layout (Hide Right TOC) */
   .docs-layout,
   .docs-container {
     gap: 20px;
@@ -2863,6 +3085,10 @@ footer {
   .docs-content,
   .docs-main {
     max-width: calc(100% - 240px);
+  }
+
+  .docs-toc {
+    display: none !important;
   }
 }
 
@@ -2924,6 +3150,10 @@ footer {
     flex-direction: column;
     gap: 20px;
     padding: 20px 16px 48px 16px;
+  }
+
+  .docs-toc {
+    display: none !important;
   }
 
   .sidebar-toggle-bar {
@@ -3083,6 +3313,10 @@ footer {
     flex-direction: column;
     gap: 16px;
     padding: 16px 12px 40px 12px;
+  }
+
+  .docs-toc {
+    display: none !important;
   }
 
   .sidebar-toggle-bar {

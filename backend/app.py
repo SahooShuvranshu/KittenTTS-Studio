@@ -576,6 +576,13 @@ def serve_docs_demo():
         return FileResponse(demo_path, media_type="application/javascript")
     raise HTTPException(status_code=404)
 
+@app.get("/docs.js")
+def serve_docs_js():
+    docs_js_path = os.path.join(DOCS_DIR, "docs.js")
+    if os.path.exists(docs_js_path):
+        return FileResponse(docs_js_path, media_type="application/javascript")
+    raise HTTPException(status_code=404)
+
 @app.get("/assets/{subpath:path}")
 def serve_assets(subpath: str):
     docs_asset = os.path.join(DOCS_DIR, "assets", subpath)

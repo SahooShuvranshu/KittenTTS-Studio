@@ -33,8 +33,8 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-item">[SHOWCASE]</a>
         <a href="architecture.html" class="nav-item active">[DOCS]</a>
-        <a href="/studio" class="nav-item nav-launch">[STUDIO]</a>
-        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-item">[GITHUB]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="nav-item nav-launch">[GITHUB REPO ↗]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="nav-item">[GITHUB]</a>
       </nav>
       <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
         ★ STAR ON GITHUB
@@ -58,11 +58,16 @@
     </div>
   </div>
 
-  <!-- ==================== TWO-COLUMN DOCUMENTATION LAYOUT ==================== -->
+  <!-- ==================== THREE-COLUMN DOCUMENTATION LAYOUT ==================== -->
   <div class="docs-layout container">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- 1. LEFT NAVIGATION SIDEBAR -->
     <aside class="docs-sidebar" id="docsSidebar">
+      <div class="sidebar-filter-wrap">
+        <input type="text" id="sidebarFilter" class="sidebar-filter-input" placeholder="Search docs..." aria-label="Search documentation topics" autocomplete="off" spellcheck="false">
+        <span class="sidebar-filter-shortcut">/</span>
+      </div>
+
       <div class="sidebar-group">
         <div class="sidebar-category">GETTING STARTED</div>
         <a href="index.html" class="sidebar-link">
@@ -95,12 +100,12 @@
 
       <div class="sidebar-footer-card">
         <div class="sidebar-card-title">LOCAL WORKSTATION</div>
-        <p class="sidebar-card-text">Directly launch the interactive Web Audio studio GUI console.</p>
-        <a href="/studio" class="btn btn-green btn-block">LAUNCH STUDIO ↗</a>
+        <p class="sidebar-card-text">Clone the repository to run the offline neural speech console locally.</p>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="btn btn-green btn-block">★ GET ON GITHUB ↗</a>
       </div>
     </aside>
 
-    <!-- MAIN DOCUMENTATION CONTENT -->
+    <!-- 2. MAIN DOCUMENTATION CONTENT -->
     <main class="docs-content">
 
       <div class="doc-header-block">
@@ -112,7 +117,7 @@
       </div>
 
       <!-- HOW IT WORKS -->
-      <section class="doc-section">
+      <section class="doc-section" id="prosody-conditioning">
         <h2 class="doc-section-title">1. How In-Context Prosody Conditioning Works</h2>
         <p>
           Unlike legacy speech engines that require cumbersome W3C SSML (Speech Synthesis Markup Language) tags like <code>&lt;prosody pitch="+5st"&gt;</code>, Kitten-TTS 2 treats emotion and paralinguistic tags as specialized semantic tokens directly embedded in the autoregressive language modeling sequence.
@@ -123,7 +128,7 @@
       </section>
 
       <!-- EMOTIONAL PROSODY TAGS -->
-      <section class="doc-section">
+      <section class="doc-section" id="emotion-tags">
         <h2 class="doc-section-title">2. Emotion &amp; Mood Prosody Tags</h2>
         <p>
           Prepend or embed emotion tags within your text to guide the tonal delivery:
@@ -175,7 +180,7 @@
       </section>
 
       <!-- PARALINGUISTIC VOCAL EVENTS -->
-      <section class="doc-section">
+      <section class="doc-section" id="vocal-events">
         <h2 class="doc-section-title">3. Paralinguistic Vocal Events</h2>
         <p>
           Paralinguistic events synthesize non-verbal human vocalizations directly within conversational speech:
@@ -220,7 +225,7 @@
       </section>
 
       <!-- PROSODIC EMPHASIS & PUNCTUATION -->
-      <section class="doc-section">
+      <section class="doc-section" id="emphasis-punctuation">
         <h2 class="doc-section-title">4. Prosodic Emphasis &amp; Punctuation Nuance</h2>
         <p>
           Fine-tune stress, rhythm, and pauses using simple punctuation rules:
@@ -262,7 +267,7 @@
       </section>
 
       <!-- COMPLEX MULTI-TAG DIALOGUES -->
-      <section class="doc-section">
+      <section class="doc-section" id="dialogue-compositions">
         <h2 class="doc-section-title">5. Multi-Tag Complex Dialogue Compositions</h2>
         <p>
           Combine emotional tags, paralinguistic events, and emphasis to craft nuanced, human-sounding speech flows:
@@ -312,6 +317,35 @@
       </nav>
 
     </main>
+
+    <!-- 3. RIGHT ON-THIS-PAGE TOC -->
+    <aside class="docs-toc" id="docsToc" aria-label="Table of Contents">
+      <div class="toc-header">
+        <span class="toc-badge">ON THIS PAGE</span>
+      </div>
+      <nav class="toc-nav">
+        <ul class="toc-list">
+          <li><a href="#prosody-conditioning" class="toc-link active">1. Conditioning</a></li>
+          <li><a href="#emotion-tags" class="toc-link">2. Emotion Tags</a></li>
+          <li><a href="#vocal-events" class="toc-link">3. Vocal Events</a></li>
+          <li><a href="#emphasis-punctuation" class="toc-link">4. Punctuation</a></li>
+          <li><a href="#dialogue-compositions" class="toc-link">5. Compositions</a></li>
+        </ul>
+      </nav>
+      <div class="toc-utility">
+        <div class="toc-util-header">COMMUNITY &amp; SOURCE</div>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="toc-util-link">
+          <span class="toc-icon">★</span> Star on GitHub
+        </a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio/issues/new" target="_blank" rel="noopener noreferrer" class="toc-util-link">
+          <span class="toc-icon">⚠</span> Report an Issue
+        </a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio/blob/main/docs/syntax.html" target="_blank" rel="noopener noreferrer" class="toc-util-link">
+          <span class="toc-icon">✎</span> Edit this Page
+        </a>
+      </div>
+    </aside>
+
   </div>
 
   <!-- ==================== FOOTER ==================== -->
@@ -325,34 +359,6 @@
     </div>
   </footer>
 
-  <script>
-    // Responsive sidebar drawer toggle
-    const toggleBtn = document.getElementById('sidebarToggle');
-    const sidebar = document.getElementById('docsSidebar');
-    if (toggleBtn && sidebar) {
-      toggleBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-      });
-    }
-
-    // Code copy buttons
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetId = btn.getAttribute('data-target');
-        const targetEl = document.getElementById(targetId);
-        if (targetEl) {
-          navigator.clipboard.writeText(targetEl.innerText.trim()).then(() => {
-            const orig = btn.innerText;
-            btn.innerText = 'COPIED!';
-            btn.style.color = '#00ff88';
-            setTimeout(() => {
-              btn.innerText = orig;
-              btn.style.color = '';
-            }, 1800);
-          });
-        }
-      });
-    });
-  </script>
+  <script src="docs.js"></script>
 </body>
 </html>

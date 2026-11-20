@@ -99,6 +99,18 @@ class TestDocsShowcase(unittest.TestCase):
         self.assertIn("rgba(5, 6, 8, 0.20)", r_js.text)  # P31 phosphor persistence
         self.assertIn("playRelayClick", r_js.text)
 
+        # 2b. docs.js direct fallback & /docs/docs.js
+        r_docs_js = self.client.get("/docs.js")
+        self.assertEqual(r_docs_js.status_code, 200)
+        self.assertIn("javascript", r_docs_js.headers["content-type"])
+        self.assertIn("initSidebarFilter", r_docs_js.text)
+        self.assertIn("initScrollspy", r_docs_js.text)
+        self.assertIn("initCodeCopyButtons", r_docs_js.text)
+
+        r_docs_sub_js = self.client.get("/docs/docs.js")
+        self.assertEqual(r_docs_sub_js.status_code, 200)
+        self.assertIn("initSidebarFilter", r_docs_sub_js.text)
+
         # 3. Vector Logo SVG
         r_logo = self.client.get("/assets/logo.svg")
         self.assertEqual(r_logo.status_code, 200)
@@ -214,11 +226,22 @@ class TestDocsShowcase(unittest.TestCase):
             r_docs = self.client.get(f"/docs/{page}")
             self.assertEqual(r_docs.status_code, 200, f"/docs/{page} returned {r_docs.status_code}")
             self.assertIn(title_fragment, r_docs.text)
+            self.assertIn("docs-toc", r_docs.text)
+            self.assertIn("sidebar-filter-input", r_docs.text)
+            self.assertNotIn('<a href="/studio"', r_docs.text)
+            self.assertIn("docs.js", r_docs.text)
+
+            if page == "architecture.html":
+                self.assertIn("arch-schematic-svg", r_docs.text)
+                self.assertNotIn("cdn.jsdelivr.net/npm/mermaid", r_docs.text)
+                self.assertNotIn("mermaid.initialize", r_docs.text)
 
             # 2. As direct root fallback
             r_root = self.client.get(f"/{page}")
             self.assertEqual(r_root.status_code, 200, f"/{page} returned {r_root.status_code}")
             self.assertIn(title_fragment, r_root.text)
+            self.assertIn("docs-toc", r_root.text)
+            self.assertNotIn('<a href="/studio"', r_root.text)
 
 if __name__ == "__main__":
     unittest.main()
