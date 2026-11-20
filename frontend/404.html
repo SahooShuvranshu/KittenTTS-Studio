@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Channel Unreachable // Kitten-TTS 2 Studio</title>
+  <meta name="theme-color" content="#090a0d">
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <style>
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 24px;
+      font-family: var(--font-mono);
+    }
+    .error-container {
+      max-width: 680px;
+      margin: 80px auto;
+      padding: 32px;
+      background: var(--bg-surface);
+      border: 2.5px solid var(--border-dark);
+      box-shadow: var(--shadow-brutal);
+    }
+    .error-code {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--signal-amber);
+      letter-spacing: -1px;
+    }
+    .error-msg {
+      font-size: 13px;
+      color: var(--text-primary);
+      margin: 16px 0 24px;
+      line-height: 1.6;
+    }
+    .btn-return {
+      display: inline-block;
+      background: var(--signal-green);
+      color: #000;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 10px 20px;
+      text-decoration: none;
+      border: 2px solid var(--border-dark);
+      box-shadow: var(--shadow-brutal-sm);
+    }
+  </style>
+</head>
+<body>
+  <main class="error-container">
+    <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">[SIGNAL LOSS // HTTP 404]</div>
+    <div class="error-code">CHANNEL UNREACHABLE</div>
+    <p class="error-msg">
+      The requested telemetry endpoint or route could not be resolved. Check local server routing or return to the overview.
+    </p>
+    <a href="/" class="btn-return">← RETURN TO OVERVIEW</a>
+  </main>
+</body>
+</html>

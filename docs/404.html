@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Channel Unreachable // Kitten-TTS 2 Studio</title>
+  <meta name="theme-color" content="#090a0d">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .error-container {
+      max-width: 680px;
+      margin: 80px auto;
+      padding: 32px;
+      background: #111318;
+      border: 2.5px solid #000;
+      box-shadow: 6px 6px 0px #000;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+    }
+    .error-code {
+      font-size: 56px;
+      font-weight: 800;
+      color: #ff8800;
+      letter-spacing: -2px;
+    }
+    .error-msg {
+      font-size: 14px;
+      color: #eeebe3;
+      margin: 16px 0 24px;
+      line-height: 1.6;
+    }
+    .btn-return {
+      display: inline-block;
+      background: #00ff88;
+      color: #000;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 10px 20px;
+      text-decoration: none;
+      border: 2px solid #000;
+      box-shadow: 3px 3px 0px #000;
+    }
+  </style>
+</head>
+<body style="background:#090a0d; color:#eeebe3; margin:0; padding:20px;">
+  <main class="error-container">
+    <div style="font-size:11px; color:#8b92a4; text-transform:uppercase; margin-bottom:8px;">[SIGNAL LOSS // HTTP 404]</div>
+    <div class="error-code">CHANNEL UNREACHABLE</div>
+    <p class="error-msg">
+      The requested telemetry endpoint or frequency could not be resolved on this carrier. Check the URL routing or return to the studio console.
+    </p>
+    <a href="./" class="btn-return">← RETURN TO CONSOLE</a>
+  </main>
+</body>
+</html>
