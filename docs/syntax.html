@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expression &amp; Emotion Syntax Playbook — Kitten-TTS 2 Studio</title>
+  <meta name="description" content="Interactive guide to prosody, emotion tags, paralinguistic vocal events (<laugh>, <sigh>), and phonetic emphasis rules in Kitten-TTS 2 Studio.">
+  <meta name="author" content="SahooShuvranshu">
+  <meta name="theme-color" content="#090A0D">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/syntax.html">
+  <meta property="og:title" content="Expression &amp; Emotion Syntax Playbook — Kitten-TTS 2 Studio">
+  <meta property="og:description" content="Master vocal timbre, emotional tags, laughter events, and prosodic emphasis in Kitten-TTS 2.">
+  <meta property="og:image" content="assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="showcase-header">
+    <div class="brand">
+      <a href="index.html" class="brand-link">
+        <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
+        <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
+      </a>
+    </div>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">[SHOWCASE]</a>
+        <a href="architecture.html" class="nav-item active">[DOCS]</a>
+        <a href="/studio" class="nav-item nav-launch">[STUDIO]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-item">[GITHUB]</a>
+      </nav>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
+        ★ STAR ON GITHUB
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== BREADCRUMBS & DRAWER TOGGLE ==================== -->
+  <div class="docs-breadcrumbs-bar">
+    <div class="container breadcrumbs-container">
+      <div class="docs-breadcrumbs">
+        <a href="index.html">HOME</a>
+        <span class="crumb-sep">/</span>
+        <a href="index.html">DOCS</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">EXPRESSION &amp; PROSODY</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Documentation Navigation">
+        ☰ DOCS MENU
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TWO-COLUMN DOCUMENTATION LAYOUT ==================== -->
+  <div class="docs-layout container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="docs-sidebar" id="docsSidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-category">GETTING STARTED</div>
+        <a href="index.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Overview &amp; Audition
+        </a>
+        <a href="quickstart.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Quickstart &amp; Deploy
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">CORE CONCEPTS</div>
+        <a href="architecture.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>System Architecture
+        </a>
+        <a href="hardware.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Hardware Matrix &amp; RAM
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">SPECIFICATIONS</div>
+        <a href="syntax.html" class="sidebar-link active">
+          <span class="sidebar-indicator"></span>Expression &amp; Prosody
+        </a>
+        <a href="api.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>REST API Reference
+        </a>
+      </div>
+
+      <div class="sidebar-footer-card">
+        <div class="sidebar-card-title">LOCAL WORKSTATION</div>
+        <p class="sidebar-card-text">Directly launch the interactive Web Audio studio GUI console.</p>
+        <a href="/studio" class="btn btn-green btn-block">LAUNCH STUDIO ↗</a>
+      </div>
+    </aside>
+
+    <!-- MAIN DOCUMENTATION CONTENT -->
+    <main class="docs-content">
+
+      <div class="doc-header-block">
+        <div class="doc-category-badge">[SPECIFICATIONS // PROSODY]</div>
+        <h1 class="doc-page-title">Expression &amp; Emotion Prosody Playbook</h1>
+        <p class="doc-lead-text">
+          Kitten-TTS 2 parses speech prompt conditioning tags, paralinguistic vocal events, and emphasis punctuation natively inside prompt text without requiring external phoneme dictionaries or SSML tags.
+        </p>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">1. How In-Context Prosody Conditioning Works</h2>
+        <p>
+          Unlike legacy speech engines that require cumbersome W3C SSML (Speech Synthesis Markup Language) tags like <code>&lt;prosody pitch="+5st"&gt;</code>, Kitten-TTS 2 treats emotion and paralinguistic tags as specialized semantic tokens directly embedded in the autoregressive language modeling sequence.
+        </p>
+        <p>
+          When the neural speech decoder encounters a tag such as <code>[whisper]</code> or <code>&lt;laugh&gt;</code>, it modulates the acoustic latent representation, shifting glottal aperture, vocal fold tension, and harmonic formant trajectories in real time.
+        </p>
+      </section>
+
+      <!-- EMOTIONAL PROSODY TAGS -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">2. Emotion &amp; Mood Prosody Tags</h2>
+        <p>
+          Prepend or embed emotion tags within your text to guide the tonal delivery:
+        </p>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>Acoustic Inflection</th>
+                <th>Vocal Tract Dynamics</th>
+                <th>Example Prompt</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-pill">[happy]</span></td>
+                <td>Warm, upbeat, energetic cadence</td>
+                <td>Elevated F0 pitch contour with wider harmonic resonance</td>
+                <td><code id="ex-happy">[happy] Good morning! The system telemetry looks fantastic today.</code></td>
+                <td><button class="copy-btn" data-target="ex-happy">COPY</button></td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">[whisper]</span></td>
+                <td>Quiet, breathy, intimate delivery</td>
+                <td>Attenuated glottal closure, elevated aspiration noise</td>
+                <td><code id="ex-whisper">[whisper] Keep your voice down, the servers are sleeping.</code></td>
+                <td><button class="copy-btn" data-target="ex-whisper">COPY</button></td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">[serious]</span></td>
+                <td>Authoritative, firm, steady cadence</td>
+                <td>Compressed pitch variance, deliberate pause timing</td>
+                <td><code id="ex-serious">[serious] Critical threshold reached. Initiating protocol zero.</code></td>
+                <td><button class="copy-btn" data-target="ex-serious">COPY</button></td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">[excited]</span></td>
+                <td>High tempo with rapid pitch peaks</td>
+                <td>Elevated fundamental frequency, sharp energy bursts</td>
+                <td><code id="ex-excited">[excited] We just benchmarked over 1.2x real-time generation on CPU!</code></td>
+                <td><button class="copy-btn" data-target="ex-excited">COPY</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PARALINGUISTIC VOCAL EVENTS -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">3. Paralinguistic Vocal Events</h2>
+        <p>
+          Paralinguistic events synthesize non-verbal human vocalizations directly within conversational speech:
+        </p>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Acoustic Gesture</th>
+                <th>Generated Sound</th>
+                <th>Example Prompt</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-pill-amber">&lt;laugh&gt;</span></td>
+                <td>Rhythmic breath bursts &amp; pitch chuckles</td>
+                <td>Audible chuckling / laughter</td>
+                <td><code id="ex-laugh">You really thought that would fail? &lt;laugh&gt; It compiled on the first try.</code></td>
+                <td><button class="copy-btn" data-target="ex-laugh">COPY</button></td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">&lt;sigh&gt;</span></td>
+                <td>Prolonged audible exhalation &amp; cadence drop</td>
+                <td>Tired or contemplative sigh</td>
+                <td><code id="ex-sigh">Another 3:00 AM debugging session. &lt;sigh&gt; Back to the terminal.</code></td>
+                <td><button class="copy-btn" data-target="ex-sigh">COPY</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-header">💡 Placement Tip for &lt;laugh&gt; and &lt;sigh&gt;</div>
+          <p class="callout-body">
+            Place <code>&lt;laugh&gt;</code> and <code>&lt;sigh&gt;</code> between punctuation marks (e.g. <code>? &lt;laugh&gt; It</code> or <code>. &lt;sigh&gt; Back</code>) to allow natural pre-event inhalation and post-event pitch recovery.
+          </p>
+        </div>
+      </section>
+
+      <!-- PROSODIC EMPHASIS & PUNCTUATION -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">4. Prosodic Emphasis &amp; Punctuation Nuance</h2>
+        <p>
+          Fine-tune stress, rhythm, and pauses using simple punctuation rules:
+        </p>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Syntax Rule</th>
+                <th>Acoustic Effect</th>
+                <th>Example Prompt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>(((word)))</code></td>
+                <td>Heavy stress with elevated amplitude &amp; pitch peak</td>
+                <td><code>This parameter is (((crucial))) for memory stability.</code></td>
+              </tr>
+              <tr>
+                <td><code>...</code> (Ellipsis)</td>
+                <td>Cadence hesitation with gentle pitch drop (~350ms pause)</td>
+                <td><code>The model is loading... Stand by for audio.</code></td>
+              </tr>
+              <tr>
+                <td><code>--</code> (Double Dash)</td>
+                <td>Abrupt pause with immediate glottal stop (~150ms break)</td>
+                <td><code>Wait-- did the benchmark really drop below 0.10x RTF?</code></td>
+              </tr>
+              <tr>
+                <td><code>!</code> (Exclamation)</td>
+                <td>Elevated final pitch contour and shorter phoneme duration</td>
+                <td><code>Synthesis complete!</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- COMPLEX MULTI-TAG DIALOGUES -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">5. Multi-Tag Complex Dialogue Compositions</h2>
+        <p>
+          Combine emotional tags, paralinguistic events, and emphasis to craft nuanced, human-sounding speech flows:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>PROMPT // TECHNICAL SUPPORT WORKSTATION</span>
+            <button class="copy-btn" data-target="dialogue-1">COPY</button>
+          </div>
+          <div class="terminal-body" id="dialogue-1">
+            <span class="cmd">[happy] Welcome back to the audio lab! &lt;laugh&gt; I see you've already provisioned the new 24kHz pipeline. [serious] Just make sure you keep the working set (((under))) 1.4 gigabytes.</span>
+          </div>
+        </div>
+
+        <div class="terminal-block" style="margin-top:16px;">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>PROMPT // AUDIOBOOK SUSPENSE SCENE</span>
+            <button class="copy-btn" data-target="dialogue-2">COPY</button>
+          </div>
+          <div class="terminal-body" id="dialogue-2">
+            <span class="cmd">[whisper] Don't move... I hear footsteps right outside the server door. &lt;sigh&gt; If they touch the power cable, (((everything))) goes dark.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINATION BAR -->
+      <nav class="docs-pagination">
+        <a href="hardware.html" class="pagination-link pagination-prev">
+          <span class="pagination-sub">← PREVIOUS SECTION</span>
+          <span class="pagination-title">Hardware Matrix &amp; RAM</span>
+        </a>
+        <a href="api.html" class="pagination-link pagination-next">
+          <span class="pagination-sub">NEXT SECTION →</span>
+          <span class="pagination-title">REST API Reference</span>
+        </a>
+      </nav>
+
+    </main>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-attribution">
+      Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
+    </div>
+    <div class="footer-meta">
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" class="footer-email">contact@sahooshuvranshu.is-a.dev</a>
+      KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
+    </div>
+  </footer>
+
+  <script>
+    // Responsive sidebar drawer toggle
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('docsSidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // Code copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          navigator.clipboard.writeText(targetEl.innerText.trim()).then(() => {
+            const orig = btn.innerText;
+            btn.innerText = 'COPIED!';
+            btn.style.color = '#00ff88';
+            setTimeout(() => {
+              btn.innerText = orig;
+              btn.style.color = '';
+            }, 1800);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

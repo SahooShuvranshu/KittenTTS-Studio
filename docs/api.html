@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asynchronous REST API Reference — Kitten-TTS 2 Studio</title>
+  <meta name="description" content="Complete REST API reference for Kitten-TTS 2 Studio. Pydantic request/response schemas, cURL examples, and Python integration clients for zero-shot voice cloning.">
+  <meta name="author" content="SahooShuvranshu">
+  <meta name="theme-color" content="#090A0D">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/api.html">
+  <meta property="og:title" content="Asynchronous REST API Reference — Kitten-TTS 2 Studio">
+  <meta property="og:description" content="10 high-performance REST endpoints for speech synthesis, voice profiling, audio transcoding, and host telemetry.">
+  <meta property="og:image" content="assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="showcase-header">
+    <div class="brand">
+      <a href="index.html" class="brand-link">
+        <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
+        <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
+      </a>
+    </div>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">[SHOWCASE]</a>
+        <a href="architecture.html" class="nav-item active">[DOCS]</a>
+        <a href="/studio" class="nav-item nav-launch">[STUDIO]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-item">[GITHUB]</a>
+      </nav>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
+        ★ STAR ON GITHUB
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== BREADCRUMBS & DRAWER TOGGLE ==================== -->
+  <div class="docs-breadcrumbs-bar">
+    <div class="container breadcrumbs-container">
+      <div class="docs-breadcrumbs">
+        <a href="index.html">HOME</a>
+        <span class="crumb-sep">/</span>
+        <a href="index.html">DOCS</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">REST API REFERENCE</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Documentation Navigation">
+        ☰ DOCS MENU
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TWO-COLUMN DOCUMENTATION LAYOUT ==================== -->
+  <div class="docs-layout container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="docs-sidebar" id="docsSidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-category">GETTING STARTED</div>
+        <a href="index.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Overview &amp; Audition
+        </a>
+        <a href="quickstart.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Quickstart &amp; Deploy
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">CORE CONCEPTS</div>
+        <a href="architecture.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>System Architecture
+        </a>
+        <a href="hardware.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Hardware Matrix &amp; RAM
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">SPECIFICATIONS</div>
+        <a href="syntax.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Expression &amp; Prosody
+        </a>
+        <a href="api.html" class="sidebar-link active">
+          <span class="sidebar-indicator"></span>REST API Reference
+        </a>
+      </div>
+
+      <div class="sidebar-footer-card">
+        <div class="sidebar-card-title">LOCAL WORKSTATION</div>
+        <p class="sidebar-card-text">Directly launch the interactive Web Audio studio GUI console.</p>
+        <a href="/studio" class="btn btn-green btn-block">LAUNCH STUDIO ↗</a>
+      </div>
+    </aside>
+
+    <!-- MAIN DOCUMENTATION CONTENT -->
+    <main class="docs-content">
+
+      <div class="doc-header-block">
+        <div class="doc-category-badge">[SPECIFICATIONS // API]</div>
+        <h1 class="doc-page-title">Asynchronous REST API Reference</h1>
+        <p class="doc-lead-text">
+          Kitten-TTS 2 Studio provides a high-performance REST API powered by FastAPI and Uvicorn. Integrate zero-shot voice cloning, automated speech synthesis, audio normalization, and system telemetry directly into your applications.
+        </p>
+      </div>
+
+      <!-- BASE URL & SECURITY -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">1. Base URL &amp; Connectivity</h2>
+        <p>
+          By default, the server listens locally with zero remote network egress:
+        </p>
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#00ff88;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ffff;"></div>
+            </div>
+            <span>HTTP // BASE ENDPOINT ADDRESS</span>
+          </div>
+          <div class="terminal-body" style="font-size:12px;">
+            <span class="cmd">http://127.0.0.1:8765</span><br>
+            <span class="comment"># Content-Type: application/json (or multipart/form-data for file uploads)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPLETE ENDPOINT CATALOG -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">2. Complete Endpoint Catalog</h2>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Payload</th>
+                <th>Description</th>
+                <th>Response</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-pill-amber">POST</span></td>
+                <td><code>/api/synthesize</code></td>
+                <td>JSON (<code>SynthesizeRequest</code>)</td>
+                <td>Main speech synthesis and speaker cloning generator.</td>
+                <td><code>200 OK</code> (JSON with audio URL)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">POST</span></td>
+                <td><code>/api/upload-sample</code></td>
+                <td>Multipart (<code>file</code>)</td>
+                <td>Normalizes uploaded audio to 24kHz mono PCM WAV.</td>
+                <td><code>200 OK</code> (Metadata &amp; validation)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">POST</span></td>
+                <td><code>/api/profiles/save-sample</code></td>
+                <td>JSON (<code>filename, name</code>)</td>
+                <td>Promotes temporary sample to permanent voice profile.</td>
+                <td><code>200 OK</code> (Profile record)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">POST</span></td>
+                <td><code>/api/profiles/record</code></td>
+                <td>Multipart (<code>file, name</code>)</td>
+                <td>Registers browser MediaRecorder WebM microphone clip.</td>
+                <td><code>200 OK</code> (Profile record)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">GET</span></td>
+                <td><code>/api/profiles</code></td>
+                <td>None</td>
+                <td>Lists all registered voice profiles from storage vault.</td>
+                <td><code>200 OK</code> (Array of profiles)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">PUT</span></td>
+                <td><code>/api/profiles/{id}</code></td>
+                <td>JSON (<code>name, description</code>)</td>
+                <td>Updates voice profile metadata.</td>
+                <td><code>200 OK</code> (Updated profile)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill-amber">DELETE</span></td>
+                <td><code>/api/profiles/{id}</code></td>
+                <td>None</td>
+                <td>Deletes profile metadata and unlinks WAV from disk.</td>
+                <td><code>200 OK</code> (Deleted status)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">GET</span></td>
+                <td><code>/api/telemetry</code></td>
+                <td>None</td>
+                <td>Reports live host CPU %, RAM usage, and GPU status.</td>
+                <td><code>200 OK</code> (Telemetry object)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">GET</span></td>
+                <td><code>/api/audio/{filename}</code></td>
+                <td>Query: <code>temp, profile</code></td>
+                <td>Streams 24kHz WAV audio with HTTP Range seek support.</td>
+                <td><code>200 / 206</code> (audio/wav)</td>
+              </tr>
+              <tr>
+                <td><span class="code-pill">GET</span></td>
+                <td><code>/api/history</code></td>
+                <td>None</td>
+                <td>Fetches last 50 generated synthesis records.</td>
+                <td><code>200 OK</code> (Array of history items)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ENDPOINT DEEP DIVES -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">3. Endpoint Specifications &amp; cURL Examples</h2>
+
+        <!-- SYNTHESIZE -->
+        <div class="api-card">
+          <div class="api-header">
+            <span class="code-pill-amber">POST</span>
+            <code class="api-endpoint">/api/synthesize</code>
+          </div>
+          <p class="api-desc">
+            Executes neural speech synthesis. When <code>profile_id</code> or <code>temp_sample</code> is supplied, Kitten-TTS 2 performs zero-shot in-context voice cloning using the reference audio's formant embedding.
+          </p>
+
+          <div class="api-sub-title">Request Schema (application/json)</div>
+          <div class="terminal-block">
+            <div class="terminal-body" style="font-size:12px;">
+              <pre style="margin:0; color:var(--bone-cream);">{
+  "text": "[happy] System online and ready for audio production.", // required
+  "speed": 1.0,                                                 // optional (0.5 to 2.0, default 1.0)
+  "profile_id": "a1b2c3d4",                                     // optional (saved profile ID)
+  "temp_sample": null                                           // optional (transient uploaded filename)
+}</pre>
+            </div>
+          </div>
+
+          <div class="api-sub-title" style="margin-top:12px;">Response Schema (200 OK)</div>
+          <div class="terminal-block">
+            <div class="terminal-body" style="font-size:12px;">
+              <pre style="margin:0; color:var(--bone-cream);">{
+  "id": "gen_1700000000_1a2b3c",
+  "filename": "gen_1700000000_1a2b3c.wav",
+  "text": "[happy] System online and ready for audio production.",
+  "duration": 3.42,
+  "latency": 0.48,
+  "device": "cpu",
+  "profile_used": "a1b2c3d4",
+  "audio_url": "/api/audio/gen_1700000000_1a2b3c.wav",
+  "created_at": "2026-11-20 08:30:00"
+}</pre>
+            </div>
+          </div>
+
+          <div class="terminal-block" style="margin-top:16px;">
+            <div class="terminal-header">
+              <div class="dot-group">
+                <div class="dot" style="background:#ff3344;"></div>
+                <div class="dot" style="background:#ff8800;"></div>
+                <div class="dot" style="background:#00ff88;"></div>
+              </div>
+              <span>CURL // SYNTHESIS REQUEST</span>
+              <button class="copy-btn" data-target="curl-synth">COPY</button>
+            </div>
+            <div class="terminal-body" id="curl-synth" style="font-size:12px;">
+              <span class="cmd">curl -X POST http://127.0.0.1:8765/api/synthesize \</span><br>
+              <span class="cmd">&nbsp;&nbsp;-H "Content-Type: application/json" \</span><br>
+              <span class="cmd">&nbsp;&nbsp;-d '{"text": "Hello world from Kitten-TTS 2 Studio!", "speed": 1.0}'</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPLOAD SAMPLE -->
+        <div class="api-card" style="margin-top:24px;">
+          <div class="api-header">
+            <span class="code-pill-amber">POST</span>
+            <code class="api-endpoint">/api/upload-sample</code>
+          </div>
+          <p class="api-desc">
+            Ingests any audio file (.wav, .mp3, .m4a, .flac, .ogg), normalizes it to broadcast-standard 24,000 Hz 1-channel mono PCM16 WAV, and evaluates zero-shot duration boundaries.
+          </p>
+
+          <div class="terminal-block">
+            <div class="terminal-header">
+              <div class="dot-group">
+                <div class="dot" style="background:#ff3344;"></div>
+                <div class="dot" style="background:#ff8800;"></div>
+                <div class="dot" style="background:#00ff88;"></div>
+              </div>
+              <span>CURL // AUDIO UPLOAD</span>
+              <button class="copy-btn" data-target="curl-upload">COPY</button>
+            </div>
+            <div class="terminal-body" id="curl-upload" style="font-size:12px;">
+              <span class="cmd">curl -X POST http://127.0.0.1:8765/api/upload-sample \</span><br>
+              <span class="cmd">&nbsp;&nbsp;-F "file=@speaker_sample.wav"</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TELEMETRY -->
+        <div class="api-card" style="margin-top:24px;">
+          <div class="api-header">
+            <span class="code-pill">GET</span>
+            <code class="api-endpoint">/api/telemetry</code>
+          </div>
+          <p class="api-desc">
+            Polls real-time host RAM, CPU usage, GPU device name, model load status, and active execution mode.
+          </p>
+
+          <div class="terminal-block">
+            <div class="terminal-header">
+              <div class="dot-group">
+                <div class="dot" style="background:#ff3344;"></div>
+                <div class="dot" style="background:#ff8800;"></div>
+                <div class="dot" style="background:#00ff88;"></div>
+              </div>
+              <span>CURL // HOST TELEMETRY</span>
+              <button class="copy-btn" data-target="curl-telemetry">COPY</button>
+            </div>
+            <div class="terminal-body" id="curl-telemetry" style="font-size:12px;">
+              <span class="cmd">curl -s http://127.0.0.1:8765/api/telemetry | jq .</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PYTHON CLIENT INTEGRATION -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">4. Python Integration Client</h2>
+        <p>
+          A minimal, complete Python script using <code>httpx</code> or <code>requests</code> to perform zero-shot voice cloning programmatically:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>PYTHON // CLIENT INTEGRATION (requests)</span>
+            <button class="copy-btn" data-target="code-python">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-python" style="font-size:12px; line-height:1.7;">
+            <pre style="margin:0; color:var(--bone-cream);">import requests
+
+BASE_URL = "http://127.0.0.1:8765"
+
+# Step 1: Upload reference speaker sample
+with open("my_speaker.wav", "rb") as f:
+    upload_res = requests.post(f"{BASE_URL}/api/upload-sample", files={"file": f}).json()
+sample_fn = upload_res["filename"]
+print(f"Sample uploaded: {sample_fn} ({upload_res['duration']}s)")
+
+# Step 2: Synthesize speech with cloned voice
+synth_payload = {
+    "text": "[happy] Zero-shot voice cloning active on consumer hardware!",
+    "speed": 1.0,
+    "temp_sample": sample_fn
+}
+synth_res = requests.post(f"{BASE_URL}/api/synthesize", json=synth_payload).json()
+print(f"Synthesis finished in {synth_res['latency']}s: {synth_res['audio_url']}")
+
+# Step 3: Download synthesized WAV audio
+audio_res = requests.get(f"{BASE_URL}{synth_res['audio_url']}")
+with open("cloned_output.wav", "wb") as f:
+    f.write(audio_res.content)
+print("Saved 24kHz audio to cloned_output.wav")</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINATION BAR -->
+      <nav class="docs-pagination">
+        <a href="syntax.html" class="pagination-link pagination-prev">
+          <span class="pagination-sub">← PREVIOUS SECTION</span>
+          <span class="pagination-title">Expression &amp; Prosody</span>
+        </a>
+        <a href="index.html" class="pagination-link pagination-next">
+          <span class="pagination-sub">BACK TO SHOWCASE →</span>
+          <span class="pagination-title">Overview &amp; Audition</span>
+        </a>
+      </nav>
+
+    </main>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-attribution">
+      Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
+    </div>
+    <div class="footer-meta">
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" class="footer-email">contact@sahooshuvranshu.is-a.dev</a>
+      KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
+    </div>
+  </footer>
+
+  <script>
+    // Responsive sidebar drawer toggle
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('docsSidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // Code copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          navigator.clipboard.writeText(targetEl.innerText.trim()).then(() => {
+            const orig = btn.innerText;
+            btn.innerText = 'COPIED!';
+            btn.style.color = '#00ff88';
+            setTimeout(() => {
+              btn.innerText = orig;
+              btn.style.color = '';
+            }, 1800);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

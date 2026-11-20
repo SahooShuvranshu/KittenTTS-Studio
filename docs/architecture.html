@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Architecture &amp; Pipeline Dataflow — Kitten-TTS 2 Studio</title>
+  <meta name="description" content="Technical deep dive into Kitten-TTS 2 Studio system architecture, 1.6-bit ternary quantized neural speech language modeling, dynamic CUDA-to-CPU fallback, and dual-engine audio persistence.">
+  <meta name="author" content="SahooShuvranshu">
+  <meta name="theme-color" content="#090A0D">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/architecture.html">
+  <meta property="og:title" content="System Architecture &amp; Pipeline Dataflow — Kitten-TTS 2 Studio">
+  <meta property="og:description" content="1.6-bit ternary SLM speech synthesis, SIMD AVX2 vectorization, dynamic hardware routing, and resilient dual-engine audio serialization.">
+  <meta property="og:image" content="assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Mermaid.js for colored technical architecture diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#050608',
+        primaryColor: '#181b22',
+        primaryTextColor: '#ffffff',
+        primaryBorderColor: '#00ff88',
+        lineColor: '#ff8800',
+        secondaryColor: '#111318',
+        tertiaryColor: '#090a0d',
+        edgeLabelBackground: '#050608',
+        textColor: '#ffffff',
+        fontFamily: 'JetBrains Mono, ui-monospace, monospace'
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="showcase-header">
+    <div class="brand">
+      <a href="index.html" class="brand-link">
+        <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
+        <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
+      </a>
+    </div>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">[SHOWCASE]</a>
+        <a href="architecture.html" class="nav-item active">[DOCS]</a>
+        <a href="/studio" class="nav-item nav-launch">[STUDIO]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-item">[GITHUB]</a>
+      </nav>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
+        ★ STAR ON GITHUB
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== BREADCRUMBS & DRAWER TOGGLE ==================== -->
+  <div class="docs-breadcrumbs-bar">
+    <div class="container breadcrumbs-container">
+      <div class="docs-breadcrumbs">
+        <a href="index.html">HOME</a>
+        <span class="crumb-sep">/</span>
+        <a href="index.html">DOCS</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">SYSTEM ARCHITECTURE</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Documentation Navigation">
+        ☰ DOCS MENU
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TWO-COLUMN DOCUMENTATION LAYOUT ==================== -->
+  <div class="docs-layout container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="docs-sidebar" id="docsSidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-category">GETTING STARTED</div>
+        <a href="index.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Overview &amp; Audition
+        </a>
+        <a href="quickstart.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Quickstart &amp; Deploy
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">CORE CONCEPTS</div>
+        <a href="architecture.html" class="sidebar-link active">
+          <span class="sidebar-indicator"></span>System Architecture
+        </a>
+        <a href="hardware.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Hardware Matrix &amp; RAM
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">SPECIFICATIONS</div>
+        <a href="syntax.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Expression &amp; Prosody
+        </a>
+        <a href="api.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>REST API Reference
+        </a>
+      </div>
+
+      <div class="sidebar-footer-card">
+        <div class="sidebar-card-title">LOCAL WORKSTATION</div>
+        <p class="sidebar-card-text">Directly launch the interactive Web Audio studio GUI console.</p>
+        <a href="/studio" class="btn btn-green btn-block">LAUNCH STUDIO ↗</a>
+      </div>
+    </aside>
+
+    <!-- MAIN DOCUMENTATION CONTENT -->
+    <main class="docs-content">
+
+      <div class="doc-header-block">
+        <div class="doc-category-badge">[CORE CONCEPTS // ARCHITECTURE]</div>
+        <h1 class="doc-page-title">System Architecture &amp; Dataflow</h1>
+        <p class="doc-lead-text">
+          A comprehensive breakdown of Kitten-TTS 2 Studio: 1.6-bit ternary quantization mathematics, end-to-end vector pipeline dataflow, self-healing CUDA-to-CPU routing, and resilient dual-engine audio serialization.
+        </p>
+      </div>
+
+      <!-- DESIGN PRINCIPLES -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">1. Architectural Philosophy &amp; Directives</h2>
+        <p>
+          Kitten-TTS 2 Studio is designed around three non-negotiable architectural mandates:
+        </p>
+        <ul class="doc-list">
+          <li><strong>Offline Data Sovereignty:</strong> Zero cloud dependencies. No audio samples, user prompts, or embeddings are transmitted to remote cloud APIs.</li>
+          <li><strong>8 GB Consumer Memory Envelope:</strong> The entire stack (OS + Web Workstation + FastAPI + 1.7B Model + PyTorch runtime) must execute safely within 8.0 GB of host RAM with &gt;4.5 GB remaining headroom.</li>
+          <li><strong>Deterministic Broadcast Audio Quality:</strong> All acoustic inputs and outputs are normalized to a uniform broadcast standard: 24,000 Hz, 1-channel mono, 16-bit linear PCM WAV.</li>
+        </ul>
+      </section>
+
+      <!-- 1.6-BIT TERNARY QUANTIZATION -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">2. 1.6-Bit Ternary Quantization Mathematics</h2>
+        <p>
+          Standard speech synthesis language models require 16-bit floating-point (FP16) or 8-bit quantized representations, consuming 4 to 8 GB of VRAM. Kitten-TTS 2 employs <strong>BitNet b1.58 style ternary quantization</strong>, constraining weight matrices to discrete ternary values:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>FORMULATION // TERNARY WEIGHT CONSTRAINTS</span>
+          </div>
+          <div class="terminal-body" style="font-size:12px; line-height:1.7;">
+            <span class="cmd">W_quant ∈ {-1, 0, +1}</span><br>
+            <span class="comment"># Theoretical bit entropy per parameter:</span><br>
+            <span class="cmd">Entropy = log2(3) ≈ 1.58496 bits/weight</span><br>
+            <span class="comment"># Storage reduction relative to FP16:</span><br>
+            <span class="cmd">Compression Factor = 16 / 1.58 ≈ 10.1x memory compaction</span>
+          </div>
+        </div>
+
+        <p>
+          By restricting parameters to ternary states, neural forward-pass tensor multiplications simplify from power-intensive floating-point multiply-accumulate (MAC) operations into pure integer additions and subtractions. This unlocks high-throughput real-time synthesis on standard consumer CPUs equipped with AVX2/AVX-512 SIMD vector extensions.
+        </p>
+
+        <div class="callout callout-note">
+          <div class="callout-header">📊 Footprint Metrics</div>
+          <p class="callout-body">
+            • Full 1.7B Model Disk Footprint: <strong>1.03 GB</strong> (GGUF / Safetensors ternary format).<br>
+            • In-Memory Working Set (RSS): <strong>~1.2 GB</strong> during standby, peak <strong>~1.41 GB</strong> during multi-sentence generation.
+          </p>
+        </div>
+      </section>
+
+      <!-- END-TO-END MERMAID DATAFLOW -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">3. End-to-End Vector Pipeline Schematic</h2>
+        <p>
+          The complete data transformation pipeline maps user prompts and speaker reference audio clips through transcoding, embedding, synthesis, and streaming delivery:
+        </p>
+
+        <div class="mermaid-box">
+          <pre class="mermaid">
+flowchart TD
+    classDef client fill:#11141b,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef backend fill:#181b22,stroke:#ff8800,stroke-width:2px,color:#eeebe3
+    classDef hardware fill:#0e1016,stroke:#00ff88,stroke-width:2px,color:#eeebe3
+    classDef amber fill:#2d1700,stroke:#ff8800,stroke-width:2px,color:#ffffff
+    classDef accent fill:#002914,stroke:#00ff88,stroke-width:2px,color:#ffffff
+
+    UI["🖥️ Studio Web Workstation (studio.html)"]:::client
+    Router["⚡ FastAPI Core REST Gateway (app.py)"]:::backend
+    Transcoder["🎛️ Audio Ingestion &amp; Transcoder (24kHz PCM16)"]:::backend
+    ProfileStore["📁 Voice Profile Storage Vault (profiles.json)"]:::backend
+    Engine["🧠 KittenTTS-2 Engine Singleton (1.7B Ternary SLM)"]:::amber
+    CUDA["🚀 GPU CUDA Acceleration (FP16 / BF16)"]:::accent
+    CPU["⚡ CPU AVX2 Vectorized Execution (Auto-Fallback)"]:::hardware
+    Writer["💾 Resilient Dual-Engine Writer (soundfile + scipy)"]:::amber
+    Stream["📡 24kHz HTTP Range Stream &amp; CRT Oscilloscope"]:::client
+
+    UI -->|1. Ingest Sample / Prompt| Router
+    Router -->|2. Transcode WebM/MP3/FLAC| Transcoder
+    Transcoder -->|3. Register Voice Profile| ProfileStore
+    ProfileStore -->|4. Pass Reference Audio Formants| Engine
+    Engine -->|Primary Route| CUDA
+    CUDA -.->|Auto Fallback on OOM / Error| CPU
+    Engine -->|CPU Direct| CPU
+    CUDA -->|Raw 24kHz Waveform| Writer
+    CPU -->|Raw 24kHz Waveform| Writer
+    Writer -->|Save 24kHz Mono WAV| Router
+    Router -->|HTTP Range Audio Stream| Stream
+    Stream -->|Real-Time Phosphor Trace| UI
+          </pre>
+        </div>
+      </section>
+
+      <!-- WALKTHROUGH PHASES -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">4. Deep-Dive Pipeline Walkthrough</h2>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Component</th>
+                <th>Mechanism &amp; Responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>01. Ingestion</strong></td>
+                <td><code>backend/audio_utils.py</code></td>
+                <td>
+                  Accepts arbitrary client audio files (.wav, .mp3, .m4a, .flac, .ogg, .webm). Executes automated FFmpeg transcoding to 24,000 Hz, 1-channel mono, 16-bit PCM WAV. Verifies clip duration for zero-shot acoustic suitability (warns if &lt;3s or &gt;60s). Cleans raw temp files immediately.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>02. Profiling</strong></td>
+                <td><code>backend/profiles.py</code></td>
+                <td>
+                  Extracts acoustic duration, sample rate, and size metadata. Assigns an 8-character UUID (<code>uuid.uuid4().hex[:8]</code>), writes the normalized WAV to <code>storage/profiles/{id}.wav</code>, and appends the metadata to <code>storage/profiles/profiles.json</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>03. Inference</strong></td>
+                <td><code>backend/engine.py</code></td>
+                <td>
+                  The <code>KittenTTSEngine</code> singleton loads the 1.7B ternary model lazily on first invocation. If a profile or temporary sample is passed, passes <code>kwargs["reference"] = reference_path</code> to perform in-context speaker timbre cloning.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>04. Self-Healing</strong></td>
+                <td>Dynamic Hardware Routing</td>
+                <td>
+                  If CUDA encounters a driver issue, device incompatibility, or CUDA Out-Of-Memory (OOM) error, the engine catches the exception, clears the PyTorch CUDA cache (<code>torch.cuda.empty_cache()</code>), triggers garbage collection (<code>gc.collect()</code>), forces execution device to <code>cpu</code>, and completes the generation via AVX2 without dropping the client request.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>05. Post-Process</strong></td>
+                <td>Tempo Stretch &amp; Dual-Engine Writer</td>
+                <td>
+                  If playback speed deviates from 1.0 (<code>abs(speed - 1.0) &gt;= 0.05</code>), applies pitch-neutral phase vocoder time-stretching via <code>librosa.effects.time_stretch</code>. Saves output WAV using <code>soundfile.write</code> with automatic pure-Python <code>scipy.io.wavfile</code> fallback.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>06. Streaming</strong></td>
+                <td><code>backend/app.py</code> &amp; Web Audio</td>
+                <td>
+                  FastAPI streams the audio file over HTTP Range Requests (supporting seek scrubbing). The frontend connects the stream to an <code>AudioContext</code> and <code>AnalyserNode</code>, animating the real-time CRT phosphor oscilloscope and FFT spectrum bars.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4 ARCHITECTURAL PILLARS -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">5. The Four Architectural Pillars</h2>
+
+        <div class="arch-grid">
+          <div class="arch-card">
+            <div class="arch-badge">[SYS_01] COMPRESSION</div>
+            <div class="arch-card-title">1.6-bit Ternary Weights</div>
+            <div class="arch-card-desc">Quantized down to ~1.03 GB disk footprint, enabling real-time neural speech synthesis in ~1.2 GB of host RAM without cloud reliance.</div>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-badge">[SYS_02] INGESTION</div>
+            <div class="arch-card-title">24 kHz Mono Pipeline</div>
+            <div class="arch-card-desc">Automated FFmpeg transcoding converts incoming MP3, M4A, FLAC, and WebM into clean 16-bit PCM WAV matching model formants.</div>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-badge">[SYS_03] FALLBACK ENGINE</div>
+            <div class="arch-card-title">Dynamic Hardware Routing</div>
+            <div class="arch-card-desc">Routes to CUDA when GPU memory allows, and falls back seamlessly to CPU AVX2 on 2GB VRAM constraints with zero crash.</div>
+          </div>
+
+          <div class="arch-card">
+            <div class="arch-badge">[SYS_04] PERSISTENCE</div>
+            <div class="arch-card-title">Dual-Engine Audio Writer</div>
+            <div class="arch-card-desc">Primary C libsndfile writer backed by an automatic pure Python scipy.io.wavfile fallback for 100% resilient audio delivery.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINATION BAR -->
+      <nav class="docs-pagination">
+        <a href="quickstart.html" class="pagination-link pagination-prev">
+          <span class="pagination-sub">← PREVIOUS SECTION</span>
+          <span class="pagination-title">Quickstart &amp; Deployment</span>
+        </a>
+        <a href="hardware.html" class="pagination-link pagination-next">
+          <span class="pagination-sub">NEXT SECTION →</span>
+          <span class="pagination-title">Hardware Matrix &amp; RAM</span>
+        </a>
+      </nav>
+
+    </main>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-attribution">
+      Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
+    </div>
+    <div class="footer-meta">
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" class="footer-email">contact@sahooshuvranshu.is-a.dev</a>
+      KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
+    </div>
+  </footer>
+
+  <script>
+    // Responsive sidebar drawer toggle
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('docsSidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+  </script>
+</body>
+</html>

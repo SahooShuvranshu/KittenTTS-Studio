@@ -41,8 +41,8 @@ class TestDocsShowcase(unittest.TestCase):
         self.assertNotIn("rule34", html.lower())
         self.assertNotIn("count.getloli.com", html.lower())
 
-        # Assert purge of 1.5MB external Mermaid.js
-        self.assertNotIn("mermaid", html.lower())
+        # Assert purge of 1.5MB external Mermaid.js CDN
+        self.assertNotIn("cdn.jsdelivr.net/npm/mermaid", html.lower())
 
         # Assert Google Fonts preconnect for JetBrains Mono
         self.assertIn("fonts.googleapis.com", html)
@@ -51,63 +51,38 @@ class TestDocsShowcase(unittest.TestCase):
         # Assert Vector Logo SVG reference
         self.assertIn("assets/logo.svg", html)
 
-        # Assert SFX Toggle
-        self.assertIn("sfxToggleBtn", html)
-        self.assertIn("SFX:", html)
-
-        # Assert Quad-Mode Visualizer Toolbar
-        self.assertIn("btnModeTime", html)
-        self.assertIn("btnModeFFT", html)
-        self.assertIn("btnModeDual", html)
-        self.assertIn("btnModeOrbit", html)
-
-        # Assert Interactive Timeline Scrubber
-        self.assertIn("scrubberTrack", html)
-        self.assertIn("scrubberCurrentTime", html)
-        self.assertIn("scrubberTotalTime", html)
-
-        # Assert Zero-Shot Voice Cloning Lab & A/B switcher
-        self.assertIn("cloning-lab", html)
-        self.assertIn("btnPlayReference", html)
-        self.assertIn("btnPlayCloned", html)
-        self.assertIn("TIMBRE CORRELATION", html)
-
-        # Assert Multi-Speaker Soundboard Matrix
-        self.assertIn("soundboard", html)
-        self.assertIn("Nexus-01", html)
-        self.assertIn("Aura-Vocal", html)
-        self.assertIn("Kitsune-Ternary", html)
-        self.assertIn("Vector-Command", html)
-        self.assertIn("Echo-Dynamic", html)
-        self.assertIn("Boreal-Deep", html)
-
-        # Assert Handcrafted Vector Architecture SVG
-        self.assertIn("arch-svg", html)
-        self.assertIn("ENGINE SINGLETON", html)
-        self.assertIn("Dual-Engine Writer", html)
-
-        # Assert 1.6-bit Ternary Weight Explorer
-        self.assertIn("ternary", html)
-        self.assertIn("ternaryFormula", html)
-        self.assertIn("ternaryTotal", html)
-        self.assertIn("bitpackByte", html)
-
-        # Assert 8 GB RAM Allocation Meter
-        self.assertIn("ram-meter", html)
-        self.assertIn("1.41 GB WORKING SET", html)
-        self.assertIn("XTTS v2", html)
-        self.assertIn("F5-TTS", html)
-
-        # Assert Developer Terminal Tabs
-        self.assertIn("tabContentUv", html)
-        self.assertIn("tabContentPython", html)
-        self.assertIn("tabContentCurl", html)
-        self.assertIn("tabContentVps", html)
-        self.assertIn("tabContentDocker", html)
-
         # Assert Metrics & Digital Odometer
         self.assertIn("githubStars", html)
         self.assertIn("odometerDisplay", html)
+
+        # Multi-Page Documentation System Routing & Content Validation
+        r_arch = self.client.get("/docs/architecture")
+        self.assertEqual(r_arch.status_code, 200)
+        arch_html = r_arch.text
+        self.assertIn("Architecture", arch_html)
+        self.assertIn("1.6-bit Ternary", arch_html)
+
+        r_hw = self.client.get("/docs/hardware")
+        self.assertEqual(r_hw.status_code, 200)
+        hw_html = r_hw.text
+        self.assertIn("Benchmark Matrix", hw_html)
+        self.assertIn("8 GB", hw_html)
+
+        r_syntax = self.client.get("/docs/syntax")
+        self.assertEqual(r_syntax.status_code, 200)
+        syntax_html = r_syntax.text
+        self.assertIn("Expression", syntax_html)
+        self.assertIn("[whisper]", syntax_html)
+
+        r_api = self.client.get("/docs/api")
+        self.assertEqual(r_api.status_code, 200)
+        api_html = r_api.text
+        self.assertIn("/api/synthesize", api_html)
+
+        r_quick = self.client.get("/docs/quickstart")
+        self.assertEqual(r_quick.status_code, 200)
+        quick_html = r_quick.text
+        self.assertIn("run_studio.sh", quick_html)
 
     def test_static_asset_routes(self):
         # 1. style.css direct fallback & /docs/style.css

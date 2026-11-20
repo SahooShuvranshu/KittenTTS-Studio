@@ -453,12 +453,71 @@ def serve_docs_showcase():
         raise HTTPException(status_code=404, detail="Docs showcase not found.")
     return FileResponse(docs_html, media_type="text/html")
 
+# Multi-Page Documentation Routes
 @app.get("/docs")
+@app.get("/docs/")
+@app.get("/docs/index")
+@app.get("/docs/index.html")
 def serve_docs():
     docs_html = os.path.join(DOCS_DIR, "index.html")
     if not os.path.exists(docs_html):
         raise HTTPException(status_code=404, detail="Docs showcase not found.")
     return FileResponse(docs_html, media_type="text/html")
+
+@app.get("/docs/architecture")
+@app.get("/docs/architecture.html")
+def serve_docs_architecture():
+    html_path = os.path.join(DOCS_DIR, "architecture.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return FileResponse(os.path.join(DOCS_DIR, "index.html"), media_type="text/html")
+
+@app.get("/docs/hardware")
+@app.get("/docs/hardware.html")
+def serve_docs_hardware():
+    html_path = os.path.join(DOCS_DIR, "hardware.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return FileResponse(os.path.join(DOCS_DIR, "index.html"), media_type="text/html")
+
+@app.get("/docs/syntax")
+@app.get("/docs/syntax.html")
+def serve_docs_syntax():
+    html_path = os.path.join(DOCS_DIR, "syntax.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return FileResponse(os.path.join(DOCS_DIR, "index.html"), media_type="text/html")
+
+@app.get("/docs/api")
+@app.get("/docs/api.html")
+def serve_docs_api():
+    html_path = os.path.join(DOCS_DIR, "api.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return FileResponse(os.path.join(DOCS_DIR, "index.html"), media_type="text/html")
+
+@app.get("/docs/quickstart")
+@app.get("/docs/quickstart.html")
+def serve_docs_quickstart():
+    html_path = os.path.join(DOCS_DIR, "quickstart.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return FileResponse(os.path.join(DOCS_DIR, "index.html"), media_type="text/html")
+
+# Dynamic documentation subpage router
+@app.get("/docs/{page:path}")
+def serve_docs_subpage(page: str):
+    direct_path = os.path.join(DOCS_DIR, page)
+    if os.path.exists(direct_path) and os.path.isfile(direct_path):
+        return FileResponse(direct_path)
+    base_page = page[:-5] if page.endswith(".html") else page
+    html_path = os.path.join(DOCS_DIR, f"{base_page}.html")
+    if os.path.exists(html_path) and os.path.isfile(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    index_path = os.path.join(DOCS_DIR, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path, media_type="text/html")
+    raise HTTPException(status_code=404, detail=f"Documentation resource '/docs/{page}' not found.")
 
 # Mount Documentation showcase directory
 app.mount("/docs", StaticFiles(directory=DOCS_DIR, html=True), name="docs")

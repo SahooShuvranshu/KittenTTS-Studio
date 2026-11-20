@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quickstart &amp; Deployment Guide — Kitten-TTS 2 Studio</title>
+  <meta name="description" content="Fast-track installation and deployment guide for Kitten-TTS 2 Studio. Local script boot, uv environment setup, headless VPS cloud hosting, and Docker containerization.">
+  <meta name="author" content="SahooShuvranshu">
+  <meta name="theme-color" content="#090A0D">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/quickstart.html">
+  <meta property="og:title" content="Quickstart &amp; Deployment Guide — Kitten-TTS 2 Studio">
+  <meta property="og:description" content="Local script boot, uv environment setup, headless VPS cloud hosting, and Docker containerization under an 8 GB RAM envelope.">
+  <meta property="og:image" content="assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="showcase-header">
+    <div class="brand">
+      <a href="index.html" class="brand-link">
+        <img src="assets/logo.png" alt="Hardware Emblem" class="brand-icon">
+        <span>SAHOO SHUVRANSU // KITTEN-TTS 2 STUDIO</span>
+      </a>
+    </div>
+    <div class="nav-cluster">
+      <nav class="nav-links">
+        <a href="index.html" class="nav-item">[SHOWCASE]</a>
+        <a href="quickstart.html" class="nav-item active">[DOCS]</a>
+        <a href="/studio" class="nav-item nav-launch">[STUDIO]</a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-item">[GITHUB]</a>
+      </nav>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-amber header-cta">
+        ★ STAR ON GITHUB
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== BREADCRUMBS & DRAWER TOGGLE ==================== -->
+  <div class="docs-breadcrumbs-bar">
+    <div class="container breadcrumbs-container">
+      <div class="docs-breadcrumbs">
+        <a href="index.html">HOME</a>
+        <span class="crumb-sep">/</span>
+        <a href="index.html">DOCS</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">QUICKSTART &amp; DEPLOY</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Documentation Navigation">
+        ☰ DOCS MENU
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== TWO-COLUMN DOCUMENTATION LAYOUT ==================== -->
+  <div class="docs-layout container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="docs-sidebar" id="docsSidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-category">GETTING STARTED</div>
+        <a href="index.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Overview &amp; Audition
+        </a>
+        <a href="quickstart.html" class="sidebar-link active">
+          <span class="sidebar-indicator"></span>Quickstart &amp; Deploy
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">CORE CONCEPTS</div>
+        <a href="architecture.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>System Architecture
+        </a>
+        <a href="hardware.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Hardware Matrix &amp; RAM
+        </a>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-category">SPECIFICATIONS</div>
+        <a href="syntax.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>Expression &amp; Prosody
+        </a>
+        <a href="api.html" class="sidebar-link">
+          <span class="sidebar-indicator"></span>REST API Reference
+        </a>
+      </div>
+
+      <div class="sidebar-footer-card">
+        <div class="sidebar-card-title">LOCAL WORKSTATION</div>
+        <p class="sidebar-card-text">Directly launch the interactive Web Audio studio GUI console.</p>
+        <a href="/studio" class="btn btn-green btn-block">LAUNCH STUDIO ↗</a>
+      </div>
+    </aside>
+
+    <!-- MAIN DOCUMENTATION CONTENT -->
+    <main class="docs-content">
+
+      <div class="doc-header-block">
+        <div class="doc-category-badge">[DEPLOYMENT // BOOT]</div>
+        <h1 class="doc-page-title">Quickstart &amp; Deployment Guide</h1>
+        <p class="doc-lead-text">
+          Get Kitten-TTS 2 Studio running locally in under 60 seconds with automated virtual environment provisioning, or deploy it as a headless daemon on remote Linux servers and Docker containers.
+        </p>
+      </div>
+
+      <!-- SYSTEM REQUIREMENTS -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">1. Prerequisites &amp; System Envelope</h2>
+        <p>
+          Kitten-TTS 2 Studio is engineered for strict hardware efficiency. Before bootstrapping, verify that your host environment meets the baseline envelope:
+        </p>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Requirement</th>
+                <th>Minimum Specification</th>
+                <th>Recommended Environment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Operating System</strong></td>
+                <td>Linux (Arch / Ubuntu / Debian / Fedora), macOS (Apple Silicon / Intel), or Windows via WSL2</td>
+                <td>Omarchy Linux / Arch Linux (Wayland / Hyprland)</td>
+              </tr>
+              <tr>
+                <td><strong>Python Runtime</strong></td>
+                <td>Python 3.11+</td>
+                <td>Python 3.12 (CPython with AVX2 support)</td>
+              </tr>
+              <tr>
+                <td><strong>System RAM</strong></td>
+                <td>8.0 GB Physical RAM (~1.4 GB peak RSS)</td>
+                <td>16.0 GB Unified / Physical RAM</td>
+              </tr>
+              <tr>
+                <td><strong>Audio System</strong></td>
+                <td>FFmpeg installed in <code>$PATH</code></td>
+                <td>FFmpeg 6.0+ with libopus and pcm encoders</td>
+              </tr>
+              <tr>
+                <td><strong>Hardware Acceleration</strong></td>
+                <td>CPU AVX2 SIMD (Standard on all modern x86)</td>
+                <td>NVIDIA GPU with CUDA 12+ (or Apple Silicon M-Series)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-header">💡 FFmpeg Verification Tip</div>
+          <p class="callout-body">
+            Verify FFmpeg is available on your machine by running <code>ffmpeg -version</code>. On Arch Linux, install via <code>sudo pacman -S ffmpeg</code>; on Ubuntu/Debian, use <code>sudo apt install ffmpeg</code>; on macOS, use <code>brew install ffmpeg</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- AUTOMATED LAUNCH -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">2. Automated Local Launch (Recommended)</h2>
+        <p>
+          The fastest way to launch Kitten-TTS 2 Studio is using the turnkey launch script <code>run_studio.sh</code>. It automatically creates a localized virtual environment, installs dependencies, verifies audio toolchains, checks hardware acceleration, and boots the workstation:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>TERMINAL // ONE-LINE LAUNCH</span>
+            <button class="copy-btn" data-target="code-boot">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-boot">
+            <span class="comment"># 1. Clone the repository</span><br>
+            <span class="cmd">git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git</span><br>
+            <span class="cmd">cd KittenTTS-Studio</span><br><br>
+            <span class="comment"># 2. Run the turnkey boot script</span><br>
+            <span class="cmd">./run_studio.sh</span>
+          </div>
+        </div>
+
+        <p>
+          Once booted, the terminal prints hardware telemetry and opens your default browser at <a href="http://127.0.0.1:8765/studio" target="_blank"><code>http://127.0.0.1:8765/studio</code></a>.
+        </p>
+
+        <div class="callout callout-note">
+          <div class="callout-header">ℹ️ What run_studio.sh Does Behind the Scenes</div>
+          <p class="callout-body">
+            1. Verifies Python 3.11+ and checks for <code>ffmpeg</code>.<br>
+            2. Automatically provisions <code>.venv</code> using <code>uv</code> (if available) or standard <code>python3 -m venv</code>.<br>
+            3. Installs package dependencies declared in <code>pyproject.toml</code>.<br>
+            4. Inspects host RAM and probes for CUDA GPU availability.<br>
+            5. Starts the high-concurrency Uvicorn ASGI server with zero cloud dependencies.
+          </p>
+        </div>
+      </section>
+
+      <!-- MANUAL / UV INSTALLATION -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">3. Manual Installation with Astral uv / pip</h2>
+        <p>
+          For developers integrating Kitten-TTS 2 Studio into existing toolchains or using high-speed package managers like <a href="https://github.com/astral-sh/uv" target="_blank">Astral <code>uv</code></a>:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>BASH // MANUAL UV ENVIRONMENT SETUP</span>
+            <button class="copy-btn" data-target="code-uv">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-uv">
+            <span class="comment"># Create virtual environment</span><br>
+            <span class="cmd">uv venv .venv --python 3.12</span><br>
+            <span class="cmd">source .venv/bin/activate</span><br><br>
+            <span class="comment"># Install project in editable development mode</span><br>
+            <span class="cmd">uv pip install -e .</span><br><br>
+            <span class="comment"># Run the automated verification suite</span><br>
+            <span class="cmd">python scripts/verify_setup.py</span>
+          </div>
+        </div>
+
+        <p>
+          The verification script executes 4 rigorous pre-flight checks:
+        </p>
+        <ul class="doc-list">
+          <li><strong>Audio Ingestion:</strong> Tests 24kHz mono PCM16 normalization and duration boundary validators.</li>
+          <li><strong>Voice Profiles Vault:</strong> Verifies profile CRUD operations in <code>storage/profiles/</code>.</li>
+          <li><strong>Hardware Telemetry:</strong> Probes system RAM envelope and detects CUDA/CPU devices.</li>
+          <li><strong>FastAPI App:</strong> Validates route bindings for <code>/</code>, <code>/studio</code>, and <code>/api/*</code>.</li>
+        </ul>
+      </section>
+
+      <!-- ENVIRONMENT VARIABLES -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">4. Environment Variables &amp; Binding Options</h2>
+        <p>
+          Customize the server bind address, port, and security headers using standard shell environment variables:
+        </p>
+
+        <div class="docs-table-wrapper">
+          <table class="docs-table">
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Default Value</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>HOST</code></td>
+                <td><code>127.0.0.1</code></td>
+                <td>Network interface to bind. Set to <code>0.0.0.0</code> for LAN or cloud access.</td>
+              </tr>
+              <tr>
+                <td><code>PORT</code></td>
+                <td><code>8765</code></td>
+                <td>HTTP port for FastAPI and the studio console.</td>
+              </tr>
+              <tr>
+                <td><code>CORS_ORIGINS</code></td>
+                <td><code>*</code></td>
+                <td>Comma-separated list of permitted CORS origins for remote frontend clients.</td>
+              </tr>
+              <tr>
+                <td><code>KITTEN_DEVICE</code></td>
+                <td><em>auto-detected</em></td>
+                <td>Force execution on <code>cpu</code> or <code>cuda</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>BASH // CUSTOM PORT &amp; REMOTE BINDING</span>
+            <button class="copy-btn" data-target="code-env">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-env">
+            <span class="comment"># Bind to all network interfaces on port 9000 with custom CORS</span><br>
+            <span class="cmd">HOST="0.0.0.0" PORT="9000" CORS_ORIGINS="https://my-app.internal" ./run_studio.sh</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- HEADLESS LINUX SERVICE -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">5. Headless Daemon &amp; Systemd Service</h2>
+        <p>
+          For permanent 24/7 deployment on dedicated Linux boxes or home servers, create a systemd service unit:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>SYSTEMD // /etc/systemd/system/kittentts.service</span>
+            <button class="copy-btn" data-target="code-systemd">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-systemd">
+            <span class="comment">[Unit]</span><br>
+            <span class="cmd">Description=Kitten-TTS 2 Studio Speech Synthesizer</span><br>
+            <span class="cmd">After=network.target</span><br><br>
+            <span class="comment">[Service]</span><br>
+            <span class="cmd">Type=simple</span><br>
+            <span class="cmd">User=shuvransu</span><br>
+            <span class="cmd">WorkingDirectory=/home/shuvransu/Projects/KittenTTS-Studio</span><br>
+            <span class="cmd">Environment="HOST=0.0.0.0" "PORT=8765"</span><br>
+            <span class="cmd">ExecStart=/home/shuvransu/Projects/KittenTTS-Studio/.venv/bin/uvicorn backend.app:app --host 0.0.0.0 --port 8765</span><br>
+            <span class="cmd">Restart=on-failure</span><br>
+            <span class="cmd">RestartSec=5s</span><br><br>
+            <span class="comment">[Install]</span><br>
+            <span class="cmd">WantedBy=multi-user.target</span>
+          </div>
+        </div>
+
+        <div class="terminal-block" style="margin-top:16px;">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>BASH // SERVICE ACTIVATION</span>
+            <button class="copy-btn" data-target="code-sysctl">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-sysctl">
+            <span class="cmd">sudo systemctl daemon-reload</span><br>
+            <span class="cmd">sudo systemctl enable --now kittentts.service</span><br>
+            <span class="cmd">sudo systemctl status kittentts.service</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOCKER CONTAINER -->
+      <section class="doc-section">
+        <h2 class="doc-section-title">6. Docker Containerization</h2>
+        <p>
+          Run isolated containerized speech instances with optional NVIDIA GPU acceleration:
+        </p>
+
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>DOCKERFILE // MULTI-STAGE PYTHON 3.12 BUILD</span>
+            <button class="copy-btn" data-target="code-docker">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-docker">
+            <span class="cmd">FROM python:3.12-slim-bookworm</span><br>
+            <span class="cmd">RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends ffmpeg &amp;&amp; rm -rf /var/lib/apt/lists/*</span><br>
+            <span class="cmd">WORKDIR /app</span><br>
+            <span class="cmd">COPY pyproject.toml .</span><br>
+            <span class="cmd">RUN pip install --no-cache-dir .</span><br>
+            <span class="cmd">COPY . .</span><br>
+            <span class="cmd">EXPOSE 8765</span><br>
+            <span class="cmd">CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8765"]</span>
+          </div>
+        </div>
+
+        <div class="terminal-block" style="margin-top:16px;">
+          <div class="terminal-header">
+            <div class="dot-group">
+              <div class="dot" style="background:#ff3344;"></div>
+              <div class="dot" style="background:#ff8800;"></div>
+              <div class="dot" style="background:#00ff88;"></div>
+            </div>
+            <span>BASH // DOCKER RUN COMMANDS</span>
+            <button class="copy-btn" data-target="code-docker-run">COPY</button>
+          </div>
+          <div class="terminal-body" id="code-docker-run">
+            <span class="comment"># CPU execution mode</span><br>
+            <span class="cmd">docker build -t kittentts-studio .</span><br>
+            <span class="cmd">docker run -d -p 8765:8765 -v $(pwd)/storage:/app/storage kittentts-studio</span><br><br>
+            <span class="comment"># NVIDIA GPU mode (with nvidia-container-toolkit)</span><br>
+            <span class="cmd">docker run -d --gpus all -p 8765:8765 -v $(pwd)/storage:/app/storage kittentts-studio</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINATION BAR -->
+      <nav class="docs-pagination">
+        <a href="index.html" class="pagination-link pagination-prev">
+          <span class="pagination-sub">← PREVIOUS SECTION</span>
+          <span class="pagination-title">Overview &amp; Audition</span>
+        </a>
+        <a href="architecture.html" class="pagination-link pagination-next">
+          <span class="pagination-sub">NEXT SECTION →</span>
+          <span class="pagination-title">System Architecture</span>
+        </a>
+      </nav>
+
+    </main>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer>
+    <div class="footer-attribution">
+      Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank">Antigravity</a></strong>
+    </div>
+    <div class="footer-meta">
+      <a href="mailto:contact@sahooshuvranshu.is-a.dev" class="footer-email">contact@sahooshuvranshu.is-a.dev</a>
+      KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • LICENSED UNDER MIT
+    </div>
+  </footer>
+
+  <script>
+    // Responsive sidebar drawer toggle
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('docsSidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // Code copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          navigator.clipboard.writeText(targetEl.innerText.trim()).then(() => {
+            const orig = btn.innerText;
+            btn.innerText = 'COPIED!';
+            btn.style.color = '#00ff88';
+            setTimeout(() => {
+              btn.innerText = orig;
+              btn.style.color = '';
+            }, 1800);
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

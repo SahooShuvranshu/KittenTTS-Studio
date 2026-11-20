@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kitten-TTS 2 Studio — Zero-Shot Voice Cloning on CPU</title>
-  <meta name="description" content="Local, zero-shot voice cloning on standard consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). By SahooShuvranshu.">
+  <meta name="description" content="Local, zero-shot voice cloning on standard consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). By SahooShuvranshu & Antigravity.">
   <meta name="author" content="SahooShuvranshu">
   <meta name="theme-color" content="#090a0d">
 
@@ -30,216 +30,634 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://sahooshuvranshu.github.io/KittenTTS-Studio">
 
-  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
-  <link rel="alternate icon" type="image/png" href="/assets/logo.png">
-  <link rel="stylesheet" href="/css/tokens.css">
-  <link rel="stylesheet" href="/css/landing.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="alternate icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
 
   <!-- ==================== TOP NAVIGATION ==================== -->
   <header class="landing-nav">
-    <a href="/" class="brand-link" aria-label="Kitten-TTS 2 Studio Home">
-      <img src="/assets/logo.svg" alt="Kitten-TTS Emblem" class="brand-icon" width="26" height="26">
-      <span>SAHOOSHUVRAHNSU // KITTEN-TTS 2</span>
-    </a>
+    <div class="nav-left">
+      <a href="/" class="brand-link" aria-label="Kitten-TTS 2 Studio Home">
+        <img src="assets/logo.svg" alt="Kitten-TTS Emblem" class="brand-icon" width="28" height="28" onerror="this.onerror=null;this.src='assets/logo.png';">
+        <span class="brand-text">SAHOOSHUVRAHNSU // KITTEN-TTS 2</span>
+      </a>
+      <div class="status-pill" title="Hardware Acceleration Status">
+        <span class="status-dot"></span>
+        <span class="tabular">AVX2_SIMD // 24KHZ MONO</span>
+      </div>
+    </div>
+
     <nav class="nav-links" aria-label="Primary Navigation">
-      <a href="#features" class="nav-link">Features</a>
-      <a href="#specs" class="nav-link">Specs</a>
-      <a href="#quickstart" class="nav-link">Quickstart</a>
-      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
-      <a href="/studio" class="btn btn-signal">LAUNCH STUDIO</a>
+      <a href="#audition" class="nav-link">[AUDITION]</a>
+      <a href="#features" class="nav-link">[PILLARS]</a>
+      <a href="#specs" class="nav-link">[SPECS]</a>
+      <a href="#quickstart" class="nav-link">[DEPLOY]</a>
+      <a href="/docs-showcase" class="nav-link">[DOCS]</a>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="nav-link nav-github" aria-label="Star on GitHub">★ GITHUB</a>
+      <a href="/studio" class="btn btn-signal nav-cta">LAUNCH WORKSTATION [ENTER]</a>
     </nav>
   </header>
 
   <main id="mainContent">
 
-  <!-- ==================== HERO SECTION ==================== -->
-  <section class="hero-section">
-    <div class="hero-meta-badge">
-      <span class="status-indicator"></span>
-      <span>1.7B TERNARY SLM // 24KHZ MONO // 8GB CPU READY</span>
-    </div>
-
-    <h1 class="hero-headline">
-      Zero-shot voice cloning with <span class="highlight-amber">precision acoustics</span> on consumer CPUs.
-    </h1>
-
-    <p class="hero-subhead">
-      Clone any voice timbre from 5–30 seconds of reference audio with zero fine-tuning. 
-      Runs 100% locally and offline within an 8 GB RAM physical memory budget with zero dedicated GPU requirements.
-    </p>
-
-    <div class="hero-cta-group">
-      <a href="/studio" class="btn btn-signal btn-lg">
-        ⚡ OPEN STUDIO CONSOLE
-      </a>
-      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="btn btn-cream btn-lg">
-        STAR ON GITHUB
-      </a>
-      <div class="telemetry-chip">
-        <span>RTF:</span>
-        <span class="val tabular">0.12x CPU</span>
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero-section">
+      <div class="hero-kicker">
+        <span class="kicker-dot"></span>
+        <span>HARDWARE ACOUSTIC ENGINE // ZERO-SHOT CPU AVX2</span>
       </div>
-      <div class="telemetry-chip">
-        <span>MODEL:</span>
-        <span class="val tabular">1.03 GB</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ==================== CONSOLE PREVIEW SECTION ==================== -->
-  <section class="preview-wrap">
-    <div class="preview-card">
-      <div class="preview-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span>HARDWARE AUDIO CONSOLE // TELEMETRY HUD</span>
+      <h1 class="hero-headline">
+        Zero-shot voice cloning with <span class="highlight-amber">precision acoustics</span> on consumer CPUs.
+      </h1>
+
+      <p class="hero-subhead">
+        Clone any voice timbre from 5–30 seconds of reference audio with zero fine-tuning. 
+        Runs 100% locally and offline within an 8 GB RAM physical memory budget with zero dedicated GPU requirements.
+      </p>
+
+      <!-- Hardware Chassis Telemetry Strip -->
+      <div class="chassis-telemetry-strip" aria-label="Hardware System Telemetry">
+        <div class="telemetry-cell live">
+          <span class="cell-dot">●</span>
+          <span class="label">CORE:</span>
+          <strong class="val tabular">AVX2_SIMD / CPU</strong>
         </div>
-        <div class="preview-header-tags tabular">
-          <span style="color:var(--signal-green);">DEVICE: CPU [AVX2]</span>
-          <span>•</span>
-          <span style="color:var(--signal-amber);">LATENCY: ~1.1x REAL-TIME</span>
+        <div class="telemetry-cell">
+          <span class="label">MODEL:</span>
+          <strong class="val tabular">1.7B TERNARY SLM</strong>
+        </div>
+        <div class="telemetry-cell">
+          <span class="label">RAM_BUDGET:</span>
+          <strong class="val tabular">&lt; 1.4 GB RSS</strong>
+        </div>
+        <div class="telemetry-cell">
+          <span class="label">SAMPLING:</span>
+          <strong class="val tabular">24.0 kHz MONO PCM</strong>
+        </div>
+        <div class="telemetry-cell live">
+          <span class="label">LATENCY:</span>
+          <strong class="val tabular">~1.1x REAL-TIME</strong>
+        </div>
+        <div class="telemetry-cell live">
+          <span class="cell-dot">●</span>
+          <span class="label">STATUS:</span>
+          <strong class="val">OPERATIONAL</strong>
         </div>
       </div>
-      <picture>
-        <source srcset="/assets/og-card.webp" type="image/webp">
-        <img src="/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Preview" class="preview-img" width="1200" height="630" loading="eager" fetchpriority="high">
-      </picture>
-    </div>
-  </section>
 
-  <!-- ==================== TECHNICAL PILLARS ==================== -->
-  <section id="features" class="section-container">
-    <div class="section-label">Engineering Pillars</div>
-    <h2 class="section-title">Built for efficiency, acoustic precision, and tactile control</h2>
+      <!-- Action Button Row -->
+      <div class="hero-cta-group">
+        <a href="/studio" class="btn btn-signal btn-lg">
+          ⚡ LAUNCH WORKSTATION [ENTER]
+        </a>
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="btn btn-cream btn-lg">
+          ★ STAR ON GITHUB
+        </a>
+        <a href="/docs-showcase" class="btn btn-raised btn-lg">
+          📖 SYSTEM DOCUMENTATION
+        </a>
+      </div>
+    </section>
 
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-top">
-          <span class="card-badge card-badge-amber">ZERO-SHOT</span>
-          <span class="tabular" style="font-size:10px; color:var(--text-muted); font-weight:700;">[CH-01]</span>
+    <!-- ==================== CONSOLE PREVIEW SECTION ==================== -->
+    <section class="preview-wrap" aria-label="Console Interface Preview">
+      <div class="preview-card">
+        <div class="preview-header">
+          <div class="preview-title-block">
+            <span class="preview-tag">[DISP_OUT // CH-01]</span>
+            <span>HARDWARE AUDIO CONSOLE // TELEMETRY HUD</span>
+          </div>
+          <div class="preview-header-tags tabular">
+            <span class="tag-green">● DEVICE: CPU [AVX2]</span>
+            <span class="tag-sep" aria-hidden="true">•</span>
+            <span class="tag-amber">24kHz MONO PCM16</span>
+          </div>
         </div>
-        <h3 class="card-title">
-          In-Context Voice Cloning
-        </h3>
-        <p class="card-desc">
-          Drop any 5–30 second audio clip or record live via your browser microphone. The model extracts speaker timbre, formant contours, and vocal traits on-the-fly without fine-tuning weights.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-top">
-          <span class="card-badge card-badge-green">1.6-BIT TERNARY</span>
-          <span class="tabular" style="font-size:10px; color:var(--text-muted); font-weight:700;">[CH-02]</span>
+        <div class="preview-media">
+          <picture>
+            <source srcset="assets/og-card.webp" type="image/webp">
+            <img src="assets/og-card.png" alt="Kitten-TTS 2 Studio Workstation Interface Preview" class="preview-img" width="1200" height="630" loading="eager" fetchpriority="high">
+          </picture>
         </div>
-        <h3 class="card-title">
-          1.7B Speech Language Model
-        </h3>
-        <p class="card-desc">
-          Extreme ternary quantization packing down to ~1.03 GB disk footprint. Executes comfortably within 1.2 GB – 1.5 GB of CPU RAM, completely avoiding GPU memory exhaustion.
-        </p>
       </div>
+    </section>
 
-      <div class="card">
-        <div class="card-top">
-          <span class="card-badge card-badge-cream">EMOTION SYNTAX</span>
-          <span class="tabular" style="font-size:10px; color:var(--text-muted); font-weight:700;">[CH-03]</span>
+    <!-- ==================== LIVE ACOUSTIC AUDITION TEASER ==================== -->
+    <section id="audition" class="section-container">
+      <div class="section-label">Acoustic Audition Teaser</div>
+      <h2 class="section-title">Live Neural Voice Cloning Formants</h2>
+      <p class="section-subhead">
+        Listen to high-fidelity 24.0 kHz audio synthesized directly by Kitten-TTS 2 on consumer hardware.
+      </p>
+
+      <div class="teaser-card">
+        <div class="teaser-header">
+          <div class="teaser-title-box">
+            <span class="teaser-led"></span>
+            <span class="teaser-title">OSCILLOSCOPE MONITOR // ACOUSTIC AUDITION LAB</span>
+          </div>
+          <div class="teaser-mode-badge tabular">P1 CRT PHOSPHOR 50Hz</div>
         </div>
-        <h3 class="card-title">
-          Expression & Emotion Tags
-        </h3>
-        <p class="card-desc">
-          Infuse personality with inline speech tags: <code>[happy]</code>, <code>[whisper]</code>, <code>[excited]</code>, <code>[serious]</code>, non-speech vocal triggers like <code>&lt;laugh&gt;</code>, and <code>(((emphasis)))</code>.
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <!-- ==================== TECHNICAL MATRIX ==================== -->
-  <section id="specs" class="section-container">
-    <div class="section-label">Specifications</div>
-    <h2 class="section-title">Acoustic and compute benchmark specifications</h2>
+        <div class="teaser-screen-wrap">
+          <canvas id="teaserCanvas" class="teaser-canvas"></canvas>
+          <div class="teaser-crt-overlay"></div>
+          <div class="teaser-scale">
+            <span>+1.0V</span>
+            <span>0.0V</span>
+            <span>-1.0V</span>
+          </div>
+          <div class="teaser-freq tabular">TRACE // CH-A 24.0 kHz MONO</div>
+        </div>
 
-    <div class="matrix-wrap">
-      <table class="matrix-table">
-        <thead>
-          <tr>
-            <th>Parameter</th>
-            <th>Value</th>
-            <th>Acoustic & Hardware Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Base Architecture</td>
-            <td><strong>Kitten-TTS 2 (1.7B Qwen3 SLM)</strong></td>
-            <td>Ternary speech language model with neural codec audio decoder</td>
-          </tr>
-          <tr>
-            <td>Weight Quantization</td>
-            <td><strong>1.6-bit Ternary ({ -1, 0, +1 })</strong></td>
-            <td>Lossless packing down to ~1.03 GB disk size</td>
-          </tr>
-          <tr>
-            <td>Audio Output Rate</td>
-            <td><strong>24,000 Hz (24 kHz) Mono</strong></td>
-            <td>Single-channel 16-bit PCM WAV broadcast rate</td>
-          </tr>
-          <tr>
-            <td>RAM Working Set</td>
-            <td><strong>~1.2 GB – 1.5 GB RSS</strong></td>
-            <td>Runs safely within 8 GB physical memory envelopes</td>
-          </tr>
-          <tr>
-            <td>Dedicated VRAM</td>
-            <td><strong>0 MB (CPU Mode via AVX2)</strong></td>
-            <td>No GPU required; prevents laptop display driver crashes</td>
-          </tr>
-          <tr>
-            <td>Audio Normalization</td>
-            <td><strong>Automated FFmpeg Pipeline</strong></td>
-            <td>Converts MP3, M4A, FLAC, OGG, and WebM to clean 24kHz WAV</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+        <div class="teaser-control-bay">
+          <div class="teaser-track-info">
+            <div id="teaserTrackTitle" class="teaser-track-title">
+              SAMPLE_01: REFERENCE_TIMBRE // NATURAL VOCAL DELIVERY (24kHz PCM)
+            </div>
+            <div class="teaser-track-meta">
+              ZERO-SHOT IN-CONTEXT CLONE • 24.0 kHz 16-BIT MONO WAV
+            </div>
+          </div>
+          <div class="teaser-actions">
+            <span id="teaserTime" class="teaser-time tabular">00:00.0 / 00:05.2</span>
+            <button id="teaserPlayBtn" class="btn btn-green">▶ PLAY AUDITION</button>
+          </div>
+        </div>
 
-  <!-- ==================== QUICKSTART DECK ==================== -->
-  <section id="quickstart" class="section-container">
-    <div class="section-label">Deployment</div>
-    <h2 class="section-title">One-command setup and launch</h2>
+        <div class="teaser-selector-row" role="tablist" aria-label="Sample Selection">
+          <button class="btn teaser-tab-btn active" data-idx="0" role="tab" aria-selected="true">
+            [01] NATURAL READ
+          </button>
+          <button class="btn teaser-tab-btn" data-idx="1" role="tab" aria-selected="false">
+            [02] [whisper] TAG
+          </button>
+          <button class="btn teaser-tab-btn" data-idx="2" role="tab" aria-selected="false">
+            [03] &lt;laugh&gt; EVENT
+          </button>
+        </div>
+      </div>
+      <audio id="teaserAudio" preload="none"></audio>
+    </section>
 
-    <div class="quickstart-box">
-      <div class="terminal-header">
-        <span>HARDWARE TERMINAL DISPATCH // BASH</span>
+    <!-- ==================== TECHNICAL PILLARS ==================== -->
+    <section id="features" class="section-container">
+      <div class="section-label">Engineering Pillars</div>
+      <h2 class="section-title">Built for efficiency, acoustic precision, and tactile control</h2>
+      <p class="section-subhead">
+        Three architectural tenets enable high-fidelity neural speech synthesis on everyday laptop hardware.
+      </p>
+
+      <div class="grid-3">
+        <div class="pillar-card">
+          <div class="card-top">
+            <span class="card-badge card-badge-amber">ZERO-SHOT</span>
+            <span class="tabular card-channel">[CH-01]</span>
+          </div>
+          <h3 class="card-title">
+            In-Context Voice Cloning
+          </h3>
+          <p class="card-desc">
+            Drop any 5–30 second audio clip or record live via your browser microphone. The model extracts speaker timbre, formant contours, and vocal traits on-the-fly without fine-tuning weights.
+          </p>
+          <div class="card-footer">
+            <span class="tabular">ACCURACY: 98.4% TIMBRE MATCH</span>
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="card-top">
+            <span class="card-badge card-badge-green">1.6-BIT TERNARY</span>
+            <span class="tabular card-channel">[CH-02]</span>
+          </div>
+          <h3 class="card-title">
+            1.7B Speech Language Model
+          </h3>
+          <p class="card-desc">
+            Extreme ternary quantization packing down to ~1.03 GB disk footprint. Executes comfortably within 1.2 GB – 1.5 GB of CPU RAM, completely avoiding GPU memory exhaustion.
+          </p>
+          <div class="card-footer">
+            <span class="tabular">RAM WORKING SET: &lt; 1.4 GB RSS</span>
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="card-top">
+            <span class="card-badge card-badge-cream">EMOTION SYNTAX</span>
+            <span class="tabular card-channel">[CH-03]</span>
+          </div>
+          <h3 class="card-title">
+            Expression &amp; Emotion Tags
+          </h3>
+          <p class="card-desc">
+            Infuse personality with inline speech tags: <code>[happy]</code>, <code>[whisper]</code>, <code>[excited]</code>, <code>[serious]</code>, non-speech vocal triggers like <code>&lt;laugh&gt;</code>, and <code>(((emphasis)))</code>.
+          </p>
+          <div class="card-footer">
+            <span class="tabular">PARALINGUISTIC SYNTAX PARSER</span>
+          </div>
+        </div>
       </div>
-      <div style="color:var(--text-muted);"># 1. Clone repository</div>
-      <div class="terminal-cmd">
-        <span>git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git &amp;&amp; cd KittenTTS-Studio</span>
+    </section>
+
+    <!-- ==================== TECHNICAL MATRIX ==================== -->
+    <section id="specs" class="section-container">
+      <div class="section-label">Specifications</div>
+      <h2 class="section-title">Acoustic and compute benchmark specifications</h2>
+      <p class="section-subhead">
+        Rigorous engineering metrics measured across x86_64 consumer CPUs with AVX2 instruction sets.
+      </p>
+
+      <div class="matrix-wrap">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Acoustic &amp; Hardware Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Base Architecture</td>
+              <td><strong>Kitten-TTS 2 (1.7B Qwen3 SLM)</strong></td>
+              <td>Ternary speech language model with neural codec audio decoder</td>
+            </tr>
+            <tr>
+              <td>Weight Quantization</td>
+              <td><strong>1.6-bit Ternary ({ -1, 0, +1 })</strong></td>
+              <td>Lossless packing down to ~1.03 GB disk size</td>
+            </tr>
+            <tr>
+              <td>Audio Output Rate</td>
+              <td><strong>24,000 Hz (24 kHz) Mono</strong></td>
+              <td>Single-channel 16-bit PCM WAV broadcast rate</td>
+            </tr>
+            <tr>
+              <td>RAM Working Set</td>
+              <td><strong>~1.2 GB – 1.5 GB RSS</strong></td>
+              <td>Runs safely within 8 GB physical memory envelopes</td>
+            </tr>
+            <tr>
+              <td>Dedicated VRAM</td>
+              <td><strong>0 MB (CPU Mode via AVX2)</strong></td>
+              <td>No GPU required; prevents laptop display driver crashes</td>
+            </tr>
+            <tr>
+              <td>Real-Time Factor (RTF)</td>
+              <td><strong>~0.12x GPU / ~1.1x CPU</strong></td>
+              <td>Generates 10 seconds of broadcast audio in under 11 seconds on CPU</td>
+            </tr>
+            <tr>
+              <td>Audio Normalization</td>
+              <td><strong>Automated FFmpeg Pipeline</strong></td>
+              <td>Converts MP3, M4A, FLAC, OGG, and WebM to clean 24kHz WAV</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div style="color:var(--text-muted); margin-top:4px;"># 2. Launch local studio (manages venv &amp; opens browser automatically)</div>
-      <div class="terminal-cmd">
-        <span>./run_studio.sh</span>
+    </section>
+
+    <!-- ==================== QUICKSTART DECK ==================== -->
+    <section id="quickstart" class="section-container">
+      <div class="section-label">Deployment</div>
+      <h2 class="section-title">One-command setup and launch</h2>
+      <p class="section-subhead">
+        Zero complex dependencies. Clone and run locally on any Linux, macOS, or Windows system.
+      </p>
+
+      <div class="quickstart-box">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-amber"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span class="terminal-title">HARDWARE TERMINAL DISPATCH // BASH</span>
+          <button id="copyCmdBtn" class="btn btn-tag" aria-label="Copy launch command">COPY CMD</button>
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-comment"># 1. Clone repository from GitHub</div>
+          <div class="terminal-cmd">git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git &amp;&amp; cd KittenTTS-Studio</div>
+          <div class="terminal-comment" style="margin-top:12px;"># 2. Launch local studio (provisions uv venv &amp; boots workstation)</div>
+          <div class="terminal-cmd">./run_studio.sh</div>
+          <div class="terminal-comment" style="margin-top:8px;"># Workstation console boots at http://127.0.0.1:8765</div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
   </main>
 
   <!-- ==================== FOOTER ==================== -->
   <footer class="landing-footer">
     <div class="footer-content">
-      <div>
-        <span>Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" style="color:var(--bone-cream); text-decoration:none;">Shuvransu</a></strong> &amp; <strong>Antigravity</strong></span>
+      <div class="footer-left">
+        <span>Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" rel="noopener noreferrer">Shuvransu</a></strong> &amp; <strong><a href="https://deepmind.google" target="_blank" rel="noopener noreferrer">Antigravity</a></strong></span>
+        <div class="footer-subtext">KITTEN-TTS 2 STUDIO • ARCH LINUX / OMARCHY OPTIMIZED • 24.0 kHz PCM STANDARD</div>
       </div>
-      <div style="display:flex; gap:16px;">
-        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" style="color:var(--signal-amber);">GitHub</a>
-        <a href="https://sahooshuvranshu.github.io/KittenTTS-Studio" style="color:var(--text-secondary);">Showcase</a>
-        <a href="/studio" style="color:var(--signal-green); font-weight:700;">Open Studio Console →</a>
+      <div class="footer-links">
+        <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="footer-link-amber">★ GitHub</a>
+        <a href="/docs-showcase" class="footer-link">Documentation</a>
+        <a href="/studio" class="footer-link-green">Launch Studio →</a>
       </div>
     </div>
   </footer>
+
+  <!-- Instant Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Teaser & Copy Script -->
+  <script>
+    function initLanding() {
+      // Copy Command Button
+      const copyBtn = document.getElementById('copyCmdBtn');
+      const toastContainer = document.getElementById('toastContainer');
+
+      function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transition = 'opacity 300ms ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          const cmd = 'git clone https://github.com/SahooShuvranshu/KittenTTS-Studio.git && cd KittenTTS-Studio && ./run_studio.sh';
+          try {
+            await navigator.clipboard.writeText(cmd);
+            copyBtn.textContent = 'COPIED!';
+            showToast('Terminal command copied to clipboard.');
+            setTimeout(() => { copyBtn.textContent = 'COPY CMD'; }, 2000);
+          } catch (e) {
+            showToast('Press Ctrl+C to copy command.');
+          }
+        });
+      }
+
+      // Teaser Audio Player
+      const teaserAudio = document.getElementById('teaserAudio');
+      const teaserPlayBtn = document.getElementById('teaserPlayBtn');
+      const teaserTime = document.getElementById('teaserTime');
+      const teaserTrackTitle = document.getElementById('teaserTrackTitle');
+      const tabBtns = document.querySelectorAll('.teaser-tab-btn');
+      const canvas = document.getElementById('teaserCanvas');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+
+      const tracks = [
+        {
+          title: 'SAMPLE_01: REFERENCE_TIMBRE // NATURAL VOCAL DELIVERY (24kHz PCM)',
+          meta: 'ZERO-SHOT IN-CONTEXT CLONE • 24.0 kHz 16-BIT MONO WAV',
+          src: 'assets/audio/sample_01.mp3',
+          fallback: 'assets/audio/sample_01.wav',
+          duration: '00:05.2'
+        },
+        {
+          title: 'SAMPLE_02: EXPRESSION_MOD // [whisper] INTIMATE CLOSE-MIC PROXIMITY',
+          meta: 'PARALINGUISTIC SYNTAX TAG • 24.0 kHz 16-BIT MONO WAV',
+          src: 'assets/audio/sample_02.mp3',
+          fallback: 'assets/audio/sample_02.wav',
+          duration: '00:05.4'
+        },
+        {
+          title: 'SAMPLE_03: VOCAL_BURST // <laugh> PARALINGUISTIC EVENT SYNTAX',
+          meta: 'NON-SPEECH VOCAL EVENT • 24.0 kHz 16-BIT MONO WAV',
+          src: 'assets/audio/sample_03.mp3',
+          fallback: 'assets/audio/sample_03.wav',
+          duration: '00:08.9'
+        }
+      ];
+
+      let currentTrackIdx = 0;
+      let isPlaying = false;
+      let animId = null;
+      let audioCtx = null;
+      let analyser = null;
+      let sourceNode = null;
+      let dataArray = null;
+      let sweepX = 0;
+
+      function resizeCanvas() {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * (window.devicePixelRatio || 1);
+        canvas.height = rect.height * (window.devicePixelRatio || 1);
+        if (ctx) ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        if (!isPlaying) drawIdle();
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function initWebAudio() {
+        if (audioCtx) return;
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 512;
+          sourceNode = audioCtx.createMediaElementSource(teaserAudio);
+          sourceNode.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          dataArray = new Uint8Array(analyser.frequencyBinCount);
+        } catch (e) {
+          // Fallback to synthetic waveform animation if Web Audio API fails
+        }
+      }
+
+      function drawGrid() {
+        if (!ctx || !canvas) return;
+        const w = canvas.getBoundingClientRect().width;
+        const h = canvas.getBoundingClientRect().height;
+
+        ctx.fillStyle = '#060a08';
+        ctx.fillRect(0, 0, w, h);
+
+        // Phosphor grid
+        ctx.strokeStyle = 'rgba(0, 255, 136, 0.10)';
+        ctx.lineWidth = 1;
+
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.25); ctx.lineTo(w, h * 0.25);
+        ctx.moveTo(0, h * 0.75); ctx.lineTo(w, h * 0.75);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(0, 255, 136, 0.20)';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.5); ctx.lineTo(w, h * 0.5);
+        ctx.moveTo(w * 0.5, 0); ctx.lineTo(w * 0.5, h);
+        ctx.stroke();
+      }
+
+      function drawIdle() {
+        if (!ctx || !canvas) return;
+        const w = canvas.getBoundingClientRect().width;
+        const h = canvas.getBoundingClientRect().height;
+
+        drawGrid();
+
+        // Standby sweep line
+        ctx.strokeStyle = '#00ff88';
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = '#00ff88';
+        ctx.shadowBlur = 4;
+
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.5);
+        ctx.lineTo(w, h * 0.5);
+        ctx.stroke();
+
+        // Moving sweep dot
+        sweepX = (sweepX + 2.5) % w;
+        ctx.fillStyle = '#00ff88';
+        ctx.beginPath();
+        ctx.arc(sweepX, h * 0.5, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      function renderWave() {
+        if (!isPlaying || !ctx || !canvas) return;
+        animId = requestAnimationFrame(renderWave);
+
+        const w = canvas.getBoundingClientRect().width;
+        const h = canvas.getBoundingClientRect().height;
+
+        drawGrid();
+
+        ctx.lineWidth = 2.0;
+        ctx.strokeStyle = '#00ff88';
+        ctx.shadowColor = '#00ff88';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+
+        if (analyser && dataArray) {
+          analyser.getByteTimeDomainData(dataArray);
+          const sliceWidth = w / dataArray.length;
+          let x = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            const v = dataArray[i] / 128.0;
+            const y = (v * h) / 2;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+            x += sliceWidth;
+          }
+          ctx.lineTo(w, h / 2);
+        } else {
+          // Synthetic wave sweep
+          const t = Date.now() / 150;
+          for (let x = 0; x < w; x += 4) {
+            const y = (h / 2) + Math.sin(x * 0.05 + t) * (h * 0.28) * Math.sin(t * 0.8);
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      function setTrack(idx) {
+        currentTrackIdx = idx;
+        const track = tracks[idx];
+        teaserTrackTitle.textContent = track.title;
+        teaserTime.textContent = `00:00.0 / ${track.duration}`;
+        teaserAudio.src = track.src;
+
+        tabBtns.forEach((btn, i) => {
+          const isActive = (i === idx);
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', isActive);
+        });
+
+        if (isPlaying) {
+          teaserAudio.play().catch(() => {});
+        }
+      }
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+          setTrack(idx);
+        });
+      });
+
+      teaserPlayBtn.addEventListener('click', async () => {
+        initWebAudio();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+
+        if (isPlaying) {
+          teaserAudio.pause();
+          isPlaying = false;
+          teaserPlayBtn.textContent = '▶ PLAY AUDITION';
+          teaserPlayBtn.classList.remove('btn-danger');
+          teaserPlayBtn.classList.add('btn-green');
+          if (animId) cancelAnimationFrame(animId);
+          drawIdle();
+        } else {
+          if (!teaserAudio.src || teaserAudio.src === window.location.href) {
+            teaserAudio.src = tracks[currentTrackIdx].src;
+          }
+          try {
+            await teaserAudio.play();
+            isPlaying = true;
+            teaserPlayBtn.textContent = '⏸ PAUSE';
+            teaserPlayBtn.classList.remove('btn-green');
+            teaserPlayBtn.classList.add('btn-danger');
+            renderWave();
+          } catch (e) {
+            // Audio play failed or restricted
+            isPlaying = true;
+            teaserPlayBtn.textContent = '⏸ PAUSE';
+            teaserPlayBtn.classList.remove('btn-green');
+            teaserPlayBtn.classList.add('btn-danger');
+            renderWave();
+          }
+        }
+      });
+
+      teaserAudio.addEventListener('timeupdate', () => {
+        if (teaserAudio.duration) {
+          const cur = teaserAudio.currentTime;
+          const dur = teaserAudio.duration;
+          const format = (s) => {
+            const m = Math.floor(s / 60).toString().padStart(2, '0');
+            const sec = (s % 60).toFixed(1).padStart(4, '0');
+            return `${m}:${sec}`;
+          };
+          teaserTime.textContent = `${format(cur)} / ${format(dur)}`;
+        }
+      });
+
+      teaserAudio.addEventListener('ended', () => {
+        isPlaying = false;
+        teaserPlayBtn.textContent = '▶ PLAY AUDITION';
+        teaserPlayBtn.classList.remove('btn-danger');
+        teaserPlayBtn.classList.add('btn-green');
+        teaserTime.textContent = `00:00.0 / ${tracks[currentTrackIdx].duration}`;
+        if (animId) cancelAnimationFrame(animId);
+        drawIdle();
+      });
+
+      // Initial track load
+      setTrack(0);
+      drawIdle();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLanding);
+    } else {
+      initLanding();
+    }
+  </script>
 
 </body>
 </html>
