@@ -3,12 +3,14 @@ import json
 import time
 import uuid
 import shutil
+import asyncio
 from typing import Optional, List, Dict, Any
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
+import anyio
 
 from backend.audio_utils import convert_to_wav, get_audio_metadata, validate_reference_audio
 from backend.profiles import list_profiles, get_profile, create_profile, update_profile, delete_profile
@@ -60,8 +62,33 @@ else:
 ALLOWED_AUDIO_EXTENSIONS = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".webm"}
 MAX_UPLOAD_SIZE = 50 * 1024 * 1024  # 50 MB
 
-def cleanup_temp_files(max_age_seconds: int = 7200):
-    """Purges expired temporary samples from storage/temp older than max_age_seconds (default 2 hours)."""
+# Concurrency Guard (Enforces single-stream neural synthesis on 8 GB RAM machines)
+synthesis_semaphore = asyncio.Semaphore(1)
+
+# In-Memory Sliding Window Rate Limiter
+_request_records: Dict[str, List[float]] = {}
+RATE_LIMIT_GLOBAL = int(os.getenv("RATE_LIMIT_GLOBAL", "120"))  # req / min
+RATE_LIMIT_HEAVY = int(os.getenv("RATE_LIMIT_HEAVY", "20"))    # req / min
+
+def check_rate_limit(request: Request, limit: int = 120, window: int = 60):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    key = f"{client_ip}:{request.url.path}"
+    now = time.time()
+    records = _request_records.setdefault(key, [])
+    cutoff = now - window
+    valid = [ts for ts in records if ts > cutoff]
+    if len(valid) >= limit:
+        _request_records[key] = valid
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded. Maximum {limit} requests per minute for this endpoint.",
+            headers={"Retry-After": "60"}
+        )
+    valid.append(now)
+    _request_records[key] = valid
+
+def cleanup_temp_files(max_age_seconds: int = 3600):
+    """Purges expired temporary samples from storage/temp older than max_age_seconds (default 1 hour)."""
     now = time.time()
     if not os.path.exists(TEMP_DIR):
         return
@@ -74,8 +101,25 @@ def cleanup_temp_files(max_age_seconds: int = 7200):
             except OSError:
                 pass
 
+def cleanup_old_outputs(max_age_seconds: int = 86400):
+    """Purges old generated audio files from storage/outputs older than 24 hours while preserving history.json."""
+    now = time.time()
+    if not os.path.exists(OUTPUTS_DIR):
+        return
+    for fname in os.listdir(OUTPUTS_DIR):
+        if fname == "history.json":
+            continue
+        fpath = os.path.join(OUTPUTS_DIR, fname)
+        if os.path.isfile(fpath):
+            try:
+                if now - os.path.getmtime(fpath) > max_age_seconds:
+                    os.remove(fpath)
+            except OSError:
+                pass
+
 # Run startup purge
 cleanup_temp_files()
+cleanup_old_outputs()
 
 # Request Schemas
 class SynthesizeRequest(BaseModel):
@@ -118,11 +162,14 @@ def get_telemetry():
     return engine.get_telemetry()
 
 @app.post("/api/upload-sample")
-async def upload_sample(file: UploadFile = File(...)):
+async def upload_sample(request: Request, file: UploadFile = File(...)):
     """
     Accepts user audio file (.wav, .mp3, .m4a, .flac, .ogg, .webm), normalizes to 24kHz mono WAV.
-    Enforces format whitelisting and 50 MB size limits.
+    Enforces format whitelisting, 50 MB size limits, and rate limiting.
     """
+    check_rate_limit(request, limit=RATE_LIMIT_HEAVY)
+    cleanup_temp_files()
+
     orig_name = file.filename or "sample.wav"
     ext = os.path.splitext(orig_name)[1].lower()
     if ext not in ALLOWED_AUDIO_EXTENSIONS:
@@ -176,7 +223,8 @@ async def upload_sample(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Audio processing failed: {str(e)}")
 
 @app.post("/api/profiles/save-sample")
-def save_sample_as_profile(req: SaveSampleProfileRequest):
+def save_sample_as_profile(request: Request, req: SaveSampleProfileRequest):
+    check_rate_limit(request, limit=RATE_LIMIT_GLOBAL)
     safe_filename = os.path.basename(req.filename)
     if safe_filename != req.filename or ".." in req.filename or not safe_filename.endswith(".wav"):
         raise HTTPException(status_code=400, detail="Invalid sample filename.")
@@ -190,6 +238,7 @@ def save_sample_as_profile(req: SaveSampleProfileRequest):
 
 @app.post("/api/profiles/record")
 async def record_profile(
+    request: Request,
     file: UploadFile = File(...),
     name: str = Form(...),
     description: Optional[str] = Form("")
@@ -197,6 +246,8 @@ async def record_profile(
     """
     Receives browser MediaRecorder audio blob and registers a new voice profile.
     """
+    check_rate_limit(request, limit=RATE_LIMIT_HEAVY)
+    cleanup_temp_files()
     if not name or not name.strip():
         raise HTTPException(status_code=400, detail="Profile name cannot be blank.")
 
@@ -245,16 +296,22 @@ def edit_profile(profile_id: str, req: UpdateProfileRequest):
     return updated
 
 @app.post("/api/synthesize")
-def synthesize_speech(req: SynthesizeRequest):
+async def synthesize_speech(req: SynthesizeRequest, request: Request):
     """
     Main speech generation endpoint. Clones speaker voice if profile or temp_sample is given.
+    Guarded with concurrency semaphore, rate limiting, and 60s timeout.
     """
+    check_rate_limit(request, limit=RATE_LIMIT_HEAVY)
+
     clean_text = req.text.strip()
     if not clean_text:
         raise HTTPException(status_code=422, detail="Text prompt cannot be empty or whitespace.")
 
     if len(clean_text) > 5000:
         raise HTTPException(status_code=422, detail="Text prompt exceeds maximum 5000 character limit.")
+
+    if req.speed is not None and not (0.25 <= req.speed <= 4.0):
+        raise HTTPException(status_code=422, detail="Speed must be between 0.25x and 4.0x.")
 
     ref_audio_path = None
     voice_label = "Default Voice"
@@ -263,28 +320,49 @@ def synthesize_speech(req: SynthesizeRequest):
         profile = get_profile(req.profile_id)
         if not profile:
             raise HTTPException(status_code=404, detail=f"Voice profile '{req.profile_id}' not found.")
-        ref_audio_path = os.path.join(PROFILES_DIR, profile["filename"])
+        ref_audio_path = os.path.abspath(os.path.join(PROFILES_DIR, profile["filename"]))
+        if not ref_audio_path.startswith(os.path.abspath(PROFILES_DIR)) or not os.path.isfile(ref_audio_path):
+            raise HTTPException(status_code=404, detail=f"Reference audio for profile '{req.profile_id}' not found on disk.")
         voice_label = f"Profile: {profile.get('name', req.profile_id)}"
     elif req.temp_sample:
         safe_temp = os.path.basename(req.temp_sample)
         if safe_temp != req.temp_sample or ".." in req.temp_sample:
             raise HTTPException(status_code=400, detail="Invalid reference sample filename.")
         temp_path = os.path.abspath(os.path.join(TEMP_DIR, safe_temp))
-        if not temp_path.startswith(os.path.abspath(TEMP_DIR)) or not os.path.exists(temp_path):
+        if not temp_path.startswith(os.path.abspath(TEMP_DIR)) or not os.path.isfile(temp_path):
             raise HTTPException(status_code=404, detail="Temporary reference sample not found or expired.")
         ref_audio_path = temp_path
         voice_label = f"Temp Sample: {safe_temp}"
+
+    # Verify semaphore for CPU/RAM concurrency protection (8 GB budget)
+    try:
+        await asyncio.wait_for(synthesis_semaphore.acquire(), timeout=0.1)
+    except asyncio.TimeoutError:
+        raise HTTPException(
+            status_code=503,
+            detail="Speech synthesis engine is currently processing another request. Please retry shortly."
+        )
 
     engine = KittenTTSEngine.get_instance()
     t0 = time.time()
     char_count = len(clean_text)
 
     try:
-        filename, duration = engine.synthesize(
-            text=clean_text,
-            reference_path=ref_audio_path,
-            speed=req.speed or 1.0,
-            output_dir=OUTPUTS_DIR
+        if await request.is_disconnected():
+            raise HTTPException(status_code=499, detail="Client closed request before synthesis started.")
+
+        speed_val = req.speed or 1.0
+        # Run worker in separate thread with 60s timeout
+        filename, duration = await asyncio.wait_for(
+            anyio.to_thread.run_sync(
+                lambda: engine.synthesize(
+                    text=clean_text,
+                    reference_path=ref_audio_path,
+                    speed=speed_val,
+                    output_dir=OUTPUTS_DIR
+                )
+            ),
+            timeout=60.0
         )
         elapsed = round(time.time() - t0, 2)
         device_used = engine.device.upper()
@@ -311,8 +389,12 @@ def synthesize_speech(req: SynthesizeRequest):
             "created_at": time.strftime("%Y-%m-%d %H:%M:%S")
         }
         _append_history(entry)
+        cleanup_temp_files()
+        cleanup_old_outputs()
 
         return entry
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Speech synthesis timed out after 60 seconds.")
     except HTTPException:
         raise
     except Exception as e:
@@ -326,13 +408,16 @@ def synthesize_speech(req: SynthesizeRequest):
             f"Error: {str(e)}"
         )
         raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}")
+    finally:
+        synthesis_semaphore.release()
 
 @app.get("/api/audio/{filename}")
-def serve_audio(filename: str, temp: Optional[int] = 0, profile: Optional[int] = 0):
+def serve_audio(request: Request, filename: str, temp: Optional[int] = 0, profile: Optional[int] = 0):
     """
     Streams audio files (.wav) from outputs, profiles, or temp directories.
-    Strictly prevents path traversal outside the storage envelope.
+    Strictly prevents path traversal outside the storage envelope with Range support.
     """
+    check_rate_limit(request, limit=RATE_LIMIT_GLOBAL)
     safe_filename = os.path.basename(filename)
     if safe_filename != filename or ".." in filename or "/" in filename or "\\" in filename:
         raise HTTPException(status_code=400, detail="Invalid audio filename.")

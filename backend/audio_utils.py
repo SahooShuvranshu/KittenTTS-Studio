@@ -78,12 +78,12 @@ def validate_reference_audio(file_path: str) -> Dict[str, Any]:
     status = "optimal"
     msg = f"Audio duration: {dur}s. Ideal for voice cloning."
 
-    if dur < 3.0:
+    if dur < 5.0:
         status = "warning"
-        msg = f"Duration ({dur}s) is very short. Clips between 5-30s produce best speaker fidelity."
-    elif dur > 60.0:
+        msg = f"Duration ({dur}s) is short. Clips between 5 to 30s produce optimal speaker fidelity."
+    elif dur > 30.0:
         status = "warning"
-        msg = f"Duration ({dur}s) is long. Consider trimming to a 10-30s clean sentence for faster processing."
+        msg = f"Duration ({dur}s) exceeds optimal range. Clips between 5 to 30s produce best acoustic precision."
 
     return {
         "status": status,

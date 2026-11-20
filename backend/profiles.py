@@ -85,12 +85,15 @@ def delete_profile(profile_id: str) -> bool:
     for p in profiles:
         if p["id"] == profile_id:
             found = True
-            audio_path = os.path.join(STORAGE_DIR, p.get("filename", ""))
-            if os.path.exists(audio_path):
-                try:
-                    os.remove(audio_path)
-                except OSError:
-                    pass
+            raw_fn = p.get("filename", "")
+            safe_fn = os.path.basename(raw_fn) if raw_fn else ""
+            if safe_fn and safe_fn == raw_fn and safe_fn.endswith(".wav"):
+                audio_path = os.path.abspath(os.path.join(STORAGE_DIR, safe_fn))
+                if audio_path.startswith(os.path.abspath(STORAGE_DIR)) and os.path.isfile(audio_path):
+                    try:
+                        os.remove(audio_path)
+                    except OSError:
+                        pass
         else:
             kept.append(p)
     if found:

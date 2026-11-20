@@ -64,7 +64,7 @@ Built upon **KittenML/kitten-tts-2**—a 1.7-billion-parameter speech language m
   - Non-Speech Events: `<laugh>`, `<sigh>`
   - Stress & Prosody: `(((emphasis)))`
 - **Minimal Retro-Futurist Workstation**: Clean hardware rack chassis featuring a real-time CRT phosphor oscilloscope trace (`#00ff88`) and strict 4px instrumentation grid.
-- **100% Offline & Private**: Zero analytics, zero cloud transmission, zero telemetry.
+- **100% Offline & Private**: Zero analytics, zero cloud transmission, zero telemetry. After initial model weight acquisition, operates completely locally and offline without network connections.
 
 ---
 
@@ -182,17 +182,18 @@ Kitten-TTS 2 natively parses emotional markers and vocal inflections inline:
 
 The backend provides a clean, self-documented REST API:
 
-| Endpoint | Method | Payload | Description |
+| Endpoint | Method | Payload / Query | Description |
 | :--- | :--- | :--- | :--- |
-| `POST /api/synthesize` | JSON | `{ text, speed, profile_id }` | Synthesizes text; clones speaker if `profile_id` is passed. |
-| `POST /api/upload-sample` | Multipart | Audio File | Normalizes upload to 24kHz mono WAV and returns metadata. |
-| `POST /api/profiles/save-sample` | JSON | `{ filename, name }` | Persists temporary sample as permanent voice profile. |
-| `POST /api/profiles/record` | Multipart | Mic Blob + Name | Saves in-browser recording directly into profile store. |
+| `POST /api/synthesize` | JSON | `{ text, speed, profile_id, temp_sample }` | Synthesizes text; clones speaker if `profile_id` or `temp_sample` is passed. Guarded with rate limiting (20/min) and single-stream concurrency semaphore. |
+| `POST /api/upload-sample` | Multipart | Audio File (`.wav`, `.mp3`, `.m4a`, etc.) | Normalizes upload to 24kHz mono WAV, validates 5–30s duration, enforces 50 MB limit, and returns metadata. |
+| `POST /api/profiles/save-sample` | JSON | `{ filename, name, description }` | Persists temporary sample as permanent voice profile. |
+| `POST /api/profiles/record` | Multipart | `file` (WebM blob), `name`, `description` | Saves in-browser recording directly into voice profile store. |
 | `GET /api/profiles` | GET | None | Lists all saved voice profiles. |
-| `PUT /api/profiles/{id}` | PUT | `{ name, description }` | Renames or updates notes on a profile. |
-| `DELETE /api/profiles/{id}` | DELETE | None | Deletes voice profile and deletes reference WAV. |
-| `GET /api/audio/{filename}` | GET | None | Streams audio with range-header support. |
-| `GET /api/telemetry` | GET | None | Returns real-time host RAM, CPU load, and model status. |
+| `PUT /api/profiles/{id}` | PUT | `{ name, description }` | Renames or updates description notes on a profile. |
+| `DELETE /api/profiles/{id}` | DELETE | None | Physically deletes voice profile index entry and reference WAV file from disk. |
+| `GET /api/audio/{filename}` | GET | Query: `?temp=1`, `?profile=1` | Streams WAV audio with HTTP 206 Partial Content / Range-header seeking support. |
+| `GET /api/history` | GET | None | Lists recent speech generations with latency, duration, text, and device telemetry. |
+| `GET /api/telemetry` | GET | None | Returns real-time host RAM, device topology (AVX2 / CUDA), and model status. |
 
 ---
 
