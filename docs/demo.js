@@ -1,5 +1,5 @@
 /**
- * Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer Showcase
+ * Kitten-TTS 2 Studio — Documentation & Acoustic Speech Engine
  * Interactive Audio Workstation Controller & Tektronix CRT Visualizer (docs/demo.js)
  *
  * Implements:
@@ -1391,6 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     togglePlayback,
     playRelayClick
   };
+  window.__kittenDocs = window.__kittenShowcase;
 
   // Start continuous CRT oscilloscope render loop
   draw();
