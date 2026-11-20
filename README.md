@@ -36,7 +36,7 @@
 
 <br/>
 
-[**Live Showcase & Interactive Demo**](https://sahooshuvranshu.github.io/KittenTTS-Studio) • [**Architecture Docs**](ARCHITECTURE.md) • [**Contributing Guide**](CONTRIBUTING.md)
+[**Live Documentation & Interactive Demo**](https://sahooshuvranshu.github.io/KittenTTS-Studio) • [**Architecture Docs**](ARCHITECTURE.md) • [**Contributing Guide**](CONTRIBUTING.md)
 
 </div>
 

@@ -450,7 +450,7 @@ def serve_studio():
 def serve_docs_showcase():
     docs_html = os.path.join(DOCS_DIR, "index.html")
     if not os.path.exists(docs_html):
-        raise HTTPException(status_code=404, detail="Docs showcase not found.")
+        raise HTTPException(status_code=404, detail="Documentation not found.")
     return FileResponse(docs_html, media_type="text/html")
 
 # Multi-Page Documentation Routes
@@ -461,7 +461,7 @@ def serve_docs_showcase():
 def serve_docs():
     docs_html = os.path.join(DOCS_DIR, "index.html")
     if not os.path.exists(docs_html):
-        raise HTTPException(status_code=404, detail="Docs showcase not found.")
+        raise HTTPException(status_code=404, detail="Documentation not found.")
     return FileResponse(docs_html, media_type="text/html")
 
 @app.get("/docs/architecture")
@@ -519,10 +519,10 @@ def serve_docs_subpage(page: str):
         return FileResponse(index_path, media_type="text/html")
     raise HTTPException(status_code=404, detail=f"Documentation resource '/docs/{page}' not found.")
 
-# Mount Documentation showcase directory
+# Mount Documentation directory
 app.mount("/docs", StaticFiles(directory=DOCS_DIR, html=True), name="docs")
 
-# Direct fallback routes for docs-showcase relative assets
+# Direct fallback routes for documentation relative assets
 @app.get("/architecture.html")
 @app.get("/architecture")
 def serve_fallback_architecture():
