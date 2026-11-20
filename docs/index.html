@@ -13,7 +13,11 @@
   <meta property="og:url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio">
   <meta property="og:title" content="Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer">
   <meta property="og:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). Built with ❤️ and ☕ by Shuvransu & Antigravity.">
-  <meta property="og:image" content="assets/og-card.png">
+  <meta property="og:image" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/assets/og-card.png">
+  <meta property="og:image:secure_url" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/assets/og-card.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
@@ -21,7 +25,7 @@
   <meta name="twitter:creator" content="@SahooShuvranshu">
   <meta name="twitter:title" content="Kitten-TTS 2 Studio — Acoustic Neural Speech Synthesizer">
   <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). Built with ❤️ and ☕ by Shuvransu & Antigravity.">
-  <meta name="twitter:image" content="assets/og-card.png">
+  <meta name="twitter:image" content="https://sahooshuvranshu.github.io/KittenTTS-Studio/assets/og-card.png">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://sahooshuvranshu.github.io/KittenTTS-Studio">
@@ -185,8 +189,8 @@
       </div>
 
       <!-- Laboratory CRT Phosphor Screen Chassis -->
-      <div class="demo-canvas-box" id="canvasContainer" title="Click screen to switch visualizer modes">
-        <canvas id="demoCanvas"></canvas>
+      <div class="demo-canvas-box" id="canvasContainer" tabindex="0" role="button" aria-label="Interactive oscilloscope display. Click or press Enter to cycle visualizer modes" title="Click screen to switch visualizer modes">
+        <canvas id="demoCanvas" role="img" aria-label="Laboratory CRT oscilloscope waveform visualizer"></canvas>
         <div class="crt-overlay"></div>
         <div class="scope-scale" id="scopeScale">
           <span>+1.0V</span>

@@ -1,0 +1,58 @@
+name: KittenTTS-Studio CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    name: Backend API & Security Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system audio libraries and ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libsndfile1
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[test] pytest pytest-asyncio anyio
+
+      - name: Run Pytest test suite
+        run: |
+          pytest -v tests/
+
+      - name: Run verification script
+        run: |
+          python scripts/verify_setup.py
+
+  accessibility-pa11y:
+    name: Automated Accessibility (WCAG 2.2 AA)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Pa11y on Landing Page
+        run: npx pa11y "file://$PWD/frontend/index.html"
+
+      - name: Run Pa11y on Studio Console
+        run: npx pa11y "file://$PWD/frontend/studio.html"
+
+      - name: Run Pa11y on Showcase
+        run: npx pa11y "file://$PWD/docs/index.html"

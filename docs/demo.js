@@ -354,7 +354,27 @@ document.addEventListener('DOMContentLoaded', () => {
     canvasBox.addEventListener('click', () => {
       cycleVisualizerMode();
     });
+    canvasBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        cycleVisualizerMode();
+      }
+    });
   }
+
+  // Tab Backgrounding Guard: pause RAF rendering loop when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    } else {
+      if (!animId) {
+        animId = requestAnimationFrame(draw);
+      }
+    }
+  });
 
   // Keyboard shortcut listener ('1', '2', '3', '4', 'v', 'm', Space)
   window.addEventListener('keydown', (e) => {
@@ -470,6 +490,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Primary Animation Render Loop with Laboratory P31 Phosphor Decay
   function draw() {
+    if (document.hidden) {
+      animId = null;
+      return;
+    }
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Laboratory P31 Phosphor Persistence Decay:
     // Fading canvas trail with rgba(5, 6, 8, 0.20) gives genuine CRT afterglow!
     ctx.fillStyle = 'rgba(5, 6, 8, 0.20)';
@@ -491,15 +517,17 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Moving CRT Phosphor Beam Dot
-        scanX = (scanX + 3.2) % width;
-        ctx.fillStyle = '#00ff88';
-        ctx.shadowColor = '#00ff88';
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.arc(scanX, height * 0.5, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        if (!reducedMotion) {
+          // Moving CRT Phosphor Beam Dot
+          scanX = (scanX + 3.2) % width;
+          ctx.fillStyle = '#00ff88';
+          ctx.shadowColor = '#00ff88';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(scanX, height * 0.5, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
       } else if (currentMode === 'spectrum') {
         // Idle Baseline Noise
         const barWidth = (width / NUM_SPECTRUM_BARS) - 1.5;
