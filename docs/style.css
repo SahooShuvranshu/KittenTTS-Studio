@@ -40,8 +40,8 @@
   --bone-cream: #eeebe3;        /* High-contrast silk-screened typography */
   --steel-gray: #2d3342;
   --text-primary: #eeebe3;
-  --text-secondary: #9da3b4;
-  --text-muted: #575e70;
+  --text-secondary: #b0b7c8;
+  --text-muted: #959cb0;
 
   /* Typography */
   --font-mono: "JetBrains Mono", "Space Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1423,7 +1423,7 @@ a {
   background-color: var(--signal-amber);
 }
 .danger-fill {
-  background-color: var(--alert-red);
+  background-color: #c41525;
   color: #ffffff;
 }
 

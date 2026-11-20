@@ -22,8 +22,11 @@
   <meta name="twitter:description" content="Local, zero-shot voice cloning on standard consumer CPUs under 8 GB RAM. 24kHz broadcast audio.">
   <meta name="twitter:image" content="/assets/og-card.png">
 
+  <link rel="canonical" href="https://sahooshuvranshu.github.io/KittenTTS-Studio/studio">
   <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
   <link rel="alternate icon" type="image/png" href="/assets/logo.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/studio.css">
 </head>
 <body>
@@ -31,11 +34,11 @@
   <!-- ==================== TOP TELEMETRY HUD ==================== -->
   <header class="hud-bar">
     <div class="hud-group">
-      <a href="/" class="hud-back-btn">
+      <a href="/" class="hud-back-btn" aria-label="Return to Overview">
         ← OVERVIEW
       </a>
       <div class="hud-item">
-        <span class="hud-status-dot"></span>
+        <span class="hud-status-dot" aria-hidden="true"></span>
         <span class="hud-label">DEVICE:</span>
         <span id="hudDevice" class="hud-val">CPU (AVX2)</span>
       </div>
@@ -65,14 +68,23 @@
     </div>
   </header>
 
+  <!-- OFFLINE DISCONNECTED NOTICE BANNER -->
+  <div id="offlineNotice" class="offline-banner" style="display:none;" role="alert" aria-live="assertive">
+    <div class="offline-banner-content">
+      <span class="offline-dot" aria-hidden="true"></span>
+      <strong>OFFLINE / DISCONNECTED:</strong>
+      <span>Backend server is unreachable. Synthesis and profile storage require the local FastAPI engine. Run <code>./run_studio.sh</code> to activate.</span>
+    </div>
+  </div>
+
   <!-- ==================== WORKSPACE THREE-PANEL LAYOUT ==================== -->
   <main class="app-container">
 
     <!-- LEFT PANEL: VOICE IDENTITY HUB -->
-    <section class="panel panel-left">
+    <section class="panel panel-left" aria-label="Voice Identity Hub">
       <div class="panel-header">
         <span class="panel-title">
-          <span class="panel-icon">01</span>
+          <span class="panel-icon" aria-hidden="true">01</span>
           Voice Identity Hub
         </span>
         <span class="panel-spec-tag">[REF INPUT]</span>
@@ -80,16 +92,16 @@
 
       <div class="panel-body">
         <!-- Tab Selectors -->
-        <div class="tab-row">
-          <button id="tabUpload" class="tab-btn active">UPLOAD AUDIO</button>
-          <button id="tabRecord" class="tab-btn">RECORD MIC</button>
+        <div class="tab-row" role="tablist" aria-label="Voice Input Methods">
+          <button id="tabUpload" class="tab-btn active" role="tab" aria-selected="true" aria-controls="viewUpload">UPLOAD AUDIO</button>
+          <button id="tabRecord" class="tab-btn" role="tab" aria-selected="false" aria-controls="viewRecord">RECORD MIC</button>
         </div>
 
         <!-- UPLOAD VIEW -->
-        <div id="viewUpload" style="display:flex; flex-direction:column; gap:12px;">
-          <input type="file" id="audioFileInput" accept=".wav,.mp3,.m4a,.flac,.ogg" style="display:none;">
-          <div id="dropzone" class="dropzone">
-            <svg class="dropzone-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        <div id="viewUpload" role="tabpanel" aria-labelledby="tabUpload" style="display:flex; flex-direction:column; gap:12px;">
+          <input type="file" id="audioFileInput" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm" aria-label="Upload reference audio file" style="display:none;">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop reference audio file here or press Enter to browse files">
+            <svg class="dropzone-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
             <span class="dropzone-text">Drop reference audio file here</span>
             <span class="dropzone-hint">WAV, MP3, M4A, FLAC, OGG (5-30s optimal)</span>
           </div>
@@ -100,34 +112,36 @@
               <span id="uploadFileName" style="font-weight:700; font-size:11px; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:180px;"></span>
               <span id="uploadFileMeta" class="tabular" style="font-size:10px; color:var(--signal-green);"></span>
             </div>
-            <audio id="uploadAudioPreview" controls style="width:100%; height:32px; margin:4px 0;"></audio>
-            <input type="text" id="profileNameInput" placeholder="Profile Name (e.g. Master Voice)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
+            <audio id="uploadAudioPreview" controls aria-label="Preview uploaded audio" style="width:100%; height:32px; margin:4px 0;"></audio>
+            <label for="profileNameInput" class="visually-hidden">Profile Name</label>
+            <input type="text" id="profileNameInput" aria-label="Profile Name" placeholder="Profile Name (e.g. Master Voice)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
             <button id="saveProfileBtn" class="btn btn-signal" style="padding:8px 12px;">SAVE AS VOICE PROFILE</button>
           </div>
         </div>
 
         <!-- RECORD VIEW -->
-        <div id="viewRecord" style="display:none; flex-direction:column; gap:12px;">
+        <div id="viewRecord" role="tabpanel" aria-labelledby="tabRecord" style="display:none; flex-direction:column; gap:12px;">
           <div class="recorder-card">
             <div class="rec-timer-row">
-              <span id="recTime" class="rec-time tabular">00:00.0</span>
-              <div id="recIndicator" class="rec-indicator">
+              <span id="recTime" class="rec-time tabular" aria-label="Recording duration">00:00.0</span>
+              <div id="recIndicator" class="rec-indicator" aria-hidden="true">
                 <span class="rec-dot"></span>
                 <span>REC</span>
               </div>
             </div>
-            <div class="vu-meter">
+            <div class="vu-meter" aria-label="Microphone input volume level" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
               <div id="vuMeterBar" class="vu-meter-bar"></div>
             </div>
-            <button id="recBtn" class="btn">START RECORDING</button>
+            <button id="recBtn" class="btn" aria-label="Start recording from microphone">START RECORDING</button>
             <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono); text-align:center;">Speak clearly into microphone for 5 to 30 seconds</span>
           </div>
 
           <!-- Recorded Preview & Save -->
           <div id="recPreview" style="display:none; flex-direction:column; gap:8px; background:var(--bg-surface-sunken); padding:12px; border:2px solid var(--border-dark); border-radius:var(--radius-brutal); box-shadow:3px 3px 0px #000;">
             <span style="font-weight:700; font-size:11px; color:var(--text-primary);">Recorded Audio Sample</span>
-            <audio id="recAudioPreview" controls style="width:100%; height:32px; margin:4px 0;"></audio>
-            <input type="text" id="recProfileNameInput" placeholder="Profile Name (e.g. Mic Profile)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
+            <audio id="recAudioPreview" controls aria-label="Preview recorded audio" style="width:100%; height:32px; margin:4px 0;"></audio>
+            <label for="recProfileNameInput" class="visually-hidden">Recorded Voice Profile Name</label>
+            <input type="text" id="recProfileNameInput" aria-label="Recorded Voice Profile Name" placeholder="Profile Name (e.g. Mic Profile)" style="background:var(--bg-surface); border:2px solid var(--border-dark); border-radius:var(--radius-brutal); padding:6px 10px; color:var(--text-primary); font-size:11px; font-family:var(--font-mono); font-weight:700;">
             <button id="saveRecProfileBtn" class="btn btn-signal" style="padding:8px 12px;">SAVE AS VOICE PROFILE</button>
           </div>
         </div>
@@ -173,18 +187,19 @@
 
         <!-- Text Input Area -->
         <div class="studio-textarea-wrap">
-          <textarea id="textPrompt" class="studio-textarea" placeholder="Type or paste the speech prompt for your cloned voice... Use inline tags like [happy] or (((emphasis))) to customize expression."></textarea>
+          <label for="textPrompt" class="visually-hidden">Speech synthesis text prompt</label>
+          <textarea id="textPrompt" class="studio-textarea" aria-label="Speech synthesis text prompt" placeholder="Type or paste the speech prompt for your cloned voice... Use inline tags like [happy] or (((emphasis))) to customize expression."></textarea>
           <div style="display:flex; justify-content:space-between; padding:8px 4px 0; font-family:var(--font-mono); font-size:10px; color:var(--text-muted); font-weight:600;">
             <span>Natural speech synthesis with inline emotion modulation</span>
-            <span id="charCount" class="tabular">0 chars</span>
+            <span id="charCount" class="tabular" aria-live="polite">0 chars</span>
           </div>
         </div>
 
         <!-- Synthesis Controls Row -->
         <div class="controls-row">
           <div class="control-item">
-            <span>SPEED:</span>
-            <select id="speedSelect">
+            <label for="speedSelect" style="color:var(--text-muted); font-family:var(--font-mono); font-size:10px; font-weight:700;">SPEED:</label>
+            <select id="speedSelect" aria-label="Speech synthesis playback speed">
               <option value="0.75">0.75x</option>
               <option value="1.0" selected>1.0x (Normal)</option>
               <option value="1.25">1.25x</option>
@@ -193,7 +208,7 @@
           </div>
 
           <div style="display:flex; align-items:center; gap:14px;">
-            <span id="latencyBadge" class="tabular" style="font-size:11px; color:var(--signal-green); font-weight:700;">Ready</span>
+            <span id="latencyBadge" class="tabular" style="font-size:11px; color:var(--signal-green); font-weight:700;" aria-live="polite">Ready</span>
             <button id="synthesizeBtn" class="btn btn-signal" style="padding:10px 22px; font-size:12px;">
               ⚡ SYNTHESIZE SPEECH
             </button>
@@ -203,11 +218,11 @@
     </section>
 
     <!-- RIGHT PANEL: AUDIO VAULT & OSCILLOSCOPE -->
-    <section class="panel panel-right">
+    <section class="panel panel-right" aria-label="Audio Vault and Oscilloscope">
       <div class="panel-header">
         <span class="panel-title">
-          <span class="panel-icon">03</span>
-          Audio Vault & Oscilloscope
+          <span class="panel-icon" aria-hidden="true">03</span>
+          Audio Vault &amp; Oscilloscope
         </span>
         <span class="panel-spec-tag tabular">[24KHZ PCM]</span>
       </div>
@@ -215,24 +230,25 @@
       <div class="panel-body">
         <!-- Live Waveform Oscilloscope Canvas -->
         <div class="waveform-canvas-box">
-          <canvas id="oscilloscopeCanvas"></canvas>
+          <canvas id="oscilloscopeCanvas" role="img" aria-label="Live audio oscilloscope waveform visualizer"></canvas>
         </div>
 
         <!-- Custom Audio Player Bar -->
         <div class="player-controls">
-          <button id="playBtn" class="btn" style="padding:8px 12px; width:80px; background:var(--signal-green); color:#000;">▶ PLAY</button>
-          <input type="range" id="scrubber" class="player-scrubber" value="0" min="0" max="100" step="0.1">
+          <button id="playBtn" class="btn" aria-label="Play or pause synthesized audio" style="padding:8px 12px; width:80px; background:var(--signal-green); color:#000;">▶ PLAY</button>
+          <label for="scrubber" class="visually-hidden">Audio playback timeline scrubber</label>
+          <input type="range" id="scrubber" class="player-scrubber" value="0" min="0" max="100" step="0.1" aria-label="Audio playback timeline scrubber" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <span class="player-time tabular">
-            <span id="currentTime">00:00</span> / <span id="totalTime">00:00</span>
+            <span id="currentTime" aria-label="Current playback time">00:00</span> / <span id="totalTime" aria-label="Total audio duration">00:00</span>
           </span>
-          <a id="downloadLink" href="#" class="btn btn-tag" style="display:none; background:var(--signal-cream); color:#000;" title="Download WAV">⬇ WAV</a>
+          <a id="downloadLink" href="#" class="btn btn-tag" style="display:none; background:var(--signal-cream); color:#000;" title="Download WAV" aria-label="Download synthesized audio as WAV">⬇ WAV</a>
         </div>
         <audio id="audioPlayer" style="display:none;"></audio>
 
         <!-- Generation History -->
         <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
           <span style="font-size:11px; font-family:var(--font-mono); font-weight:700; color:var(--signal-amber); text-transform:uppercase;">Recent Generations</span>
-          <div id="historyList" class="history-list">
+          <div id="historyList" class="history-list" aria-label="Recent speech generations">
             <!-- Dynamically populated -->
           </div>
         </div>
@@ -240,13 +256,13 @@
     </section>
 
     <footer style="margin-top:24px; padding:16px 0; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-muted); font-family:var(--font-mono);">
-      <div>Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" style="color:var(--bone-cream); text-decoration:none;">Shuvransu</a></strong> &amp; <strong>Antigravity</strong></div>
+      <div>Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" rel="noopener noreferrer" style="color:var(--bone-cream); text-decoration:none;">Shuvransu</a></strong> &amp; <strong>Antigravity</strong></div>
       <div>KITTEN-TTS 2 STUDIO // 24.0 kHz PCM STANDARD</div>
     </footer>
 
   </main>
 
-  <div id="toastContainer" class="toast-container"></div>
+  <div id="toastContainer" class="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Scripts -->
   <script src="/js/visualizer.js"></script>

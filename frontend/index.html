@@ -23,26 +23,32 @@
   <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM).">
   <meta name="twitter:image" content="/assets/og-card.png">
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://sahooshuvranshu.github.io/KittenTTS-Studio">
+
   <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
   <link rel="alternate icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/css/tokens.css">
   <link rel="stylesheet" href="/css/landing.css">
 </head>
 <body>
 
   <!-- ==================== TOP NAVIGATION ==================== -->
   <header class="landing-nav">
-    <a href="/" class="brand-link">
-      <img src="/assets/logo.svg" alt="Kitten-TTS Emblem" class="brand-icon">
+    <a href="/" class="brand-link" aria-label="Kitten-TTS 2 Studio Home">
+      <img src="/assets/logo.svg" alt="Kitten-TTS Emblem" class="brand-icon" width="26" height="26">
       <span>SAHOOSHUVRAHNSU // KITTEN-TTS 2</span>
     </a>
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="Primary Navigation">
       <a href="#features" class="nav-link">Features</a>
       <a href="#specs" class="nav-link">Specs</a>
       <a href="#quickstart" class="nav-link">Quickstart</a>
-      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" class="nav-link">GitHub</a>
+      <a href="https://github.com/SahooShuvranshu/KittenTTS-Studio" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
       <a href="/studio" class="btn btn-signal">LAUNCH STUDIO</a>
     </nav>
   </header>
+
+  <main id="mainContent">
 
   <!-- ==================== HERO SECTION ==================== -->
   <section class="hero-section">
@@ -91,7 +97,10 @@
           <span style="color:var(--signal-amber);">LATENCY: ~1.1x REAL-TIME</span>
         </div>
       </div>
-      <img src="/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Preview" class="preview-img">
+      <picture>
+        <source srcset="/assets/og-card.webp" type="image/webp">
+        <img src="/assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Preview" class="preview-img" width="1200" height="630" loading="eager" fetchpriority="high">
+      </picture>
     </div>
   </section>
 
@@ -211,6 +220,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- ==================== FOOTER ==================== -->
   <footer class="landing-footer">

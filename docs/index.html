@@ -23,6 +23,10 @@
   <meta name="twitter:description" content="Local, zero-shot voice cloning on consumer CPUs under 8 GB RAM. 24kHz broadcast audio synthesis powered by Kitten-TTS 2 (1.7B Ternary SLM). Built with ❤️ and ☕ by Shuvransu & Antigravity.">
   <meta name="twitter:image" content="assets/og-card.png">
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://sahooshuvranshu.github.io/KittenTTS-Studio">
+  <link rel="manifest" href="site.webmanifest">
+
   <!-- Vector Favicon & Touch Icon -->
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="alternate icon" type="image/png" href="assets/logo.png">
@@ -145,7 +149,10 @@
           <span class="status-live">● 1200x630 TELEMETRY FEED (24kHz PCM)</span>
         </div>
       </div>
-      <img src="assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Console" class="banner-img">
+      <picture>
+        <source srcset="assets/og-card.webp" type="image/webp">
+        <img src="assets/og-card.png" alt="Kitten-TTS 2 Studio Interface Console" class="banner-img" width="1200" height="630" loading="eager" fetchpriority="high">
+      </picture>
     </div>
 
     <!-- ==================== 1. TEKTRONIX CRT OSCILLOSCOPE & AUDITION LAB ==================== -->
