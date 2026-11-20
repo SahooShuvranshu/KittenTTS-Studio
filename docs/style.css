@@ -2054,6 +2054,11 @@ footer {
 .breadcrumbs-container {
   width: 100%;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .docs-breadcrumbs-bar {
@@ -2368,7 +2373,7 @@ footer {
 
 .sidebar-toggle,
 .sidebar-toggle-btn {
-  display: inline-flex;
+  display: none; /* Strictly hidden on desktop/laptop where sidebar is statically visible */
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
@@ -2381,6 +2386,7 @@ footer {
   padding: 6px 12px;
   cursor: pointer;
   box-shadow: var(--shadow-brutal-sm);
+  transition: all 0.15s ease;
 }
 
 .sidebar-toggle:hover,
@@ -3156,14 +3162,24 @@ footer {
     display: none !important;
   }
 
+  .sidebar-toggle,
+  .sidebar-toggle-btn {
+    display: inline-flex !important;
+  }
+
   .sidebar-toggle-bar {
     display: flex;
   }
 
   .docs-sidebar {
+    display: none;
     width: 100%;
     position: static;
     max-height: none;
+  }
+
+  .docs-sidebar.open {
+    display: flex;
   }
 
   .docs-content,
@@ -3317,6 +3333,11 @@ footer {
 
   .docs-toc {
     display: none !important;
+  }
+
+  .sidebar-toggle,
+  .sidebar-toggle-btn {
+    display: inline-flex !important;
   }
 
   .sidebar-toggle-bar {
