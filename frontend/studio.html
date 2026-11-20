@@ -37,10 +37,12 @@
 
   <!-- ==================== TOP TELEMETRY HUD ==================== -->
   <header class="hud-bar">
-    <div class="hud-group">
+    <div class="hud-group hud-group-left">
       <a href="/" class="hud-back-btn" aria-label="Return to Overview">
         ← OVERVIEW
       </a>
+    </div>
+    <div class="hud-group hud-group-telemetry">
       <div class="hud-item">
         <span class="hud-status-dot" aria-hidden="true"></span>
         <span class="hud-label">DEVICE:</span>
@@ -54,9 +56,6 @@
         <span class="hud-label">SAMPLE RATE:</span>
         <span class="hud-val">24KHZ MONO</span>
       </div>
-    </div>
-
-    <div class="hud-group">
       <div class="hud-item">
         <span class="hud-label">RAM:</span>
         <span id="hudRam" class="hud-val tabular">-- / 7.6G</span>
@@ -81,11 +80,18 @@
     </div>
   </div>
 
+  <!-- MOBILE RACK SECTION JUMPER (Visible on <= 768px) -->
+  <nav class="mobile-rack-nav" aria-label="Console Rack Sections">
+    <button class="rack-nav-btn active" data-target="panelVoice" aria-label="Jump to Voice Identity Hub">[01 VOICE]</button>
+    <button class="rack-nav-btn" data-target="panelSynth" aria-label="Jump to Speech Synthesizer">[02 SYNTHESIS]</button>
+    <button class="rack-nav-btn" data-target="panelVault" aria-label="Jump to Audio Vault and Oscilloscope">[03 VAULT]</button>
+  </nav>
+
   <!-- ==================== WORKSPACE THREE-PANEL LAYOUT ==================== -->
   <main class="app-container">
 
     <!-- LEFT PANEL: VOICE IDENTITY HUB -->
-    <section class="panel panel-left" aria-label="Voice Identity Hub">
+    <section id="panelVoice" class="panel panel-left" aria-label="Voice Identity Hub">
       <div class="panel-header">
         <span class="panel-title">
           <span class="panel-icon" aria-hidden="true">01</span>
@@ -164,15 +170,16 @@
     </section>
 
     <!-- CENTER PANEL: SPEECH SYNTHESIS STUDIO -->
-    <section class="panel panel-center">
+    <section id="panelSynth" class="panel panel-center" aria-label="Speech Synthesizer">
       <div class="panel-header">
         <span class="panel-title">
-          <span class="panel-icon">02</span>
+          <span class="panel-icon" aria-hidden="true">02</span>
           Speech Synthesizer
         </span>
-        <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); display:flex; align-items:center;">
-          ACTIVE VOICE:&nbsp;<span id="activeVoiceName" style="color:var(--signal-green); font-weight:700;">None (Default / Uploaded)</span>
-          <button id="resetVoiceBtn" class="btn btn-tag" style="padding:2px 8px; margin-left:8px;" title="Clear selected voice profile">Clear</button>
+        <div class="active-voice-indicator">
+          <span class="voice-prefix">VOICE:</span>
+          <span id="activeVoiceName" class="voice-name">None (Default / Uploaded)</span>
+          <button id="resetVoiceBtn" class="btn btn-tag voice-clear-btn" title="Clear selected voice profile">Clear</button>
         </div>
       </div>
 
@@ -211,7 +218,7 @@
             </select>
           </div>
 
-          <div style="display:flex; align-items:center; gap:14px;">
+          <div class="controls-actions">
             <span id="latencyBadge" class="tabular" style="font-size:11px; color:var(--signal-green); font-weight:700;" aria-live="polite">Ready</span>
             <button id="synthesizeBtn" class="btn btn-signal" style="padding:10px 22px; font-size:12px;">
               ⚡ SYNTHESIZE SPEECH
@@ -222,7 +229,7 @@
     </section>
 
     <!-- RIGHT PANEL: AUDIO VAULT & OSCILLOSCOPE -->
-    <section class="panel panel-right" aria-label="Audio Vault and Oscilloscope">
+    <section id="panelVault" class="panel panel-right" aria-label="Audio Vault and Oscilloscope">
       <div class="panel-header">
         <span class="panel-title">
           <span class="panel-icon" aria-hidden="true">03</span>
@@ -239,13 +246,17 @@
 
         <!-- Custom Audio Player Bar -->
         <div class="player-controls">
-          <button id="playBtn" class="btn" aria-label="Play or pause synthesized audio" style="padding:8px 12px; width:80px; background:var(--signal-green); color:#000;">▶ PLAY</button>
-          <label for="scrubber" class="visually-hidden">Audio playback timeline scrubber</label>
-          <input type="range" id="scrubber" class="player-scrubber" value="0" min="0" max="100" step="0.1" aria-label="Audio playback timeline scrubber" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <span class="player-time tabular">
-            <span id="currentTime" aria-label="Current playback time">00:00</span> / <span id="totalTime" aria-label="Total audio duration">00:00</span>
-          </span>
-          <a id="downloadLink" href="#" class="btn btn-tag" style="display:none; background:var(--signal-cream); color:#000;" title="Download WAV" aria-label="Download synthesized audio as WAV">⬇ WAV</a>
+          <div class="player-scrubber-track">
+            <label for="scrubber" class="visually-hidden">Audio playback timeline scrubber</label>
+            <input type="range" id="scrubber" class="player-scrubber" value="0" min="0" max="100" step="0.1" aria-label="Audio playback timeline scrubber" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <span class="player-time tabular">
+              <span id="currentTime" aria-label="Current playback time">00:00</span> / <span id="totalTime" aria-label="Total audio duration">00:00</span>
+            </span>
+          </div>
+          <div class="player-actions">
+            <button id="playBtn" class="btn" aria-label="Play or pause synthesized audio" style="padding:8px 16px; background:var(--signal-green); color:#000;">▶ PLAY</button>
+            <a id="downloadLink" href="#" class="btn btn-tag download-btn" style="display:none; background:var(--signal-cream); color:#000;" title="Download WAV" aria-label="Download synthesized audio as WAV">⬇ WAV</a>
+          </div>
         </div>
         <audio id="audioPlayer" style="display:none;"></audio>
 
@@ -259,12 +270,13 @@
       </div>
     </section>
 
-    <footer style="margin-top:24px; padding:16px 0; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-muted); font-family:var(--font-mono);">
-      <div>Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" rel="noopener noreferrer" style="color:var(--bone-cream); text-decoration:none;">Shuvransu</a></strong> &amp; <strong>Antigravity</strong></div>
-      <div>KITTEN-TTS 2 STUDIO // 24.0 kHz PCM STANDARD</div>
-    </footer>
-
   </main>
+
+  <!-- WORKSTATION FOOTER (Outside main flex container) -->
+  <footer class="studio-footer">
+    <div class="footer-attribution">Built with ❤️ and ☕ by <strong><a href="https://sahooshuvranshu.is-a.dev" target="_blank" rel="noopener noreferrer">Shuvransu</a></strong> &amp; <strong>Antigravity</strong></div>
+    <div class="footer-meta">KITTEN-TTS 2 STUDIO // 24.0 kHz PCM STANDARD</div>
+  </footer>
 
   <div id="toastContainer" class="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 

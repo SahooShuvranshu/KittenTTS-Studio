@@ -899,6 +899,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ==================== MOBILE RACK NAVIGATION JUMPER ====================
+  const rackNavBtns = document.querySelectorAll('.rack-nav-btn');
+  rackNavBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        rackNavBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    const rackObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+          const id = entry.target.id;
+          rackNavBtns.forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-target') === id);
+          });
+        }
+      });
+    }, { threshold: 0.25 });
+
+    ['panelVoice', 'panelSynth', 'panelVault'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) rackObserver.observe(el);
+    });
+  }
+
   // Initial Boot
   loadProfiles();
   loadHistory();
